@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tổng Ôn Đọc Điền Khuyết - Gen Z Style</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700;900&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        display: ['Space Grotesk', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            yellow: '#FFD166',
+                            pink: '#EF476F',
+                            green: '#06D6A0',
+                            blue: '#118AB2',
+                            dark: '#073B4C',
+                            light: '#F8F9FA'
+                        }
+                    },
+                    boxShadow: {
+                        'brutal': '6px 6px 0px 0px rgba(7, 59, 76, 1)',
+                        'brutal-sm': '3px 3px 0px 0px rgba(7, 59, 76, 1)',
+                        'brutal-hover': '2px 2px 0px 0px rgba(7, 59, 76, 1)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #e0fbfc;
+            background-image: radial-gradient(#118AB2 1px, transparent 1px);
+            background-size: 24px 24px;
+            background-attachment: fixed;
+        }
+
+        .neo-box {
+            background-color: white;
+            border: 3px solid #073B4C;
+            border-radius: 16px;
+            box-shadow: 6px 6px 0px 0px #073B4C;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .neo-btn {
+            border: 3px solid #073B4C;
+            box-shadow: 4px 4px 0px 0px #073B4C;
+            transition: all 0.15s ease;
+        }
+        
+        .neo-btn:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0px 0px #073B4C;
+        }
+
+        .neo-btn:active {
+            transform: translate(4px, 4px);
+            box-shadow: 0px 0px 0px 0px #073B4C;
+        }
+
+        .option-label {
+            cursor: pointer;
+            border: 3px solid #e2e8f0;
+            transition: all 0.2s ease;
+        }
+        
+        .option-label:hover {
+            border-color: #118AB2;
+            background-color: #f0f9ff;
+        }
+
+        input[type="radio"]:checked + .option-label {
+            border-color: #073B4C;
+            background-color: #FFD166;
+            font-weight: 700;
+            box-shadow: 4px 4px 0px 0px #073B4C;
+            transform: translate(-2px, -2px);
+        }
+
+        .correct-answer {
+            background-color: #06D6A0 !important;
+            border-color: #02805f !important;
+            color: #01402f !important;
+            font-weight: 800;
+        }
+
+        .wrong-answer {
+            background-color: #EF476F !important;
+            border-color: #8c1c38 !important;
+            color: #ffffff !important;
+            text-decoration: line-through;
+        }
+
+        .timer-warning {
+            animation: pulse-red 1s infinite;
+            background-color: #EF476F !important;
+            color: white !important;
+        }
+
+        @keyframes pulse-red {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* Làm nổi bật phần điền khuyết */
+        .highlight-blank {
+            display: inline-block;
+            background-color: #FFD166;
+            border: 2px solid #073B4C;
+            padding: 2px 12px;
+            margin: 0 4px;
+            border-radius: 8px;
+            font-weight: 900;
+            color: #EF476F;
+            box-shadow: 2px 2px 0px 0px #073B4C;
+            animation: bounce-small 2s infinite;
+        }
+
+        @keyframes bounce-small {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-3px); }
+        }
+
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: #e2e8f0; border-left: 2px solid #073B4C; }
+        ::-webkit-scrollbar-thumb { background: #073B4C; border-radius: 0px; }
+
+        #explanation-modal {
+            display: none;
+            backdrop-filter: blur(8px);
+        }
+        #explanation-modal.active {
+            display: flex;
+        }
+    </style>
+</head>
+<body class="text-brand-dark min-h-screen flex flex-col font-sans p-4 md:p-6">
+
+    <!-- Header / Timer -->
+    <header class="max-w-5xl mx-auto w-full mb-8 sticky top-2 z-50">
+        <div class="neo-box p-3 md:p-4 flex flex-col md:flex-row justify-between items-center gap-4 bg-white/95">
+            <div class="flex items-center gap-4">
+                <div class="w-14 h-14 rounded-xl bg-brand-blue border-3 border-brand-dark flex items-center justify-center text-white text-2xl shadow-brutal-sm transform -rotate-3">
+                    <i class="fa-solid fa-puzzle-piece"></i>
+                </div>
+                <div>
+                    <h1 class="font-display font-black text-xl md:text-2xl uppercase tracking-tight">
+                        ĐỌC ĐIỀN KHUYẾT
+                    </h1>
+                    <div class="inline-block bg-brand-green px-2 py-0.5 border-2 border-brand-dark text-xs font-bold rounded mt-1">
+                        PART 1 • 40 CÂU
+                    </div>
+                </div>
+            </div>
+
+            <div id="timer-container" class="flex items-center gap-3 neo-btn bg-brand-light px-6 py-3 rounded-xl border-3 border-brand-dark">
+                <i class="fa-regular fa-clock text-xl"></i>
+                <div class="font-display text-2xl md:text-3xl font-black tracking-widest w-[100px] text-center" id="time">40:00</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="max-w-5xl mx-auto w-full flex-grow relative pb-20">
+        
+        <!-- Welcome Screen -->
+        <div id="start-screen" class="neo-box p-8 md:p-16 text-center flex flex-col items-center justify-center min-h-[60vh] bg-white relative overflow-hidden">
+            <div class="absolute top-10 left-10 text-5xl transform -rotate-12">📝</div>
+            <div class="absolute bottom-10 right-10 text-5xl transform rotate-12">🧠</div>
+            
+            <h2 class="font-display text-4xl md:text-6xl font-black mb-6 uppercase tracking-tight">
+                Thử Thách Đọc Hiểu
+            </h2>
+            <p class="text-xl md:text-2xl font-medium mb-8 max-w-2xl leading-relaxed text-gray-700">
+                Bài test <strong>Đọc Điền Khuyết Thông Tin (40 câu)</strong>. Nhiệm vụ của bạn là chọn mệnh đề/câu phù hợp nhất để điền vào phần <span class="highlight-blank">còn thiếu</span>. Thời gian: <strong>40 phút</strong>.
+            </p>
+            <button id="start-btn" class="neo-btn bg-brand-yellow px-10 py-5 rounded-2xl font-black text-2xl uppercase tracking-widest text-brand-dark hover:bg-brand-pink hover:text-white transition-colors">
+                Bắt Đầu Làm Bài! 🚀
+            </button>
+        </div>
+
+        <!-- Quiz Container -->
+        <div id="quiz-container" class="hidden space-y-8">
+            <!-- Questions injected here via JS -->
+        </div>
+
+        <!-- Submit Button Container -->
+        <div id="submit-container" class="hidden mt-12 mb-8 flex justify-center">
+            <button id="submit-btn" class="neo-btn bg-brand-pink text-white px-12 py-5 rounded-2xl font-black text-2xl uppercase tracking-wider hover:bg-brand-dark">
+                <i class="fa-solid fa-flag-checkered mr-2"></i> Nộp Bài Ngay!
+            </button>
+        </div>
+
+        <!-- Results Screen -->
+        <div id="results-screen" class="hidden neo-box p-8 md:p-12 text-center border-t-8 border-t-brand-green mt-8">
+            <div id="score-icon" class="text-8xl mb-6">🏆</div>
+            <h2 class="font-display text-4xl font-black mb-4 uppercase">Tổng Kết Thành Quả</h2>
+            
+            <div class="inline-block border-4 border-brand-dark rounded-3xl p-6 bg-brand-light shadow-brutal my-6">
+                <div class="text-7xl font-black text-brand-dark">
+                    <span id="score-display" class="text-brand-blue">0</span><span class="text-3xl text-gray-400">/40</span>
+                </div>
+            </div>
+            
+            <p id="feedback-message" class="text-2xl font-bold mb-10 mt-4 max-w-2xl mx-auto"></p>
+            
+            <button id="review-btn" class="neo-btn bg-brand-yellow px-8 py-4 rounded-xl font-bold text-xl uppercase tracking-wide">
+                <i class="fa-solid fa-magnifying-glass mr-2"></i> Xem lại đáp án & giải thích
+            </button>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="mt-auto py-8 text-center relative z-10">
+        <div class="inline-flex items-center justify-center gap-3 px-8 py-3 rounded-full bg-white border-3 border-brand-dark shadow-brutal-sm font-bold uppercase tracking-wider text-sm hover:scale-105 transition-transform cursor-pointer">
+            <span>✨ Idea for Design:</span>
+            <span class="text-brand-pink text-lg bg-brand-yellow px-2 rotate-2 inline-block border-2 border-black animate-bounce">Mr Hoa Van! 🚀</span>
+        </div>
+    </footer>
+
+    <!-- Explanation Modal -->
+    <div id="explanation-modal" class="fixed inset-0 z-[100] bg-brand-dark/80 items-center justify-center p-4 md:p-8">
+        <div class="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col border-4 border-brand-dark shadow-[12px_12px_0px_0px_rgba(255,209,102,1)]">
+            
+            <!-- Modal Header -->
+            <div class="p-5 bg-brand-dark text-white flex justify-between items-center border-b-4 border-black">
+                <h3 class="font-display font-black text-2xl uppercase tracking-wider flex items-center gap-3">
+                    <span class="bg-brand-pink text-white w-8 h-8 flex items-center justify-center rounded-md text-lg">💡</span> 
+                    Giải Thích Chi Tiết
+                </h3>
+                <button id="close-modal" class="w-10 h-10 rounded-lg bg-white/10 hover:bg-brand-pink border-2 border-transparent hover:border-white flex items-center justify-center transition-all">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+            
+            <!-- Modal Body -->
+            <div class="p-6 md:p-8 overflow-y-auto bg-gray-50">
+                <div class="bg-white border-3 border-black p-5 rounded-xl shadow-brutal-sm mb-6">
+                    <p id="modal-question-text" class="font-medium text-lg leading-relaxed text-gray-800"></p>
+                </div>
+                <div id="modal-explanation-content" class="text-brand-dark text-lg space-y-4">
+                    <!-- Content injected here -->
+                </div>
+            </div>
+            
+            <!-- Modal Footer -->
+            <div class="p-5 bg-white border-t-4 border-black text-center">
+                <button id="close-modal-btn" class="neo-btn bg-brand-blue text-white px-10 py-3 rounded-xl font-black text-lg uppercase tracking-widest hover:bg-brand-dark">
+                    Đã Hiểu Rõ! 👍
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Audio elements -->
+    <audio id="sound-tick" preload="auto"><source src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3" type="audio/mpeg"></audio>
+    <audio id="sound-alarm" preload="auto"><source src="https://assets.mixkit.co/active_storage/sfx/995/995-preview.mp3" type="audio/mpeg"></audio>
+    <audio id="sound-success" preload="auto"><source src="https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3" type="audio/mpeg"></audio>
+
+    <script>
+        // Quiz Data - 40 Questions
+        const quizData = [
+            {
+                id: 1,
+                question: "Brain drain refers to the situation where skilled and educated people leave their home country to live and work in another country, often in search of better opportunities. In many cases, these individuals <span class='highlight-blank'>[ ĐIỀN VÀO ĐÂY ]</span>",
+                options: [
+                    "having been motivated by career growth, advanced education, and a higher standard of living abroad.",
+                    "of which are motivated by career growth, advanced education, and a higher standard of living abroad.",
+                    "are motivated by career growth, advanced education, and a higher standard of living abroad.",
+                    "that are motivated by career growth, advanced education, and a higher standard of living abroad."
+                ],
+                correct: 2,
+                explanation: "Trong câu \"In many cases, these individuals ___\", cụm \"these individuals\" đang đóng vai trò là chủ ngữ chính của câu. Do đó, phần chỗ trống cần một động từ chính được chia theo thì để tạo thành một câu hoàn chỉnh (Cấu trúc S + V). Các phương án A, B, D đều biến mệnh đề này thành mệnh đề phụ hoặc mệnh đề quan hệ (bắt đầu bằng having been, of which, that), làm cho câu bị thiếu động từ chính. Phương án C cung cấp động từ chính \"are motivated\" ở dạng bị động."
+            },
+            {
+                id: 2,
+                question: "The home country may face challenges in areas such as healthcare, technology, and education. Affected by the loss of talented professionals, <span class='highlight-blank'>[ ĐIỀN VÀO ĐÂY ]</span>",
+                options: [
+                    "global advancements may leave these countries behind if they cannot retain skilled workers.",
+                    "countries may struggle to keep up with global advancements in various fields.",
+                    "various fields of development may advance more slowly in these countries.",
+                    "people in these countries may find it difficult to compete globally without a skilled workforce."
+                ],
+                correct: 1,
+                explanation: "Đây là dạng câu hỏi về rút gọn mệnh đề đồng chủ ngữ (Participial phrase). Cụm từ đầu câu \"Affected by the loss of talented professionals,\" (Bị ảnh hưởng bởi sự mất mát các chuyên gia tài năng) mang nghĩa bị động. Chủ thể bị ảnh hưởng ở đây phải là \"các quốc gia\" (countries). Chỉ có phương án B bắt đầu bằng chủ ngữ \"countries\" là phù hợp nhất về mặt ngữ nghĩa và logic với vế câu phía trước."
+            },
+            {
+                id: 3,
+                question: "While brain drain can be seen as a negative situation, it also offers benefits. For example, people who work abroad may return to their home country, <span class='highlight-blank'>[ ĐIỀN VÀO ĐÂY ]</span>",
+                options: [
+                    "in which the new skills and knowledge they acquire in driving the local economy's growth.",
+                    "had the potential to play a major role in boosting the local economy with their skills and knowledge.",
+                    "made valuable contributions to the development of the local economy thanks to their enhanced skills.",
+                    "whose new skills and knowledge can greatly contribute to the overall growth of the local economy."
+                ],
+                correct: 3,
+                explanation: "Chỗ trống cần một mệnh đề quan hệ để bổ nghĩa cho danh từ \"people\" (những người làm việc ở nước ngoài). Phương án D sử dụng đại từ quan hệ \"whose\" (sở hữu cách) để nối: \"whose new skills and knowledge\" (những kỹ năng và kiến thức mới của họ) có thể đóng góp lớn cho nền kinh tế địa phương."
+            },
+            {
+                id: 4,
+                question: "A particular robot that has recently gained attention is Atlas, a humanoid robot developed by Boston Dynamics. Atlas, <span class='highlight-blank'>[ ĐIỀN VÀO ĐÂY ]</span> is known for its impressive mobility and balance.",
+                options: [
+                    "in which the state-of-the-art design and advanced technology to handle risky and demanding jobs.",
+                    "developed to assist with dangerous tasks through cutting-edge design and complex technology.",
+                    "whose advanced design and sophisticated technology were created to help with hazardous tasks.",
+                    "had the potential to tackle hazardous tasks thanks to its innovative design and high-tech features."
+                ],
+                correct: 2,
+                explanation: "Câu đã có chủ ngữ là \"Atlas\" và động từ chính là \"is known\". Chỗ trống nằm giữa hai dấu phẩy dùng để bổ sung thông tin cho chủ ngữ (mệnh đề quan hệ không xác định). Đại từ quan hệ \"whose\" trong phương án C dùng để chỉ thiết kế và công nghệ của robot Atlas."
+            },
+            {
+                id: 5,
+                question: "Atlas is continuously improved through research, and its abilities are enhanced over time. Tested in different environments, <span class='highlight-blank'>[ ĐIỀN VÀO ĐÂY ]</span> making it highly valuable for real-world applications.",
+                options: [
+                    "people can rely on Atlas to maintain steadiness and perform with accuracy.",
+                    "tasks that require precision and stability are executed flawlessly by Atlas.",
+                    "Atlas shows its ability to remain steady and perform tasks with precision.",
+                    "manufacturers benefit from Atlas' ability to carry out tasks with stability."
+                ],
+                correct: 2,
+                explanation: "Tương tự câu 2, cụm \"Tested in different environments,\" là một cụm phân từ rút gọn mang nghĩa bị động (Được kiểm tra trong nhiều môi trường khác nhau). Chủ thể \"được kiểm tra\" ở đây phải là robot Atlas. Do đó, mệnh đề chính phía sau phải bắt đầu bằng \"Atlas\", suy ra phương án C là chính xác nhất."
+            },
+            {
+                id: 6,
+                question: "Throughout his life, Edison faced many failures, but he didn't let them stop him from trying again. Many of his ideas <span class='highlight-blank'>[ ĐIỀN VÀO ĐÂY ]</span>",
+                options: [
+                    "that were rejected before they were finally accepted.",
+                    "were rejected before they were finally accepted.",
+                    "of which were rejected before they were finally accepted.",
+                    "having been rejected before they were finally accepted."
+                ],
+                correct: 1,
+                explanation: "Câu \"Many of his ideas ...\" có chủ ngữ là \"Many of his ideas\" nhưng hoàn toàn chưa có vị ngữ. Các đáp án A, C, D sử dụng that, of which, having been sẽ tạo thành câu cụt thiếu động từ chính. Phương án B cung cấp động từ chính chia ở bị động quá khứ đơn \"were rejected\"."
+            },
+            {
+                id: 7,
+                question: "His inventions were created through years of hard work and testing, and they changed the world forever. Invented after numerous attempts, <span class='highlight-blank'>[ ĐIỀN VÀO ĐÂY ]</span>",
+                options: [
+                    "the light bulb eventually provided a solution that made life brighter for people.",
+                    "people around the world benefited from the light bulb, which made life brighter.",
+                    "Edison proved himself to be a visionary as his invention transformed everyday life.",
+                    "local authorities adopted the light bulb immediately to improve public lighting."
+                ],
+                correct: 0,
+                explanation: "Cụm phân từ \"Invented after numerous attempts,\" (Được phát minh sau vô số nỗ lực) bổ nghĩa cho chủ ngữ của mệnh đề chính phía sau. Thứ \"được phát minh\" phải là bóng đèn điện (the light bulb), nên chủ ngữ của vế sau phải là \"the light bulb\"."
+            },
+            {
+                id: 8,
+                question: "Edison's story teaches us the importance of perseverance and believing in ourselves, even when others doubt us, <span class='highlight-blank'>[ ĐIỀN VÀO ĐÂY ]</span>.",
+                options: [
+                    "highlighted how perseverance can lead to success, even when faced with difficulties.",
+                    "enabled him to overcome obstacles to achieve one's goals, through sheer determination.",
+                    "whose consistent determination in conquering countless challenges and problems.",
+                    "which demonstrates the power of resilience in achieving success despite challenges."
+                ],
+                correct: 3,
+                explanation: "Cần một mệnh đề quan hệ bổ nghĩa cho toàn bộ ý của mệnh đề hoặc câu phía trước (Câu chuyện của Edison dạy chúng ta tầm quan trọng của sự kiên trì). Đại từ \"which\" trong phương án D đóng vai trò thay thế cho cả ý tưởng đó: \"điều này chứng minh sức mạnh của sự bền bỉ...\"."
+            },
+            {
+                id: 9,
+                question: "Many people with FOBO struggle to commit to a choice because they worry about missing out on something better. People <span class='highlight-blank'>[ ĐIỀN VÀO ĐÂY ]</span> frequently experience stress and anxiety.",
+                options: [
+                    "put off making decisions constantly due to the anxiety of picking the wrong option.",
+                    "regularly postponed their decisions due to the fear of choosing incorrectly.",
+                    "whose decisions are consistently delayed by the fear of making the wrong choice.",
+                    "in which the hesitation to make choices for fear of making the wrong one."
+                ],
+                correct: 2,
+                explanation: "Câu bắt đầu bằng chủ ngữ \"People\". Chỗ trống cần một mệnh đề quan hệ để bổ nghĩa cho \"People\". Đại từ quan hệ chỉ sự sở hữu \"whose\" trong phương án C (những người mà quyết định của họ liên tục bị trì hoãn do sợ hãi...) là hoàn toàn hợp lý cả về ngữ pháp lẫn ngữ nghĩa."
+            },
+            {
+                id: 10,
+                question: "The pressure of always looking for something better can create a cycle of indecision. As a result, simple decisions that others might find easy <span class='highlight-blank'>[ ĐIỀN VÀO ĐÂY ]</span>.",
+                options: [
+                    "of which are often perceived as overwhelming and challenging to make.",
+                    "are often perceived as overwhelming and challenging to make.",
+                    "that are often perceived as overwhelming and challenging to make.",
+                    "having often been perceived as overwhelming and challenging to make."
+                ],
+                correct: 1,
+                explanation: "Chủ ngữ của câu là cụm danh từ \"simple decisions (that others might find easy)\". Câu này đang bị thiếu động từ chính. Phương án B cung cấp động từ chính \"are often perceived\" (thường bị coi là...) để hoàn thành cấu trúc câu."
+            },
+            {
+                id: 11,
+                question: "[...] However, the technology also poses challenges, including job displacement in creative sectors, intellectual property concerns, and <span class='highlight-blank'>[ ĐIỀN VÀO ĐÂY ]</span>.",
+                options: [
+                    "because Al models produce harmful or biased content when not properly monitored.",
+                    "the risk of generating harmful or biased content if models are not properly monitored.",
+                    "generating harmful or biased content if Al models are not properly trained and monitored.",
+                    "Al models can generate harmful or biased content without training and monitoring."
+                ],
+                correct: 1,
+                explanation: "Áp dụng quy tắc cấu trúc song song sau từ nối \"and\". Trước \"and\" là liệt kê các cụm danh từ: \"job displacement...\" (N1), \"intellectual property concerns\" (N2). Vì vậy, chỗ trống cũng phải là một cụm danh từ (N3). Phương án B bắt đầu bằng cụm danh từ \"the risk of generating...\" là đáp án chính xác."
+            },
+            {
+                id: 12,
+                question: "[...] These models rely on deep learning algorithms trained on massive datasets, <span class='highlight-blank'>[ ĐIỀN VÀO ĐÂY ]</span>.",
+                options: [
+                    "Al models can identify underlying structures and create content that imitates human work.",
+                    "enabling them to understand patterns and generate outputs that mimic human creativity.",
+                    "whose special ability to detect trends and generate outputs similar to human creativity.",
+                    "equipping with the capacity to analyze patterns and generate outputs reflecting humans."
+                ],
+                correct: 1,
+                explanation: "Câu đã có đầy đủ chủ ngữ (These models) và động từ (rely). Chỗ trống cần một mệnh đề phân từ hiện tại (V-ing) để bổ nghĩa, chỉ kết quả của hành động trước đó: \"enabling them to understand...\" (điều này cho phép chúng hiểu được các khuôn mẫu...)."
+            },
+            {
+                id: 13,
+                question: "In recent years, Vietnam has experienced an alarming increase in the frequency and intensity of natural disasters, particularly typhoons and floods. Regions such as the central provinces <span class='highlight-blank'>[ ĐIỀN VÀO ĐÂY ]</span>, leaving local communities struggling to recover.",
+                options: [
+                    "which experience destruction of roads, buildings, farmland, and residences.",
+                    "subjected to ongoing harm affecting facilities, farmland, and local homes.",
+                    "have suffered repeated damage to infrastructure, agriculture, and homes.",
+                    "whose extensive damage to public infrastructure, crops, and private property."
+                ],
+                correct: 2,
+                explanation: "Cụm \"Regions such as the central provinces\" (Các khu vực như các tỉnh miền Trung) đóng vai trò là chủ ngữ nhưng chưa có động từ chính. Phương án C cung cấp cụm động từ \"have suffered\" ở thì hiện tại hoàn thành, tạo thành câu hoàn chỉnh S + V."
+            },
+            {
+                id: 14,
+                question: "To mitigate these pressures, hospitality businesses are adapting to consumer preferences by offering eco-certified accommodations, eliminating single-use plastics across guest rooms, and <span class='highlight-blank'>[ ĐIỀN VÀO ĐÂY ]</span>.",
+                options: [
+                    "they ease local water consumption via high-tech recycling solutions.",
+                    "water supplies using smart reuse systems should be safeguarded.",
+                    "conserving local water resources through advanced recycling systems.",
+                    "to reuse greywater responsibly through innovative recycling machinery."
+                ],
+                correct: 2,
+                explanation: "Áp dụng cấu trúc song song. Do đứng sau liên từ \"and\" và trước đó là một chuỗi các danh động từ đang liệt kê: \"offering\" (V-ing), \"eliminating\" (V-ing), nên động từ ở chỗ trống cũng phải ở dạng V-ing. Chọn C (conserving)."
+            },
+            {
+                id: 15,
+                question: "Electronic waste, or e-waste, has become one of the fastest-growing forms of waste globally, <span class='highlight-blank'>[ ĐIỀN VÀO ĐÂY ]</span>. [...]",
+                options: [
+                    "giving rise to ongoing technological improvements and the prevalence of electronic gadgets.",
+                    "which are caused by fast-paced tech development and rising consumer reliance on electronics.",
+                    "causing rapid technological progress and the growing demand for electronic products.",
+                    "driven by technological advancement and the increasing consumption of electronic devices."
+                ],
+                correct: 3,
+                explanation: "Chỗ trống cần một mệnh đề phân từ bổ nghĩa cho \"e-waste\" (rác thải điện tử). Vì rác thải điện tử \"bị thúc đẩy/được tạo ra\" bởi sự tiến bộ công nghệ, ta cần dùng quá khứ phân từ mang nghĩa bị động. Chọn D (driven by...)."
+            },
+            {
+                id: 16,
+                question: "[...] Platforms now utilize artificial intelligence to optimize user profiles, curate potential compatibility matches, and <span class='highlight-blank'>[ ĐIỀN VÀO ĐÂY ]</span>.",
+                options: [
+                    "even facilitate virtual communication through automated conversation starters.",
+                    "they aim to simplify online interaction with pre-written conversation starters.",
+                    "so online interactions through Al-generated opening messages are encouraged.",
+                    "also stimulating app-based interaction with system-generated introductions."
+                ],
+                correct: 0,
+                explanation: "Cấu trúc song song liệt kê các động từ nguyên thể đứng sau \"utilize artificial intelligence to\": \"optimize\" (V1), \"curate\" (V1), and.... Vì thế chỗ trống cần một động từ nguyên thể không \"to\". Chọn A (facilitate)."
+            },
+            {
+                id: 17,
+                question: "[...] This issue is especially severe in countries <span class='highlight-blank'>[ ĐIỀN VÀO ĐÂY ]</span> making fast fashion not just a consumer problem, but a global ecological concern.",
+                options: [
+                    "that manufactured garments with inadequate ecological monitoring.",
+                    "who produce textiles in countries with minimal regulatory oversight.",
+                    "where environmental regulations are weak or poorly enforced.",
+                    "are relying on weakly enforced and lenient environmental laws."
+                ],
+                correct: 2,
+                explanation: "Cần một mệnh đề quan hệ để bổ sung thông tin cho danh từ chỉ nơi chốn \"countries\" (các quốc gia). Đại từ quan hệ \"where\" được dùng để chỉ không gian/địa điểm: \"nơi mà các quy định về môi trường còn yếu kém...\"."
+            },
+            {
+                id: 18,
+                question: "[...] However, pursuing success without finding satisfaction in the journey <span class='highlight-blank'>[ ĐIỀN VÀO ĐÂY ]</span> no matter how impressive their accomplishments appear to others.",
+                options: [
+                    "result in a profound sense of emptiness.",
+                    "can leave a person feeling empty.",
+                    "may create a sense of fulfillment.",
+                    "lead to feelings of dissatisfaction."
+                ],
+                correct: 1,
+                explanation: "Chủ ngữ của câu là cụm danh động từ \"pursuing success without finding satisfaction in the journey\" (S số ít). Câu đang thiếu động từ chính. Phương án B cung cấp động từ khuyết thiếu \"can leave\" rất phù hợp với ngữ cảnh."
+            },
+            {
+                id: 19,
+                question: "Practical subjects, like laboratory experiments, performing arts, or sports, often require hands-on guidance that online education struggles to provide. Many students <span class='highlight-blank'>[ ĐIỀN VÀO ĐÂY ]</span> which helps maintain motivation and focus.",
+                options: [
+                    "whose structure and guidance inherent in conventional schools.",
+                    "who receive support from the systematic framework in conventional schools.",
+                    "will gain advantages from the conventionally organized and routine setting.",
+                    "also benefit from the structured environment of traditional schools."
+                ],
+                correct: 3,
+                explanation: "Cụm \"Many students\" đóng vai trò là chủ ngữ, do đó cần một động từ chính. Phương án D \"also benefit from\" (cũng hưởng lợi từ...) không chỉ đúng về mặt ngữ pháp S + V mà còn đúng với thì hiện tại đơn của toàn đoạn văn (thay vì thì tương lai \"will gain\" ở câu C)."
+            },
+            {
+                id: 20,
+                question: "Online learning platforms allow learners to study subjects ranging from computer science to art history without leaving their homes. For many, online learning provides opportunities <span class='highlight-blank'>[ ĐIỀN VÀO ĐÂY ]</span> making education more inclusive and adaptable to individual needs.",
+                options: [
+                    "enabled learners to study subjects they might miss out on due to restrictions.",
+                    "that would otherwise be inaccessible due to geographic or financial constraints.",
+                    "many of which could be reached regardless of students' location or financial health.",
+                    "allowed individuals to participate in courses despite living far away or lacking funds."
+                ],
+                correct: 1,
+                explanation: "Chỗ trống cần một mệnh đề quan hệ bổ nghĩa cho danh từ \"opportunities\" (những cơ hội). Đại từ \"that\" trong phương án B \"that would otherwise be inaccessible...\" là đáp án chính xác để thay thế cho vật."
+            },
+            {
+                id: 21,
+                question: "However, many children today spend too much time indoors, especially in front of screens, <span class='highlight-blank'>[ ĐIỀN VÀO ĐÂY ]</span>.",
+                options: [
+                    "caused various difficulties, such as weak physical well-being and hindered social skills.",
+                    "contributed to several issues like subpar physical health and a lack of social development.",
+                    "whose inadequate physical health and restricted social growth associated with several problems.",
+                    "which can lead to a variety of issues such as poor physical health and limited social development."
+                ],
+                correct: 3,
+                explanation: "Cần một mệnh đề quan hệ bổ nghĩa cho toàn bộ ý của mệnh đề đứng trước (việc trẻ em ngày nay dành quá nhiều thời gian trong nhà và trước màn hình). Đại từ quan hệ \"which\" đứng sau dấu phẩy được sử dụng trong trường hợp này."
+            },
+            {
+                id: 22,
+                question: "Smartphones are devices <span class='highlight-blank'>[ ĐIỀN VÀO ĐÂY ]</span>. They can take high-quality photos, organize schedules, and even help with learning through educational apps.",
+                options: [
+                    "enabled users to perform tasks beyond just making phone calls through advanced features like cameras.",
+                    "of which the ability to accomplish a wide range of activities besides making phone calls.",
+                    "provided users with capabilities that go beyond simple voice calls thanks to functionalities like cameras.",
+                    "whose advanced features, such as cameras, allow users to do much more than make phone calls."
+                ],
+                correct: 3,
+                explanation: "Chỗ trống cần mệnh đề quan hệ bổ nghĩa cho \"devices\". Dùng đại từ sở hữu \"whose\" để chỉ sự sở hữu đối với các tính năng của thiết bị đó (whose advanced features...)."
+            },
+            {
+                id: 23,
+                question: "Designed to fit in your pocket, smartphones are light, portable and powerful. With regular updates and improvements, they are becoming faster and more capable over time. When used properly, <span class='highlight-blank'>[ ĐIỀN VÀO ĐÂY ]</span>.",
+                options: [
+                    "people find smartphones indispensable for education and everyday tasks.",
+                    "other tools like tablets complement the versatility of smartphones.",
+                    "smartphones are a valuable tool for both learning and daily life.",
+                    "daily life becomes more convenient with the help of smartphones."
+                ],
+                correct: 2,
+                explanation: "Dạng câu rút gọn mệnh đề đồng chủ ngữ. Vế \"When used properly,\" (Khi được sử dụng đúng cách) mang ý nghĩa bị động. Chủ thể \"được sử dụng\" phải là những chiếc điện thoại thông minh (smartphones). Do đó, vế chính phải bắt đầu bằng \"smartphones\"."
+            },
+            {
+                id: 24,
+                question: "In recent years, Vietnam has made great efforts to restore its forests through reforestation projects. Thousands of trees <span class='highlight-blank'>[ ĐIỀN VÀO ĐÂY ]</span>.",
+                options: [
+                    "having been planted every year in areas where forests were destroyed by logging or natural disasters.",
+                    "are planted every year in areas where forests were destroyed by logging or natural disasters.",
+                    "that are planted every year in areas where forests were destroyed by logging or natural disasters.",
+                    "of which are planted every year in areas where forests were destroyed by logging or natural disasters."
+                ],
+                correct: 1,
+                explanation: "Cụm \"Thousands of trees\" là chủ ngữ của câu nhưng lại chưa có động từ chính. Phương án B (are planted) cung cấp cấu trúc bị động thì hiện tại đơn để hoàn chỉnh câu."
+            },
+            {
+                id: 25,
+                question: "When students feel like they are constantly in competition with their peers, they may become afraid of failure or not feel good enough. Unhealthy competition <span class='highlight-blank'>[ ĐIỀN VÀO ĐÂY ]</span>.",
+                options: [
+                    "that has been linked to lower self-esteem and a sense of failure.",
+                    "has been linked to lower self-esteem and a sense of failure.",
+                    "of which has been linked to lower self-esteem and a sense of failure.",
+                    "having been linked to lower self-esteem and a sense of failure."
+                ],
+                correct: 1,
+                explanation: "Chủ ngữ \"Unhealthy competition\" (Sự cạnh tranh không lành mạnh) đang thiếu động từ chính để mô tả. Phương án B cung cấp động từ \"has been linked\" (được liên kết/có liên quan đến), hoàn thiện cấu trúc S + V."
+            },
+            {
+                id: 26,
+                question: "This pressure often causes students to worry more about their grades or achievements rather than enjoying the learning process. Influenced by external pressures, <span class='highlight-blank'>[ ĐIỀN VÀO ĐÂY ]</span>.",
+                options: [
+                    "teachers should encourage students to prioritize balance and ethical behavior in their studies.",
+                    "some students may develop unhealthy habits like cheating or overworking themselves.",
+                    "parents can support children by fostering healthy study habits and stress management.",
+                    "unhealthy habits, such as cheating or overworking, can develop in some students."
+                ],
+                correct: 1,
+                explanation: "Rút gọn mệnh đề đồng chủ ngữ \"Influenced by external pressures,\" (Bị ảnh hưởng bởi các áp lực bên ngoài). Chủ thể \"bị ảnh hưởng\" ở đây chính là một bộ phận học sinh, do đó mệnh đề chính phải bắt đầu bằng cụm danh từ chỉ người \"some students\"."
+            },
+            {
+                id: 27,
+                question: "To reduce unhealthy competitiveness, it is important for both teachers and students to focus on personal growth, <span class='highlight-blank'>[ ĐIỀN VÀO ĐÂY ]</span>.",
+                options: [
+                    "encouraged self-reflection rather than competition, enabling people to realize their personal strengths.",
+                    "whose the comparison of accomplishments and the appreciation of their distinct abilities.",
+                    "which helps avoid comparing achievements and allows individuals to recognize their unique strengths.",
+                    "helped individuals concentrate on their unique qualities and talents by avoiding comparisons."
+                ],
+                correct: 2,
+                explanation: "Cần một đại từ quan hệ thay thế cho toàn bộ ý của việc \"tập trung vào sự phát triển cá nhân\" ở vế trước. Phương án C sử dụng \"which helps avoid comparing...\" là đáp án chính xác cả về ngữ pháp lẫn logic."
+            },
+            {
+                id: 28,
+                question: "Many companies choose celebrities <span class='highlight-blank'>[ ĐIỀN VÀO ĐÂY ]</span>. For example, a sports brand may choose a famous athlete to promote their products because the athlete represents strength and determination.",
+                options: [
+                    "of which the recognition in harmony with the brand values.",
+                    "reflected in both their reputation and the popularity they enjoy.",
+                    "whose popularity and reputation align with their brand values.",
+                    "combined their reputation with with the values upheld by their brand."
+                ],
+                correct: 2,
+                explanation: "Cần mệnh đề quan hệ bổ nghĩa cho danh từ chỉ người \"celebrities\" (người nổi tiếng). Đại từ sở hữu \"whose\" trong \"whose popularity and reputation\" (những người mà danh tiếng và sự phổ biến của họ...) liên kết hoàn hảo danh từ với mệnh đề mô tả phía sau."
+            },
+            {
+                id: 29,
+                question: "Many students believe in superstitions before taking an exam. These beliefs often include rituals or actions that are thought to bring good luck or help them perform better. Superstitions, passed down through generations, <span class='highlight-blank'>[ ĐIỀN VÀO ĐÂY ]</span>.",
+                options: [
+                    "are believed by many students to have a positive impact on their performance.",
+                    "which are believed by many students to have a positive impact on their performance.",
+                    "of which are believed by many students to have a positive impact on their performance.",
+                    "having been believed by many students to have a positive impact on their performance."
+                ],
+                correct: 0,
+                explanation: "Cụm \"Superstitions\" đóng vai trò là chủ ngữ, phần \"passed down through generations\" chỉ là phần bổ nghĩa xen giữa hai dấu phẩy. Câu đang thiếu động từ chính S + V. Phương án A cung cấp động từ chính thể bị động \"are believed\"."
+            },
+            {
+                id: 30,
+                question: "[...] This sense of control or belief in luck may help reduce their stress, even if it does not directly affect their scores. Reassured by their routines, <span class='highlight-blank'>[ ĐIỀN VÀO ĐÂY ]</span>.",
+                options: [
+                    "concentration levels can improve significantly when students are in a calm state.",
+                    "parents can help by making children feel more focused and less anxious before exams.",
+                    "many students find themselves more focused and calm when they sit down to take the test.",
+                    "their performances often improve as they become focused when sitting down to take the test."
+                ],
+                correct: 2,
+                explanation: "Rút gọn mệnh đề đồng chủ ngữ với quá khứ phân từ mang nghĩa bị động \"Reassured by their routines,\" (Được trấn an bởi những thói quen của mình). Chủ thể \"được trấn an\" ở đây là các học sinh. Suy ra chủ ngữ của vế chính phải bắt đầu bằng \"many students\"."
+            },
+            {
+                id: 31,
+                question: "[...] Therefore, while supporters argue that these digital tools democratize creativity by lowering production barriers for independent creators and <span class='highlight-blank'>[ ĐIỀN VÀO ĐÂY ]</span>, the industry must navigate unprecedented challenges.",
+                options: [
+                    "to providing non-professional artists with essential tools to freely explore Al-based production.",
+                    "independent creators are granted the freedom to experiment with Al-driven media production.",
+                    "allowing non-professional artists to experiment more freely with automated media production.",
+                    "they support non-professional artists in freely using automated systems for creative production."
+                ],
+                correct: 2,
+                explanation: "Cấu trúc song song với liên từ \"and\". Vế trước sử dụng V-ing (lowering production barriers...), do đó vế sau \"and\" cũng phải bắt đầu bằng V-ing. Chọn C (allowing...)."
+            },
+            {
+                id: 32,
+                question: "Allowing students to take mental health days can have significant benefits. When granted time to rest and manage stress, <span class='highlight-blank'>[ ĐIỀN VÀO ĐÂY ]</span>.",
+                options: [
+                    "teachers notice that students who take mental health days often return more attentive.",
+                    "students are more likely to return to school focused, engaged, and productive.",
+                    "school environments that support mental well-being see students more engaged.",
+                    "their parents observe that well-rested students are more energetic and focused."
+                ],
+                correct: 1,
+                explanation: "Phân từ rút gọn \"When granted time to rest and manage stress,\" (Khi được cấp thời gian để nghỉ ngơi...). Chủ thể được ban cho thời gian chính là học sinh, do đó chủ ngữ đứng ngay sau dấu phẩy phải là \"students\"."
+            },
+            {
+                id: 33,
+                question: "[...] By acknowledging that mental health is as important as physical health, schools can foster a supportive environment <span class='highlight-blank'>[ ĐIỀN VÀO ĐÂY ]</span>.",
+                options: [
+                    "who focus on mental health without worrying about judgment or negative academic consequences.",
+                    "enabled students to care for their well-being while feeling safe from criticism or penalties.",
+                    "that encourages students to prioritize their well-being without fear of stigma or academic penalty.",
+                    "where students were allowed maintaining their well-being confidently, free from academic pressure."
+                ],
+                correct: 2,
+                explanation: "Chỗ trống cần mệnh đề quan hệ để bổ nghĩa cho danh từ chỉ vật/sự việc \"a supportive environment\". Phương án C dùng đại từ quan hệ \"that\" (that encourages students...) là chuẩn xác nhất."
+            },
+            {
+                id: 34,
+                question: "However, implementing mental health days requires clear guidelines and oversight. Schools must establish criteria to prevent misuse, such as limiting the number of days per semester or <span class='highlight-blank'>[ ĐIỀN VÀO ĐÂY ]</span>.",
+                options: [
+                    "the importance of parental control over children.",
+                    "they mandate that parents be informed on mental health days.",
+                    "requiring parental notification for younger students.",
+                    "parents who are notified in advance for young students."
+                ],
+                correct: 2,
+                explanation: "Cấu trúc song song sau giới từ \"such as\" nối bằng liên từ \"or\". Vế trước dùng V-ing \"limiting the number...\", do đó vế sau \"or\" cũng cần một danh động từ V-ing tương đương. Chọn C (requiring...)."
+            },
+            {
+                id: 35,
+                question: "[...] Ordinary citizens can reflect on their own behavior, <span class='highlight-blank'>[ ĐIỀN VÀO ĐÂY ]</span>.",
+                options: [
+                    "recognizing that ethical decision-making is essential to maintain trust and reputation.",
+                    "understand that making ethical choices is crucial for preserving professional credibility.",
+                    "where ethical behavior plays a key role in maintaining reputation and reliability.",
+                    "principled actions are therefore important for protecting one's integrity and public image."
+                ],
+                correct: 0,
+                explanation: "Mệnh đề phân từ hiện tại (V-ing) được dùng để rút gọn câu, diễn tả hai hành động xảy ra đồng thời hoặc có quan hệ nguyên nhân - kết quả do cùng một chủ ngữ (Ordinary citizens) thực hiện. Phương án A (recognizing that...) là lựa chọn đúng."
+            },
+            {
+                id: 36,
+                question: "To discover the region in a sustainable manner, tourists are encouraged to utilize Europe's excellent rail infrastructure, <span class='highlight-blank'>[ ĐIỀN VÀO ĐÂY ]</span>.",
+                options: [
+                    "although it provides interrupted options from nearby provinces.",
+                    "which facilitates seamless train arrivals from neighboring nations.",
+                    "guaranteeing disruptive transit operations from close territories.",
+                    "most of them allow convenient locomotive transit from bordering states."
+                ],
+                correct: 1,
+                explanation: "Cần mệnh đề quan hệ để bổ nghĩa cho danh từ \"rail infrastructure\" (cơ sở hạ tầng đường sắt). Đại từ \"which\" đóng vai trò là chủ ngữ để bắt đầu mệnh đề bổ nghĩa \"which facilitates seamless train arrivals...\"."
+            },
+            {
+                id: 37,
+                question: "The rapid development of Al has enabled the creation of deepfakes - highly realistic videos or images that manipulate or fabricate content to make it appear genuine. Using generative models, <span class='highlight-blank'>[ ĐIỀN VÀO ĐÂY ]</span> often making it difficult for viewers to distinguish real from fake.",
+                options: [
+                    "local authorities may find it challenging to verify identities.",
+                    "people's faces and voices can be artificially recreated by Al with precision.",
+                    "people can be convincingly imitated through Al-generated videos.",
+                    "Al can synthesize faces, voices, and actions with remarkable accuracy."
+                ],
+                correct: 3,
+                explanation: "Cụm phân từ chủ động \"Using generative models,\" (Sử dụng các mô hình tạo sinh) đứng đầu câu. Chủ thể thực hiện hành động \"sử dụng\" trong bối cảnh này chính là Trí tuệ nhân tạo (AI). Do đó chủ ngữ vế sau phải bắt đầu bằng \"AI\"."
+            },
+            {
+                id: 38,
+                question: "[...] Moreover, these active compounds continue to affect nature by disrupting aquatic ecosystems and <span class='highlight-blank'>[ ĐIỀN VÀO ĐÂY ]</span>.",
+                options: [
+                    "altering the reproductive behavior of various species.",
+                    "that the natural reproduction of species is interfered.",
+                    "it disturbs reproductive activities among different species.",
+                    "to modify the reproductive processes of living organisms."
+                ],
+                correct: 0,
+                explanation: "Cấu trúc song song sau giới từ \"by\" kết nối qua \"and\". Vế trước \"and\" là danh động từ V-ing (disrupting), do vậy vế sau cũng phải là V-ing. Chọn A (altering...)."
+            },
+            {
+                id: 39,
+                question: "Prospective travelers are presented with an array of inspiring possibilities, ranging from highly integrated transport networks to <span class='highlight-blank'>[ ĐIỀN VÀO ĐÂY ]</span>.",
+                options: [
+                    "boasting exceptional housing alternatives resting across spectacular views.",
+                    "unique accommodation selections are placed inside beautiful backdrops.",
+                    "provide novel hospitality preferences anchored within panoramic settings.",
+                    "unconventional accommodation choices nestled in picturesque landscapes."
+                ],
+                correct: 3,
+                explanation: "Cấu trúc \"ranging from [A] to [B]\" (dao động từ A đến B), yêu cầu A và B phải đồng đẳng về mặt từ loại. [A] là một cụm danh từ (highly integrated transport networks), nên chỗ trống [B] cũng phải là một cụm danh từ tương tự. Phương án D (unconventional accommodation choices...) thỏa mãn điều kiện này."
+            },
+            {
+                id: 40,
+                question: "[...] Therefore, as resistance spreads globally, common infections once easily managed <span class='highlight-blank'>[ ĐIỀN VÀO ĐÂY ]</span>.",
+                options: [
+                    "that turn deadly and no longer respond effectively to conventional treatments.",
+                    "may become life-threatening and nearly impossible to treat with standard medicine.",
+                    "having developed into serious conditions that standard drugs are unable to cure.",
+                    "be posed a major threat to human health and resist routine antibiotics."
+                ],
+                correct: 1,
+                explanation: "Cụm \"common infections\" là chủ ngữ chính, phần \"once easily managed\" chỉ là mệnh đề quan hệ rút gọn bổ nghĩa. Câu này hoàn toàn thiếu động từ chính. Phương án B cung cấp cụm động từ \"may become\" để hoàn thiện cấu trúc S + V."
+            }
+        ];
+
+        let currentAnswers = new Array(quizData.length).fill(null);
+        let timerInterval;
+        let timeLeft = 40 * 60; // 40 phút
+        let isSubmitted = false;
+        
+        const startBtn = document.getElementById('start-btn');
+        const startScreen = document.getElementById('start-screen');
+        const quizContainer = document.getElementById('quiz-container');
+        const submitContainer = document.getElementById('submit-container');
+        const submitBtn = document.getElementById('submit-btn');
+        const resultsScreen = document.getElementById('results-screen');
+        const timeDisplay = document.getElementById('time');
+        const timerContainer = document.getElementById('timer-container');
+        
+        const explanationModal = document.getElementById('explanation-modal');
+        const closeModalBtn = document.getElementById('close-modal');
+        const closeModalBtnBottom = document.getElementById('close-modal-btn');
+        const modalQuestionText = document.getElementById('modal-question-text');
+        const modalExplanationContent = document.getElementById('modal-explanation-content');
+
+        const soundTick = document.getElementById('sound-tick');
+        const soundAlarm = document.getElementById('sound-alarm');
+        const soundSuccess = document.getElementById('sound-success');
+
+        soundTick.volume = 0.3;
+        soundAlarm.volume = 0.6;
+        soundSuccess.volume = 0.7;
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                updateTimerDisplay();
+
+                if (timeLeft === 300) {
+                    timerContainer.classList.add('timer-warning');
+                    playSound(soundAlarm);
+                }
+
+                if (timeLeft <= 10 && timeLeft > 0) {
+                    playSound(soundTick);
+                }
+
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    autoSubmit();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            timeDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        function playSound(audioEl) {
+            try {
+                audioEl.currentTime = 0;
+                let playPromise = audioEl.play();
+                if (playPromise !== undefined) {
+                    playPromise.catch(e => console.log("Audio blocked by browser:", e));
+                }
+            } catch (e) {}
+        }
+
+        function renderQuestions() {
+            quizContainer.innerHTML = ''; 
+
+            quizData.forEach((q, index) => {
+                const questionBlock = document.createElement('div');
+                questionBlock.className = 'neo-box p-6 md:p-8 bg-white opacity-0 translate-y-8 transition-all duration-700 ease-out mb-8';
+                questionBlock.id = `q-block-${index}`;
+                
+                setTimeout(() => {
+                    questionBlock.classList.remove('opacity-0', 'translate-y-8');
+                }, index * 40);
+
+                const labels = ['A', 'B', 'C', 'D'];
+                let optionsHtml = '';
+                
+                q.options.forEach((opt, optIndex) => {
+                    optionsHtml += `
+                        <div class="relative w-full mb-3">
+                            <input type="radio" name="q${index}" id="q${index}-opt${optIndex}" value="${optIndex}" class="peer hidden" onchange="handleSelect(${index}, ${optIndex})">
+                            <label for="q${index}-opt${optIndex}" id="label-q${index}-opt${optIndex}" class="option-label flex items-start p-4 rounded-xl w-full bg-white text-brand-dark text-lg font-medium">
+                                <span class="w-10 h-10 flex-shrink-0 flex items-center justify-center rounded-lg border-2 border-slate-300 text-slate-500 font-black mr-4 font-display peer-checked:border-brand-dark peer-checked:bg-white peer-checked:text-brand-dark transition-all mt-0.5">
+                                    ${labels[optIndex]}
+                                </span>
+                                <span class="pt-1.5 leading-snug">${opt}</span>
+                            </label>
+                        </div>
+                    `;
+                });
+
+                questionBlock.innerHTML = `
+                    <div class="flex flex-col md:flex-row gap-4 mb-6 border-b-2 border-dashed border-slate-200 pb-6 bg-[#f8f9fa] p-5 rounded-xl border-2 border-brand-dark shadow-brutal-sm">
+                        <div class="flex-shrink-0">
+                            <span class="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-brand-dark text-brand-yellow font-display font-black text-2xl shadow-[4px_4px_0px_0px_#EF476F] transform -rotate-2">
+                                ${q.id}
+                            </span>
+                        </div>
+                        <p class="text-xl md:text-[22px] font-medium leading-relaxed pt-1 text-brand-dark">
+                            ${q.question}
+                        </p>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6">
+                        ${optionsHtml}
+                    </div>
+                    
+                    <div id="feedback-${index}" class="hidden mt-6 p-5 rounded-xl border-4">
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                            <span id="status-${index}" class="font-black text-xl flex items-center gap-3"></span>
+                            <button onclick="showExplanation(${index})" class="neo-btn bg-brand-blue text-white px-5 py-2.5 rounded-lg font-bold hover:bg-brand-dark flex items-center gap-2 whitespace-nowrap">
+                                <i class="fa-solid fa-wand-magic-sparkles"></i> Xem giải thích
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                quizContainer.appendChild(questionBlock);
+            });
+        }
+
+        window.handleSelect = function(questionIndex, optionIndex) {
+            if (isSubmitted) return;
+            currentAnswers[questionIndex] = optionIndex;
+            
+            if (currentAnswers.every(ans => ans !== null)) {
+                submitBtn.classList.add('animate-pulse');
+                submitBtn.innerHTML = `<i class="fa-solid fa-rocket mr-2"></i> Đã Xong! Nộp Bài Nào!`;
+            }
+        };
+
+        function evaluateQuiz() {
+            if (isSubmitted) return;
+            isSubmitted = true;
+            clearInterval(timerInterval);
+
+            submitContainer.classList.add('hidden');
+            
+            let score = 0;
+
+            quizData.forEach((q, index) => {
+                const selected = currentAnswers[index];
+                const isCorrect = selected === q.correct;
+                
+                const qBlock = document.getElementById(`q-block-${index}`);
+                const feedbackDiv = document.getElementById(`feedback-${index}`);
+                const statusSpan = document.getElementById(`status-${index}`);
+
+                const radios = document.querySelectorAll(`input[name="q${index}"]`);
+                radios.forEach(radio => radio.disabled = true);
+
+                const correctLabel = document.getElementById(`label-q${index}-opt${q.correct}`);
+                correctLabel.classList.add('correct-answer');
+                
+                if (isCorrect) {
+                    score++;
+                    feedbackDiv.classList.remove('hidden');
+                    feedbackDiv.classList.add('bg-green-100', 'border-green-600', 'shadow-[4px_4px_0px_0px_#06D6A0]');
+                    statusSpan.innerHTML = `<span class="bg-green-500 text-white w-8 h-8 rounded flex items-center justify-center"><i class="fa-solid fa-check"></i></span> <span class="text-green-800">Chuẩn không cần chỉnh! (+1)</span>`;
+                } else {
+                    feedbackDiv.classList.remove('hidden');
+                    feedbackDiv.classList.add('bg-pink-100', 'border-pink-600', 'shadow-[4px_4px_0px_0px_#EF476F]');
+                    
+                    if (selected !== null) {
+                        const wrongLabel = document.getElementById(`label-q${index}-opt${selected}`);
+                        wrongLabel.classList.add('wrong-answer');
+                        statusSpan.innerHTML = `<span class="bg-brand-pink text-white w-8 h-8 rounded flex items-center justify-center"><i class="fa-solid fa-xmark"></i></span> <span class="text-pink-800">Sai mất rồi! Xem lại nha!</span>`;
+                    } else {
+                        statusSpan.innerHTML = `<span class="bg-yellow-500 text-white w-8 h-8 rounded flex items-center justify-center"><i class="fa-solid fa-minus"></i></span> <span class="text-yellow-800">Quên chưa chọn đáp án nè!</span>`;
+                    }
+                }
+            });
+
+            showResults(score);
+        }
+
+        function showResults(score) {
+            playSound(soundSuccess);
+            
+            const percentage = (score / quizData.length) * 100;
+            const scoreDisplay = document.getElementById('score-display');
+            const feedbackMsg = document.getElementById('feedback-message');
+            const scoreIcon = document.getElementById('score-icon');
+            
+            let count = 0;
+            const duration = 2000;
+            const step = Math.max(1, Math.floor(score / (duration / 20)));
+            
+            const counter = setInterval(() => {
+                count += step;
+                if (count >= score) {
+                    count = score;
+                    clearInterval(counter);
+                }
+                scoreDisplay.textContent = count;
+            }, 20);
+
+            if (percentage >= 90) {
+                feedbackMsg.innerHTML = "Trùm đọc hiểu là đây! Quá xuất sắc! 👑✨";
+                scoreIcon.textContent = "👑";
+            } else if (percentage >= 75) {
+                feedbackMsg.innerHTML = "Giỏi lắm! Vốn ngữ pháp và từ vựng của bạn rất vững! 🚀";
+                scoreIcon.textContent = "🚀";
+            } else if (percentage >= 50) {
+                feedbackMsg.innerHTML = "Khá ổn áp! Hãy đọc kỹ lại phần giải thích để rút kinh nghiệm nhé! 💪";
+                scoreIcon.textContent = "💪";
+            } else {
+                feedbackMsg.innerHTML = "Dạng bài này hơi 'khoai' đúng không? Đừng nản, luyện tập thêm là sẽ mượt thôi! 📚";
+                scoreIcon.textContent = "📚";
+            }
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            quizContainer.classList.add('hidden');
+            resultsScreen.classList.remove('hidden');
+        }
+
+        function autoSubmit() {
+            const endMsg = document.createElement('div');
+            endMsg.className = "fixed top-10 left-1/2 transform -translate-x-1/2 bg-brand-pink text-white px-8 py-4 rounded-2xl font-black text-xl shadow-brutal z-[999] border-4 border-black animate-bounce";
+            endMsg.innerHTML = "⏰ HẾT GIỜ! NỘP BÀI TỰ ĐỘNG!";
+            document.body.appendChild(endMsg);
+            
+            setTimeout(() => { endMsg.remove(); }, 4000);
+            evaluateQuiz();
+        }
+
+        window.showExplanation = function(index) {
+            const q = quizData[index];
+            modalQuestionText.innerHTML = `<span class="bg-brand-dark text-white px-3 py-1 rounded-lg mr-2 font-black">Câu ${q.id}</span> <br><br> ${q.question}`;
+            modalExplanationContent.innerHTML = `
+                <div class="mb-6 p-5 border-4 border-black rounded-xl bg-[#e0fbfc] shadow-brutal-sm">
+                    <p class="text-sm font-black uppercase text-brand-blue mb-2 tracking-widest">ĐÁP ÁN CHUẨN XÁC LÀ:</p>
+                    <div class="text-xl font-bold text-brand-dark flex items-start gap-3">
+                        <span class="bg-brand-green border-2 border-black w-10 h-10 flex-shrink-0 flex items-center justify-center rounded">
+                            ${['A', 'B', 'C', 'D'][q.correct]}
+                        </span> 
+                        <span class="pt-1">${q.options[q.correct]}</span>
+                    </div>
+                </div>
+                <div class="p-6 border-4 border-black rounded-xl bg-white shadow-brutal-sm relative">
+                    <div class="absolute -top-4 -left-4 bg-brand-yellow text-brand-dark font-black px-4 py-1 border-3 border-black rounded-lg transform -rotate-3">
+                        <i class="fa-solid fa-pen-nib mr-1"></i> Góc Giải Thích
+                    </div>
+                    <p class="text-[19px] font-medium leading-relaxed mt-3 text-gray-800">${q.explanation}</p>
+                </div>
+            `;
+            explanationModal.classList.add('active');
+            document.body.style.overflow = 'hidden'; 
+        };
+
+        function hideModal() {
+            explanationModal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Event Listeners
+        startBtn.addEventListener('click', () => {
+            startScreen.classList.add('hidden');
+            quizContainer.classList.remove('hidden');
+            submitContainer.classList.remove('hidden');
+            renderQuestions();
+            startTimer();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        submitBtn.addEventListener('click', () => {
+            const unanswered = currentAnswers.filter(ans => ans === null).length;
+            if (unanswered > 0) {
+                const isConfirmed = confirm(`Khoan đã! Còn ${unanswered} câu chưa điền. Có chắc muốn nộp không?`);
+                if (!isConfirmed) return;
+            }
+            evaluateQuiz();
+        });
+
+        document.getElementById('review-btn').addEventListener('click', () => {
+            resultsScreen.classList.add('hidden');
+            quizContainer.classList.remove('hidden');
+        });
+
+        closeModalBtn.addEventListener('click', hideModal);
+        closeModalBtnBottom.addEventListener('click', hideModal);
+        
+        explanationModal.addEventListener('click', (e) => {
+            if (e.target === explanationModal) hideModal();
+        });
+        
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && explanationModal.classList.contains('active')) hideModal();
+        });
+    </script>
+</body>
+</html>
