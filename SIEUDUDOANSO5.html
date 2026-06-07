@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kỳ thi THPT 2026 - Luyện Đề Số 5</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+            background-attachment: fixed;
+            color: #1f2937;
+        }
+        
+        /* Custom Scrollbar for a clean look */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #c7c7cc; 
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a1a1aa; 
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        /* Glassmorphism elements */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Gen Z Border Style */
+        .genz-border {
+            border: 3px solid #1f2937;
+            box-shadow: 6px 6px 0px 0px #1f2937;
+            transition: all 0.2s ease;
+        }
+        
+        /* 3D Option button styling (Gen Z Neobrutalism) */
+        .option-label {
+            cursor: pointer;
+            display: block;
+            position: relative;
+            margin-top: 12px;
+        }
+        .option-box {
+            border: 2px solid #1f2937;
+            border-radius: 0.75rem;
+            box-shadow: 3px 3px 0px 0px #1f2937;
+            transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .option-label:hover .option-box {
+            transform: translate(-3px, -3px);
+            box-shadow: 6px 6px 0px 0px #1f2937;
+        }
+        .option-label:active .option-box {
+            transform: translate(2px, 2px);
+            box-shadow: 0px 0px 0px 0px #1f2937;
+        }
+        
+        /* Checked State Styling */
+        input[type="radio"]:checked + .option-box {
+            background-color: #1f2937 !important; /* Bold Dark Gray */
+            border-color: #1f2937;
+            box-shadow: 4px 4px 0px 0px #a855f7 !important; /* Neon Purple Shadow */
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+        input[type="radio"]:checked + .option-box .opt-text {
+            color: white !important;
+        }
+        input[type="radio"]:checked + .option-box .letter-circle {
+            background-color: #a855f7 !important;
+            color: white !important;
+            border-color: #1f2937;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.95); }
+            50% { transform: scale(1.03); }
+            100% { transform: scale(1); }
+        }
+
+        /* Result states after submission (Disabled mode - no colors shown) */
+        input:disabled + .option-box {
+            cursor: not-allowed;
+            opacity: 0.8;
+        }
+
+        /* Sticky top offset for header */
+        .sticky-offset {
+            top: 5rem;
+        }
+        
+        .blank-space {
+            display: inline-block;
+            padding: 0 8px;
+            font-weight: bold;
+            color: #8b5cf6;
+            background: #ede9fe;
+            border-radius: 6px;
+            margin: 0 2px;
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col relative">
+
+    <!-- OVERLAY: START TEST -->
+    <div id="startOverlay" class="fixed inset-0 z-50 flex items-center justify-center bg-white/80 backdrop-blur-md">
+        <div class="bg-white p-8 md:p-12 rounded-3xl genz-border text-center max-w-lg mx-4">
+            <h1 class="text-3xl md:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-500 mb-4">
+                ✨ Sẵn sàng chưa?
+            </h1>
+            <p class="text-gray-600 mb-8 text-lg">Bài thi môn Tiếng Anh có thời gian làm bài là <b>50 phút</b>. Hệ thống sẽ có chuông báo khi còn 1 phút.</p>
+            <button onclick="startTest()" class="w-full bg-gradient-to-r from-violet-500 to-fuchsia-500 hover:from-violet-600 hover:to-fuchsia-600 text-white font-bold py-4 px-8 rounded-2xl shadow-lg transform hover:scale-105 transition-all duration-200 text-xl">
+                Bắt Đầu Làm Bài 🚀
+            </button>
+        </div>
+    </div>
+
+    <!-- HEADER / TIMER -->
+    <header class="sticky top-0 z-40 glass-panel border-b border-gray-200 px-4 py-3 shadow-sm">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <span class="text-2xl">📝</span>
+                <h1 class="font-bold text-lg hidden sm:block bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600">Đề Siêu Dự Đoán - Số 05</h1>
+            </div>
+            <div class="flex items-center gap-4">
+                <div id="timerBox" class="bg-indigo-100 text-indigo-800 font-mono font-bold text-xl px-4 py-2 rounded-xl border-2 border-indigo-200 flex items-center gap-2 transition-colors">
+                    ⏳ <span id="timeDisplay">50:00</span>
+                </div>
+                <button onclick="submitTest()" id="submitBtnTop" class="bg-gray-900 hover:bg-gray-800 text-white font-bold py-2 px-6 rounded-xl transition-colors hidden sm:block">
+                    Nộp Bài
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="flex-grow max-w-7xl mx-auto w-full px-4 py-8">
+        
+        <form id="testForm" onsubmit="event.preventDefault(); submitTest();">
+            
+            <!-- SECTION 1: CLOZE TEST 1 (Announcement) -->
+            <div class="mb-12">
+                <h2 class="text-xl font-bold mb-4 text-purple-700 bg-purple-100 inline-block px-4 py-1 rounded-full border-2 border-purple-200">Part 1: Announcement (Questions 1 - 6)</h2>
+                <p class="italic text-gray-600 mb-4 font-medium">Read the following announcement and mark the letter A, B, C or D on your answer sheet to indicate the option that best fits each of the numbered blanks from 1 to 6.</p>
+                <div class="flex flex-col lg:flex-row gap-6">
+                    <div class="lg:w-[70%] glass-panel rounded-3xl p-6 lg:p-8 lg:sticky lg:top-24 lg:max-h-[80vh] overflow-y-auto custom-scrollbar border border-gray-200">
+                        <h3 class="text-2xl font-bold mb-4 uppercase tracking-wide">The Gig Economy and The Future of Work</h3>
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            The traditional nine-to-five paradigm is rapidly disintegrating. In its place, the "gig economy" has emerged, characterized by short-term contracts and freelance work. This shift is not merely a trend but a fundamental restructuring of the labor market, <span class="blank-space">(1)</span> by technological advancements that allow remote connectivity.
+                        </p>
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            For many, this offers unparalleled autonomy. Digital nomads can now operate from anywhere, creating a lifestyle <span class="blank-space">(2)</span> travel and work. However, this freedom comes at a cost. The lack of job security and benefits creates a <span class="blank-space">(3)</span> existence for some, leading to calls for updated labor laws.
+                        </p>
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            Employers, meanwhile, benefit from a fluid workforce, allowing them to <span class="blank-space">(4)</span> talent on demand. Yet, they face the challenge of fostering company culture among a dispersed team. As we move forward, society must address these disparities to ensure that the future of work is equitable, <span class="blank-space">(5)</span> we create a workforce devoid of protection. We must <span class="blank-space">(6)</span> the reality that flexibility should not compromise basic worker rights.
+                        </p>
+                    </div>
+                    <div class="lg:w-[30%] flex flex-col gap-4" id="q-container-part1"></div>
+                </div>
+            </div>
+
+            <!-- SECTION 2: READING COMPREHENSION 1 -->
+            <div class="mb-12">
+                <h2 class="text-xl font-bold mb-4 text-green-700 bg-green-100 inline-block px-4 py-1 rounded-full border-2 border-green-200">Part 2: Reading Comprehension 1 (Questions 7 - 14)</h2>
+                <p class="italic text-gray-600 mb-4 font-medium">Read the passage and mark the letter A, B, C or D on your answer sheet to indicate the best answer to each of the following questions from 7 to 14.</p>
+                <div class="flex flex-col lg:flex-row gap-6">
+                    <!-- Left: Reading (70% on lg) -->
+                    <div class="lg:w-[70%] glass-panel rounded-3xl p-6 lg:p-8 lg:sticky lg:top-24 lg:max-h-[80vh] overflow-y-auto custom-scrollbar border border-gray-200">
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            The notion of "de-extinction," or biological resurrection, has transitioned from the realm of science fiction to a <u>tangible</u>, albeit controversial, scientific pursuit. The primary candidate for this procedure is the Woolly Mammoth. Scientists are currently employing CRISPR technology to splice mammoth DNA into the genome of the Asian elephant, its closest living relative. The objective is not merely to create a biological curiosity but to restore the "Mammoth Steppe" ecosystem in the Arctic.
+                        </p>
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            Proponents argue that reintroducing these mega-herbivores could <u>combat</u> climate change. By trampling the snow and knocking down trees, mammoths would expose the ground to freezing Arctic air, thereby preserving the permafrost. <u>It</u> acts as a massive carbon sink; if it melts, it releases catastrophic amounts of methane. Thus, the mammoth is envisioned as a geo-engineering tool, a hairy bulwark against global warming.
+                        </p>
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            However, ethical objections abound. <u>Critics question the morality of bringing a social, intelligent animal into today's world, which lacks the climate, ecosystem, and social structures the species once depended on, potentially subjecting it to a lonely existence in a zoo-like environment.</u> Furthermore, conservationists worry that the colossal funding required for de-extinction could divert resources from saving extant species that are currently teetering on the brink of oblivion. The fear is that we might trade the existence of the living for the resurrection of the dead.
+                        </p>
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            Ultimately, the debate transcends biology. It forces us to confront our role as stewards of the planet. Are we correcting a past mistake - the likely human-induced extinction of the mammoth - or are we indulging in scientific hubris? As technology advances, the line between what we "can" do and what we "should" do becomes increasingly blurred, leaving us to navigate a moral landscape as treacherous as the melting permafrost itself.
+                        </p>
+                    </div>
+                    
+                    <!-- Right: Questions (30% on lg) -->
+                    <div class="lg:w-[30%] flex flex-col gap-4" id="q-container-part2">
+                        <!-- Questions injected via JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 3: SENTENCE ARRANGEMENT -->
+            <div class="mb-12">
+                <h2 class="text-xl font-bold mb-4 text-blue-700 bg-blue-100 inline-block px-4 py-1 rounded-full border-2 border-blue-200">Part 3: Sentence Arrangement (Questions 15 - 19)</h2>
+                <p class="italic text-gray-600 mb-4 font-medium">Mark the letter A, B, C or D on your answer sheet to indicate the best arrangement of utterances or sentences to make a cohesive and coherent exchange or text in each of the following questions from 15 to 19.</p>
+                <div class="glass-panel rounded-3xl p-6 lg:p-8 grid grid-cols-1 md:grid-cols-2 gap-8 border border-gray-200" id="q-container-part3">
+                    <!-- Sentences injected via JS -->
+                </div>
+            </div>
+
+            <!-- SECTION 4: READING COMPREHENSION 2 -->
+            <div class="mb-12">
+                <h2 class="text-xl font-bold mb-4 text-orange-700 bg-orange-100 inline-block px-4 py-1 rounded-full border-2 border-orange-200">Part 4: Reading Comprehension 2 (Questions 20 - 29)</h2>
+                <p class="italic text-gray-600 mb-4 font-medium">Read the passage and mark the letter A, B, C or D on your answer sheet to indicate the best answer to each of the following questions from 20 to 29.</p>
+                <div class="flex flex-col lg:flex-row gap-6">
+                    <div class="lg:w-[70%] glass-panel rounded-3xl p-6 lg:p-8 lg:sticky lg:top-24 lg:max-h-[80vh] overflow-y-auto custom-scrollbar border border-gray-200">
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            In the bustling alleyways of rapidly developing nations, a silent social contract exists. It is played out over bowls of noodles and cups of strong coffee, where cash changes hands without the whir of a receipt printer. This is the shadow economy, a vast, <u>nebulous</u> zone where tax evasion is not viewed as theft, but as a pragmatic adjustment to reality. For many, under-declaring income is not an act of malice; it is a normalized defense mechanism against a system perceived as inefficient or corrupt.
+                        </p>
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            The psychology behind this normalization is complex. <b>[I]</b> <u>It</u> stems from a concept known as "fiscal exchange theory," which posits that tax compliance is directly linked to the perceived quality of public services. When citizens see potholed roads, underfunded schools, and official extravagance, the moral obligation to pay taxes dissolves. It is replaced by a cynical rationality: "Why should I feed a system that does not feed me?" Consequently, fraud becomes a socially acceptable rebellion, a way for the "little guy" to level the playing field against a monolithic state.
+                        </p>
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            However, the aggregate effect of this individual rationality is collectively disastrous. <b>[II]</b> It creates a vicious cycle: low tax revenue leads to poor public services, which in turn fuels further evasion. Moreover, it distorts market competition. <u>Honest businesses that comply with regulations find themselves undercut by competitors who treat tax evasion as a margin of profit.</u> This creates an environment where integrity is penalized and deceit is rewarded, fundamentally warping the economic structure.
+                        </p>
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            Addressing this requires more than just punitive measures; it demands a restoration of the social contract. Governments often resort to technological crackdowns, forcing digital payments to track transactions. <b>[III]</b> Without a corresponding increase in transparency and accountability, such measures are viewed as oppressive rather than corrective. True normalization of tax compliance will only occur when the state is viewed not as a predator, but as a partner. Until the populace believes that their contribution serves the common good rather than private pockets, the shadow economy will remain an enduring, if not dominant, feature of the landscape. <b>[IV]</b>
+                        </p>
+                    </div>
+                    <div class="lg:w-[30%] flex flex-col gap-4" id="q-container-part4"></div>
+                </div>
+            </div>
+
+            <!-- SECTION 5: CLOZE TEST 2 -->
+            <div class="mb-12">
+                <h2 class="text-xl font-bold mb-4 text-teal-700 bg-teal-100 inline-block px-4 py-1 rounded-full border-2 border-teal-200">Part 5: Guided Cloze 1 (Questions 30 - 34)</h2>
+                <p class="italic text-gray-600 mb-4 font-medium">Read the following passage and mark the letter A, B, C or D on your answer sheet to indicate the option that best fits each of the numbered blanks from 30 to 34.</p>
+                <div class="flex flex-col lg:flex-row gap-6">
+                    <div class="lg:w-[70%] glass-panel rounded-3xl p-6 lg:p-8 lg:sticky lg:top-24 lg:max-h-[80vh] overflow-y-auto custom-scrollbar border border-gray-200">
+                        <h3 class="text-2xl font-bold mb-4 uppercase tracking-wide">The Psychology of Investment Decisions</h3>
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            The psychology of investment is shaped by a range of cognitive biases that influence how people make financial decisions. Investors often assume they act rationally; however, in reality, they are frequently influenced by collective behaviour rather than independent analysis. This tendency, widely observed across financial markets, <span class="blank-space">(30)</span>. As a result, the fear of missing out (FOMO) can drive speculative market bubbles.
+                        </p>
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            Investors may then question whether an asset is genuinely valuable, or <span class="blank-space">(31)</span>. Be that as it may, experienced investors recognise that volatility is an inherent feature of the market rather than a sign of immediate danger. While inexperienced traders often panic at the first indication of a downturn, seasoned participants tend to interpret such moments as potential opportunities. <span class="blank-space">(32)</span>
+                        </p>
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            A prudent investor diversifies their portfolio in order to manage risk, whereas a gambler concentrates all resources on a single investment, hoping for exceptional returns, <span class="blank-space">(33)</span>.
+                        </p>
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            There is substantial evidence indicating that emotional discipline, rather than sheer intellectual ability, plays a decisive role in long-term investment success. <span class="blank-space">(34)</span>, the intelligent investor can navigate market uncertainty without giving in to irrational fear.
+                        </p>
+                    </div>
+                    <div class="lg:w-[30%] flex flex-col gap-4" id="q-container-part5"></div>
+                </div>
+            </div>
+
+            <!-- SECTION 6: CLOZE TEST 3 (Leaflet) -->
+            <div class="mb-12">
+                <h2 class="text-xl font-bold mb-4 text-pink-700 bg-pink-100 inline-block px-4 py-1 rounded-full border-2 border-pink-200">Part 6: Leaflet (Questions 35 - 40)</h2>
+                <p class="italic text-gray-600 mb-4 font-medium">Read the following leaflet and mark the letter A, B, C or D on your answer sheet to indicate the option that best fits each of the numbered blanks from 35 to 40.</p>
+                <div class="flex flex-col lg:flex-row gap-6">
+                    <div class="lg:w-[70%] glass-panel rounded-3xl p-6 lg:p-8 lg:sticky lg:top-24 lg:max-h-[80vh] overflow-y-auto custom-scrollbar border border-gray-200">
+                        <h3 class="text-2xl font-bold mb-4 uppercase tracking-wide">Mental Wellbeing in the Modern Workplace</h3>
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            In an era of hyper-connectivity, burnout has become an occupational hazard. To safeguard your mental health, consider these strategies to foster a routine <span class="blank-space">(35)</span> balance:
+                        </p>
+                        <ul class="list-disc pl-6 text-gray-700 leading-relaxed text-lg mb-4 space-y-4">
+                            <li>Establish clear boundaries.</li>
+                            <li>Learn to say "no" to non-essential tasks <span class="blank-space">(36)</span> overcommitting yourself.</li>
+                            <li>Prioritize "deep work" sessions by silencing notifications, allowing you to focus on <span class="blank-space">(37)</span>.</li>
+                            <li>Encourage colleagues and <span class="blank-space">(38)</span> staff members to respect "offline" hours, ensuring that downtime is truly restorative.</li>
+                            <li>Seek professional support if stress becomes unmanageable; acknowledging vulnerability is a sign <span class="blank-space">(39)</span> strength, not weakness.</li>
+                        </ul>
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify font-semibold">
+                            Remember, a healthy mind is the foundation upon which a successful career <span class="blank-space">(40)</span>. Don't wait until you reach a breaking point to take action.
+                        </p>
+                    </div>
+                    <div class="lg:w-[30%] flex flex-col gap-4" id="q-container-part6"></div>
+                </div>
+            </div>
+
+            <!-- SUBMIT BUTTON BOTTOM -->
+            <div class="text-center mt-12 mb-8">
+                <button type="submit" id="submitBtnBottom" class="bg-gray-900 hover:bg-gray-800 text-white font-bold py-4 px-12 rounded-2xl shadow-xl transform hover:-translate-y-1 transition-all duration-200 text-xl genz-border">
+                    Nộp Bài & Xem Điểm ✨
+                </button>
+            </div>
+
+        </form>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-white border-t border-gray-200 py-6 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p class="font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-500 text-xl">Idea for Design: Mr Hoa Van!</p>
+            <p class="text-gray-400 text-sm mt-1">© 2026 - Tinh Hoa Dự Đoán THPT</p>
+        </div>
+    </footer>
+
+    <!-- RESULT MODAL -->
+    <div id="resultModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm hidden">
+        <div class="bg-white p-8 md:p-12 rounded-3xl genz-border text-center max-w-md mx-4 animate-[fadeIn_0.3s_ease]">
+            <div class="text-6xl mb-4" id="resultIcon">🎉</div>
+            <h2 class="text-3xl font-extrabold mb-2">Điểm số của bạn</h2>
+            <p class="text-5xl font-black text-purple-600 mb-6"><span id="scoreText">0</span>/40</p>
+            <p class="text-gray-600 mb-8 font-medium">Kết quả bài làm đã được hệ thống ghi nhận thành công!</p>
+            <button onclick="closeModal()" class="w-full bg-gray-900 text-white font-bold py-3 px-6 rounded-xl hover:bg-gray-800 transition">
+                Đóng
+            </button>
+        </div>
+    </div>
+
+    <!-- DATA & SCRIPT -->
+    <script>
+        // QUESTION DATA - ĐỀ SỐ 05
+        // Note: Không hiển thị lời giải, nhưng hệ thống vẫn cần correct data để chấm điểm ngầm.
+        const questionsData = [
+            // Part 1: Cloze 1 (Announcement)
+            { id: 1, part: 1, options: ["having been driven", "driven", "to drive", "driving"], correct: 1 },
+            { id: 2, part: 1, options: ["blending", "to blend", "having blended", "blended"], correct: 0 },
+            { id: 3, part: 1, options: ["precarious", "stable", "lavish", "mundane"], correct: 0 },
+            { id: 4, part: 1, options: ["tap into", "make up", "touch down", "put off"], correct: 0 },
+            { id: 5, part: 1, options: ["unless", "lest", "but", "while"], correct: 1 },
+            { id: 6, part: 1, options: ["get round to", "come up with", "look down on", "face up to"], correct: 3 },
+
+            // Part 2: Reading 1
+            { id: 7, part: 2, qText: "Which of the following is <b class='text-red-600 underline'>NOT</b> mentioned in paragraph 1 as a component of the de-extinction process?", options: ["Using CRISPR technology", "Splicing DNA", "restoring the \"Mammoth Steppe\" ecosystem", "Using Asian elephants"], correct: 2 },
+            { id: 8, part: 2, qText: "The word <b class='text-blue-700'><i>tangible</i></b> in paragraph 1 can be best replaced by ______.", options: ["abstract", "concrete", "elusive", "theoretical"], correct: 1 },
+            { id: 9, part: 2, qText: "The word <b class='text-blue-700'><i>combat</i></b> in paragraph 2 is <b class='text-red-600 underline'>OPPOSITE</b> in meaning to ______.", options: ["fight", "tackle", "exacerbate", "diminish"], correct: 2 },
+            { id: 10, part: 2, qText: "The word <b class='text-blue-700'><i>It</i></b> in paragraph 2 refers to ______.", options: ["The Mammoth Steppe", "The permafrost", "The Arctic air", "The ground"], correct: 1 },
+            { id: 11, part: 2, qText: "Which of the following best paraphrases the <u class='font-bold text-gray-900'>underlined sentence</u> in paragraph 3?", options: ["Reintroducing a highly social, intelligent animal into the modern world...", "Ethical concerns are raised about the reintroduction of a highly social...", "Living in isolation in captivity, a highly social, intelligent animal...", "Even when the modern world can provide a highly social, intelligent animal..."], correct: 1 },
+            { id: 12, part: 2, qText: "Which of the following is <b class='text-green-600 underline'>TRUE</b> according to the passage?", options: ["The Asian elephant is genetically identical to the Woolly Mammoth.", "Mammoths would help accelerate the melting of the permafrost.", "The main argument for de-extinction is purely for entertainment purposes.", "Some experts fear the de-extinction project represents a misallocation of conservation resources."], correct: 3 },
+            { id: 13, part: 2, qText: "Which paragraph mentions the potential ecological function of the resurrected mammoth?", options: ["Paragraph 1", "Paragraph 4", "Paragraph 2", "Paragraph 3"], correct: 2 },
+            { id: 14, part: 2, qText: "Which paragraph discusses the philosophical consequences of human power over nature?", options: ["Paragraph 1", "Paragraph 4", "Paragraph 2", "Paragraph 3"], correct: 1 },
+
+            // Part 3: Sentence Arrangement
+            { id: 15, part: 3, text: "a. Consequently, the local biodiversity has plummeted...<br>b. Efforts are being made to restore the habitat...<br>c. The rapid industrialization of the delta region...<br>d. It is a stark reminder that economic growth...<br>e. Toxic waste from factories is frequently discharged...", options: ["a-c-e-d-b", "c-a-e-d-b", "e-c-a-b-d", "c-e-a-b-d"], correct: 3 },
+            { id: 16, part: 3, text: "a. Sarah: Actually, I am more inclined to freelance...<br>b. Sarah: I'm weighing my options...<br>c. Mike: Have you decided on that job offer...<br>d. Mike: That makes sense...<br>e. Mike: True, but consider the benefits package...", options: ["c-b-d-a-e", "c-a-d-b-e", "c-b-e-a-d", "c-a-b-e-d"], correct: 2 },
+            { id: 17, part: 3, text: "a. However, this practice is corrosive...<br>b. In many emerging economies, tax evasion...<br>c. When citizens perceive that their contributions...<br>d. Small business owners often deal in cash...<br>e. To break this cycle, governments must demonstrate...", options: ["a-b-d-c-e", "b-a-d-c-e", "d-b-a-c-e", "b-d-c-a-e"], correct: 3 },
+            { id: 18, part: 3, text: "a. Receptionist: Certainly. Take the elevator...<br>b. Visitor: Good morning. I have an interview scheduled...<br>c. Visitor: Thank you. Should I knock or just go in?", options: ["b-a-c", "b-c-a", "a-b-c", "c-b-a"], correct: 0 },
+            { id: 19, part: 3, text: "Dear Mr. Tran,<br>a. Had we been informed of the discrepancy earlier...<br>b. Please find attached the revised invoice...<br>c. We look forward to your prompt settlement...<br>d. However, due to an accounting error on your end...<br>e. We are writing to address the outstanding balance...", options: ["e-a-b-d-c", "e-d-a-b-c", "e-a-d-b-c", "e-b-a-d-c"], correct: 1 },
+
+            // Part 4: Reading 2
+            { id: 20, part: 4, qText: "According to paragraph 1, the shadow economy is described as ______.", options: ["a malicious attempt by criminals to undermine the government", "a pragmatic response where evading taxes is socially accepted", "a result of the technological failure of receipt printers", "a zone exclusively for illegal activities and contraband goods"], correct: 1 },
+            { id: 21, part: 4, qText: "Which of the following best summarises paragraph 2?", options: ["Fiscal exchange theory suggests that people evade taxes primarily because...", "The normalization of tax fraud is driven by a lack of trust in the government's ability...", "Citizens believe that potholed roads and underfunded schools are the signs...", "The \"little guy\" usually wins against the state by hiding income..."], correct: 1 },
+            { id: 22, part: 4, qText: "Which of the following is <b class='text-red-600 underline'>NOT</b> mentioned as a consequence of the shadow economy in paragraph 3?", options: ["It causes a reduction in the quality of public services.", "It puts honest businesses at a competitive disadvantage.", "It leads to an immediate increase in government punitive raids.", "It creates an economic environment where integrity is punished."], correct: 2 },
+            { id: 23, part: 4, qText: "The word <b class='text-blue-700'><i>nebulous</i></b> in paragraph 1 mostly means ______.", options: ["distinct and clear", "vague and ill-defined", "strict and rigid", "bright and optimistic"], correct: 1 },
+            { id: 24, part: 4, qText: "The word <b class='text-blue-700'><i>It</i></b> in paragraph 2 refers to ______.", options: ["The moral obligation", "The fiscal exchange theory", "The perceived quality", "The official extravagance"], correct: 0 },
+            { id: 25, part: 4, qText: "Which of the following best paraphrases the <u class='font-bold text-gray-900'>underlined sentence</u> in paragraph 3?", options: ["Honest businesses are undercut by rivals because the latter use tax evasion...", "Competitors who evade taxes are often undercut by honest businesses...", "Despite complying with regulations, honest businesses profit more...", "Honest businesses and tax-evading competitors suffer equally..."], correct: 0 },
+            { id: 26, part: 4, qText: "According to the passage, the <b class='text-blue-700'><i>\"vicious cycle\"</i></b> mentioned in paragraph 3 involves ______.", options: ["high tax revenue leading to government corruption and further evasion", "poor public services causing low tax compliance, which further degrades services", "honest businesses forcing the government to lower taxes for everyone", "the government increasing taxes to punish those who have evaded them"], correct: 1 },
+            { id: 27, part: 4, qText: "Which of the following can be inferred from the passage regarding government solutions?", options: ["Technological crackdowns are the most effective way to permanently end...", "Increasing penalties for tax evasion will restore the public's trust...", "Enhancing accountability and transparency in governance is as crucial as monitoring...", "The shadow economy will disappear gradually as the country becomes increasingly developed."], correct: 2 },
+            { id: 28, part: 4, qText: "Where in the passage does the following sentence best fit?<br><i class='text-purple-700 font-semibold mt-2 block'>*This creates a paradox where the state tightens its grip, yet the sand continues to slip through its fingers.*</i>", options: ["[I]", "[II]", "[III]", "[IV]"], correct: 2 },
+            { id: 29, part: 4, qText: "Which of the following best summarises the passage?", options: ["The shadow economy is a criminal enterprise that requires strict digital...", "Tax evasion is normalized in some economies due to a broken social contract...", "Small business owners are the primary victims of the shadow economy...", "Fiscal exchange theory proves that governments should stop collecting taxes..."], correct: 1 },
+
+            // Part 5: Cloze 2
+            { id: 30, part: 5, options: ["reflects how investors are influenced by the actions and expectations of others", "reflecting how investors influenced by the actions and expectations of others", "which investors are influenced by the actions and expectations of others", "reflects investors influenced by the actions and expectations of others"], correct: 0 },
+            { id: 31, part: 5, options: ["if we are simply buying it because everyone else is", "the fear that we cannot possess something that everyone has", "in case that the thing you buy can generate profits someday", "find those who can provide us with an evidence-based answer"], correct: 0 },
+            { id: 32, part: 5, options: ["Consequently, many investors experience short-term losses during economic downturns.", "Such reactions reveal how significant approaching the market with a strategy is.", "The difference lies not in risk itself, but in how that risk is understood and managed.", "As a result, newcomers in this field should avoid market volatility before they can gain more experience."], correct: 2 },
+            { id: 33, part: 5, options: ["in which the importance of strategy and risk management in investment decisions is highlighted", "which highlights the importance of strategy and risk management in investment decisions", "whose importance of strategy and risk management in investment decisions is highlighted", "that highlights the importance of strategy and risk management in investment decision"], correct: 1 },
+            { id: 34, part: 5, options: ["With emotional resilience acting as a guiding principle", "That emotional resilience acts as a guiding principle", "Which acts as a guiding principle, emotional resilience", "It is emotional resilience acting as a guiding principle"], correct: 0 },
+
+            // Part 6: Cloze 3 (Leaflet)
+            { id: 35, part: 6, options: ["conducive to", "subject to", "opposed to", "with a view to"], correct: 0 },
+            { id: 36, part: 6, options: ["other than", "rather than", "better than", "more than"], correct: 1 },
+            { id: 37, part: 6, options: ["complex strategic urgent tasks", "urgent complex strategic tasks", "complex urgent strategic tasks", "urgent strategic complex tasks"], correct: 1 },
+            { id: 38, part: 6, options: ["another", "every", "other", "others"], correct: 2 },
+            { id: 39, part: 6, options: ["of", "at", "for", "about"], correct: 0 },
+            { id: 40, part: 6, options: ["rests", "sits", "lays", "leans"], correct: 0 }
+        ];
+
+        // RENDER QUESTIONS
+        function renderQuestions() {
+            // Mảng màu Gen Z sặc sỡ cho 4 lựa chọn (Hồng, Xanh lam, Vàng, Xanh lá)
+            const optionBgColors = [
+                'bg-[#ffe4e6] hover:bg-[#fecdd3]', // A: Rose pastel
+                'bg-[#e0e7ff] hover:bg-[#c7d2fe]', // B: Indigo pastel
+                'bg-[#fef9c3] hover:bg-[#fef08a]', // C: Yellow pastel
+                'bg-[#dcfce7] hover:bg-[#bbf7d0]'  // D: Green pastel
+            ];
+
+            questionsData.forEach((q, index) => {
+                const container = document.getElementById(`q-container-part${q.part}`);
+                if (!container) return;
+
+                const qDiv = document.createElement('div');
+                qDiv.className = "bg-white rounded-2xl p-5 shadow-sm border border-gray-200 hover:shadow-md transition";
+                
+                let extraText = '';
+                if(q.part === 3 && q.text) {
+                    extraText = `<div class="mb-4 text-gray-700 bg-blue-50 p-4 rounded-xl text-sm leading-relaxed border border-blue-100">${q.text}</div>`;
+                }
+
+                // Hiển thị phần câu hỏi dẫn (Question Text) nếu có
+                let qTextDisplay = '';
+                if(q.qText) {
+                    qTextDisplay = `<p class="mb-4 text-gray-800 font-semibold text-[1.05rem] leading-snug">${q.qText}</p>`;
+                }
+
+                let optionsHtml = q.options.map((opt, i) => `
+                    <label class="option-label">
+                        <input type="radio" name="q${q.id}" value="${i}" class="peer hidden">
+                        <div class="option-box p-3 flex items-center gap-3 ${optionBgColors[i]}">
+                            <span class="letter-circle w-8 h-8 rounded-full bg-white flex items-center justify-center font-black text-sm shrink-0 transition-colors border-2 border-gray-900 text-gray-900">${String.fromCharCode(65 + i)}</span>
+                            <span class="opt-text text-base font-semibold text-gray-800 transition-colors">${opt}</span>
+                        </div>
+                    </label>
+                `).join('');
+
+                qDiv.innerHTML = `
+                    <h4 class="font-bold text-lg mb-3">Question ${q.id} [HĐLG].</h4>
+                    ${qTextDisplay}
+                    ${extraText}
+                    <div class="space-y-2">
+                        ${optionsHtml}
+                    </div>
+                `;
+                container.appendChild(qDiv);
+            });
+        }
+
+        // TIMER LOGIC
+        let timeLeft = 3000; // 50 minutes (50 * 60)
+        let timerInterval;
+        let audioCtx;
+        let isSubmitted = false;
+
+        function startTest() {
+            // Init Audio Context on user gesture
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            
+            document.getElementById('startOverlay').style.display = 'none';
+            
+            timerInterval = setInterval(() => {
+                if(isSubmitted) return;
+                
+                timeLeft--;
+                updateTimerDisplay();
+
+                if (timeLeft === 60) {
+                    playAlarm();
+                    document.getElementById('timerBox').classList.replace('bg-indigo-100', 'bg-red-100');
+                    document.getElementById('timerBox').classList.replace('text-indigo-800', 'text-red-600');
+                    document.getElementById('timerBox').classList.replace('border-indigo-200', 'border-red-300');
+                    document.getElementById('timerBox').classList.add('animate-pulse');
+                }
+
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    submitTest();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            let m = Math.floor(timeLeft / 60);
+            let s = timeLeft % 60;
+            document.getElementById('timeDisplay').innerText = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+        }
+
+        function playAlarm() {
+            if(!audioCtx) return;
+            // Create a sequence of 3 beeps
+            for(let i=0; i<3; i++) {
+                const osc = audioCtx.createOscillator();
+                const gainNode = audioCtx.createGain();
+                
+                osc.type = 'square';
+                osc.frequency.setValueAtTime(880, audioCtx.currentTime + i*0.4); // A5 note
+                
+                gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime + i*0.4);
+                gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + i*0.4 + 0.3);
+                
+                osc.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+                
+                osc.start(audioCtx.currentTime + i*0.4);
+                osc.stop(audioCtx.currentTime + i*0.4 + 0.3);
+            }
+        }
+
+        // SUBMIT LOGIC (Just score, no explanations)
+        function submitTest() {
+            if(isSubmitted) return;
+            isSubmitted = true;
+            clearInterval(timerInterval);
+            
+            let score = 0;
+            
+            questionsData.forEach(q => {
+                const selected = document.querySelector(`input[name="q${q.id}"]:checked`);
+                const allOptionsBox = document.querySelectorAll(`input[name="q${q.id}"] + .option-box`);
+                
+                // Vô hiệu hoá click sau khi nộp
+                document.querySelectorAll(`input[name="q${q.id}"]`).forEach(input => input.disabled = true);
+
+                let userAnsIndex = selected ? parseInt(selected.value) : -1;
+                
+                // Xóa hiệu ứng hover để giao diện cố định
+                allOptionsBox.forEach((box) => {
+                    box.classList.remove('hover:bg-[#fecdd3]', 'hover:bg-[#c7d2fe]', 'hover:bg-[#fef08a]', 'hover:bg-[#bbf7d0]');
+                });
+
+                if (userAnsIndex === q.correct) {
+                    score++;
+                }
+            });
+
+            // Ẩn nút Nộp bài
+            document.getElementById('submitBtnTop').style.display = 'none';
+            document.getElementById('submitBtnBottom').style.display = 'none';
+            
+            // Hiện Modal Kết quả
+            document.getElementById('scoreText').innerText = score;
+            if(score >= 35) document.getElementById('resultIcon').innerText = '🏆';
+            else if(score >= 25) document.getElementById('resultIcon').innerText = '🔥';
+            else document.getElementById('resultIcon').innerText = '💪';
+            
+            document.getElementById('resultModal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('resultModal').classList.add('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Khởi tạo render
+        window.onload = renderQuestions;
+    </script>
+</body>
+</html>
