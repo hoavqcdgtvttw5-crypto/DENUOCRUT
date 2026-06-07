@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tổng Ôn Ngữ Pháp - Gen Z Style</title>
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                        display: ['Space Grotesk', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            purple: '#9d4edd',
+                            pink: '#ff70a6',
+                            yellow: '#ff9770',
+                            blue: '#4cc9f0',
+                            dark: '#10002b'
+                        }
+                    },
+                    animation: {
+                        'gradient-x': 'gradient-x 15s ease infinite',
+                        'bounce-slow': 'bounce 3s infinite',
+                    },
+                    keyframes: {
+                        'gradient-x': {
+                            '0%, 100%': {
+                                'background-size': '200% 200%',
+                                'background-position': 'left center'
+                            },
+                            '50%': {
+                                'background-size': '200% 200%',
+                                'background-position': 'right center'
+                            },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom Styles for Gen Z Vibe */
+        body {
+            background-color: #f8f9fa;
+            background-image: 
+                radial-gradient(at 0% 0%, hsla(280,100%,74%,1) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, hsla(328,100%,74%,1) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, hsla(190,100%,70%,1) 0px, transparent 50%);
+            background-attachment: fixed;
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+            border-radius: 24px;
+        }
+
+        .neo-brutalism {
+            border: 3px solid #10002b;
+            box-shadow: 4px 4px 0px #10002b;
+            transition: all 0.2s ease;
+        }
+
+        .neo-brutalism:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0px #10002b;
+        }
+
+        .neo-brutalism:active {
+            transform: translate(2px, 2px);
+            box-shadow: 0px 0px 0px #10002b;
+        }
+
+        .option-label {
+            cursor: pointer;
+            border: 2px solid #e2e8f0;
+            transition: all 0.2s ease;
+        }
+        
+        .option-label:hover {
+            border-color: #9d4edd;
+            background-color: #faf5ff;
+        }
+
+        input[type="radio"]:checked + .option-label {
+            border-color: #9d4edd;
+            background-color: #f3e8ff;
+            font-weight: 600;
+            box-shadow: 0 4px 6px -1px rgba(157, 78, 221, 0.2);
+        }
+
+        .correct-answer {
+            background-color: #dcfce7 !important;
+            border-color: #22c55e !important;
+            color: #166534 !important;
+            font-weight: bold;
+        }
+
+        .wrong-answer {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+            color: #991b1b !important;
+        }
+
+        .timer-warning {
+            animation: pulse-red 1s infinite;
+            color: #ef4444;
+            font-weight: bold;
+        }
+
+        @keyframes pulse-red {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* Hide scrollbar for clean look but keep functionality */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        
+        #explanation-modal {
+            display: none;
+        }
+        #explanation-modal.active {
+            display: flex;
+        }
+    </style>
+</head>
+<body class="text-brand-dark min-h-screen p-4 md:p-8 flex flex-col font-sans">
+
+    <!-- Header Area -->
+    <header class="max-w-4xl mx-auto w-full mb-8 sticky top-4 z-50">
+        <div class="glass-panel p-4 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-brand-purple to-brand-pink flex items-center justify-center text-white text-xl shadow-lg transform -rotate-6">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                </div>
+                <div>
+                    <h1 class="font-display font-bold text-2xl tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-brand-purple to-brand-pink">
+                        TỔNG ÔN NGỮ PHÁP
+                    </h1>
+                    <p class="text-sm text-gray-600 font-medium">✨ Slay your grammar ✨</p>
+                </div>
+            </div>
+
+            <!-- Timer Dashboard -->
+            <div id="timer-container" class="flex items-center gap-4 neo-brutalism bg-white px-5 py-2 rounded-xl">
+                <i class="fa-regular fa-clock text-xl text-brand-purple"></i>
+                <div class="font-display text-2xl font-bold font-mono tracking-wider w-24 text-center" id="time">60:00</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="max-w-4xl mx-auto w-full flex-grow relative pb-20">
+        
+        <!-- Welcome / Start Screen -->
+        <div id="start-screen" class="glass-panel p-8 md:p-12 text-center flex flex-col items-center justify-center min-h-[60vh]">
+            <span class="text-6xl mb-6 inline-block animate-bounce-slow">🚀</span>
+            <h2 class="font-display text-4xl md:text-5xl font-bold mb-4">Sẵn sàng chiến chưa?</h2>
+            <p class="text-lg text-gray-600 mb-8 max-w-lg">
+                Bài test gồm 70 câu hỏi ngữ pháp cực "cuốn". Bạn có 60 phút để hoàn thành. Hãy tập trung cao độ nhé!
+            </p>
+            <button id="start-btn" class="neo-brutalism bg-brand-yellow px-8 py-4 rounded-2xl font-bold text-xl uppercase tracking-wider text-brand-dark hover:bg-brand-pink hover:text-white transition-colors">
+                Let's Go! 🔥
+            </button>
+        </div>
+
+        <!-- Quiz Container (Hidden initially) -->
+        <div id="quiz-container" class="hidden space-y-6">
+            <!-- Questions will be injected here by JavaScript -->
+        </div>
+
+        <!-- Submit Button (Hidden initially) -->
+        <div id="submit-container" class="hidden mt-10 text-center">
+            <button id="submit-btn" class="neo-brutalism bg-brand-blue px-10 py-4 rounded-2xl font-bold text-xl uppercase tracking-wider text-white hover:bg-brand-purple transition-colors inline-flex items-center gap-3">
+                <i class="fa-solid fa-paper-plane"></i> Nộp Bài Ngay!
+            </button>
+        </div>
+
+        <!-- Results Screen (Hidden initially) -->
+        <div id="results-screen" class="hidden glass-panel p-8 text-center">
+            <div id="score-icon" class="text-7xl mb-4">🏆</div>
+            <h2 class="font-display text-4xl font-bold mb-2">Kết quả của bạn</h2>
+            <div class="text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-brand-purple to-brand-pink my-6">
+                <span id="score-display">0</span>/70
+            </div>
+            <p id="feedback-message" class="text-xl font-medium mb-8 text-gray-700"></p>
+            <button id="review-btn" class="neo-brutalism bg-white px-6 py-3 rounded-xl font-bold text-lg hover:bg-gray-100 transition-colors inline-flex items-center gap-2">
+                <i class="fa-solid fa-magnifying-glass"></i> Xem lại chi tiết
+            </button>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="mt-auto py-6 text-center">
+        <div class="inline-flex items-center justify-center gap-2 px-6 py-2 rounded-full glass-panel font-medium text-sm text-gray-600 shadow-sm border border-gray-200">
+            <span>✨ Idea for Design:</span>
+            <span class="font-bold text-brand-purple">Mr Hoa Van!</span>
+        </div>
+    </footer>
+
+    <!-- Explanation Modal -->
+    <div id="explanation-modal" class="fixed inset-0 z-[100] bg-black/50 backdrop-blur-sm items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-2xl w-full max-h-[80vh] overflow-hidden flex flex-col shadow-2xl transform transition-all neo-brutalism">
+            <div class="p-6 bg-gradient-to-r from-brand-purple to-brand-pink text-white flex justify-between items-center">
+                <h3 class="font-display font-bold text-2xl flex items-center gap-2">
+                    <i class="fa-solid fa-lightbulb text-yellow-300"></i> Giải thích chi tiết
+                </h3>
+                <button id="close-modal" class="w-10 h-10 rounded-full bg-white/20 hover:bg-white/40 flex items-center justify-center transition-colors">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+            <div class="p-6 md:p-8 overflow-y-auto">
+                <p id="modal-question-text" class="font-medium text-lg mb-4 text-gray-700 pb-4 border-b border-gray-100"></p>
+                <div id="modal-explanation-content" class="text-gray-800 leading-relaxed text-lg">
+                    <!-- Content injected here -->
+                </div>
+            </div>
+            <div class="p-4 bg-gray-50 border-t border-gray-100 text-center">
+                <button id="close-modal-btn" class="neo-brutalism bg-brand-dark text-white px-8 py-2 rounded-xl font-bold hover:bg-brand-purple transition-colors">
+                    Đã hiểu! 👍
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Audio elements for feedback -->
+    <audio id="sound-tick" preload="auto">
+        <source src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="sound-alarm" preload="auto">
+        <source src="https://assets.mixkit.co/active_storage/sfx/995/995-preview.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="sound-success" preload="auto">
+        <source src="https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        // Data Structure for Questions
+        // Contains the question text, options, correct answer index (0-3), and explanation.
+        const quizData = [
+            {
+                id: 1,
+                question: "More than 5,000 runners participated in the Da Nang Charity Marathon, raising a record ____ of money for local hospitals.",
+                options: ["scale", "number", "range", "amount"],
+                correct: 3,
+                explanation: "<strong>'amount of money'</strong> là cụm từ cố định nghĩa là 'khoản tiền'. 'Number' dùng cho danh từ đếm được, 'scale' (quy mô), 'range' (phạm vi) không phù hợp ngữ cảnh này."
+            },
+            {
+                id: 2,
+                question: "This project is expected to bring significant ____ to passenger experience and safety.",
+                options: ["improved", "improve", "improvingly", "improvements"],
+                correct: 3,
+                explanation: "Sau tính từ 'significant' (đáng kể) cần một danh từ. <strong>'improvements'</strong> (những sự cải thiện) là danh từ số nhiều phù hợp ngữ nghĩa."
+            },
+            {
+                id: 3,
+                question: "In recent years, our city has invested heavily in flood-prevention infrastructure. ____ damage from seasonal storms has decreased considerably.",
+                options: ["Because", "Therefore", "Moreover", "However"],
+                correct: 1,
+                explanation: "Câu trước nói về nguyên nhân (đầu tư mạnh vào hạ tầng), câu sau là kết quả (thiệt hại giảm). Do đó cần trạng từ chỉ kết quả <strong>'Therefore'</strong> (Vì vậy)."
+            },
+            {
+                id: 4,
+                question: "Customers purchasing the premium package will gain access to our ____.",
+                options: ["exclusive networking platform", "exclusive platform networking", "networking exclusive platform", "platform networking exclusive"],
+                correct: 0,
+                explanation: "Trật tự từ trong cụm danh từ: Tính từ (exclusive) + Danh từ phụ bổ nghĩa (networking) + Danh từ chính (platform) -> <strong>'exclusive networking platform'</strong> (nền tảng kết nối độc quyền)."
+            },
+            {
+                id: 5,
+                question: "Several recommendations ____ by experts specializing in public health policy during the conference.",
+                options: ["presented", "was presented", "presenting", "were presented"],
+                correct: 3,
+                explanation: "Chủ ngữ 'Several recommendations' (Nhiều đề xuất) là danh từ số nhiều và là vật nên cần thể bị động số nhiều. <strong>'were presented'</strong> (được trình bày) là đáp án đúng."
+            },
+            {
+                id: 6,
+                question: "Entrepreneurs ____ innovative healthcare technologies received funding from international investors.",
+                options: ["developing", "developed", "develop", "development"],
+                correct: 0,
+                explanation: "Rút gọn mệnh đề quan hệ chủ động. Đầy đủ: 'Entrepreneurs who develop...'. Rút gọn thành V-ing: <strong>'developing'</strong> (những doanh nhân phát triển...)."
+            },
+            {
+                id: 7,
+                question: "Participants in Bright English Center program can choose classes at different ____ based on their proficiency.",
+                options: ["numbers", "levels", "degrees", "extents"],
+                correct: 1,
+                explanation: "Dựa vào ngữ cảnh 'based on their proficiency' (dựa trên năng lực), từ phù hợp nhất để đi với 'classes' là <strong>'levels'</strong> (các trình độ khác nhau)."
+            },
+            {
+                id: 8,
+                question: "____ participant in the Young Entrepreneurs Summit will receive a certificate and networking opportunities.",
+                options: ["Each", "Some", "Several", "All"],
+                correct: 0,
+                explanation: "Danh từ 'participant' (người tham gia) đang ở dạng số ít đếm được. Trong các từ đã cho, chỉ có <strong>'Each'</strong> (Mỗi) cộng với danh từ số ít đếm được."
+            },
+            {
+                id: 9,
+                question: "Visitors to the Tokyo Digital Art Museum, ____ features interactive exhibits, often spend several hours exploring its galleries.",
+                options: ["where", "what", "that", "which"],
+                correct: 3,
+                explanation: "Đại từ quan hệ thay thế cho danh từ chỉ vật 'Tokyo Digital Art Museum' trong mệnh đề quan hệ không xác định (có dấu phẩy) làm chủ ngữ cho động từ 'features' là <strong>'which'</strong>. Không dùng 'that' sau dấu phẩy."
+            },
+            {
+                id: 10,
+                question: "The exhibition features a ____ created by award-winning artists from around the world.",
+                options: ["digital art collection", "digital collection art", "art digital collection", "collection art digital"],
+                correct: 0,
+                explanation: "Trật tự cụm danh từ: Tính từ (digital) + Danh từ phụ (art) + Danh từ chính (collection) -> <strong>'digital art collection'</strong> (bộ sưu tập nghệ thuật kỹ thuật số)."
+            },
+            {
+                id: 11,
+                question: "Only a small ____ of programming experience is required to join our six-week AI course.",
+                options: ["amount", "degree", "extent", "number"],
+                correct: 0,
+                explanation: "'experience' (kinh nghiệm) trong ngữ cảnh này là danh từ không đếm được. Ta dùng cụm <strong>'a small amount of'</strong> (một lượng nhỏ)."
+            },
+            {
+                id: 12,
+                question: "Visitors ____ the Ancient Silk Road Exhibition can access interactive displays using their devices.",
+                options: ["are exploring", "exploring", "explored", "explore"],
+                correct: 1,
+                explanation: "Rút gọn mệnh đề quan hệ mang nghĩa chủ động. Đầy đủ: 'Visitors who explore...'. Rút gọn bằng V-ing: <strong>'exploring'</strong>."
+            },
+            {
+                id: 13,
+                question: "The documentary provides valuable ____ about the challenges facing endangered wildlife species worldwide.",
+                options: ["information", "informed", "inform", "informative"],
+                correct: 0,
+                explanation: "Sau tính từ 'valuable' cần một danh từ. <strong>'information'</strong> (thông tin) là danh từ phù hợp. 'Provide information about' (cung cấp thông tin về)."
+            },
+            {
+                id: 14,
+                question: "____ residents of Valencia gathered in the city center to celebrate the opening of a new public library.",
+                options: ["Much", "Another", "Many", "Every"],
+                correct: 2,
+                explanation: "'residents' (cư dân) là danh từ đếm được số nhiều. Chỉ có <strong>'Many'</strong> (Nhiều) đi được với danh từ đếm được số nhiều."
+            },
+            {
+                id: 15,
+                question: "The flight to Bali was fully booked, ____ the airline added another service for the following day.",
+                options: ["for", "so", "or", "yet"],
+                correct: 1,
+                explanation: "Mệnh đề trước chỉ nguyên nhân (chuyến bay đã kín chỗ), mệnh đề sau chỉ kết quả (hãng hàng không thêm chuyến mới). Liên từ phù hợp là <strong>'so'</strong> (vì vậy)."
+            },
+            {
+                id: 16,
+                question: "____ registration fees increased slightly this year, the Hanoi International Book Fair attracted record attendance.",
+                options: ["Although", "Because", "However", "Despite"],
+                correct: 0,
+                explanation: "Hai mệnh đề mang nghĩa tương phản (phí tăng NHƯNG thu hút lượng người kỷ lục). Chỗ trống cần liên từ đi với một mệnh đề (S + V). <strong>'Although'</strong> (Mặc dù) là phù hợp. ('Despite' đi với N/V-ing)."
+            },
+            {
+                id: 17,
+                question: "____ several international speakers canceled their flights, the conference schedule had to be adjusted at short notice.",
+                options: ["However", "Because", "Although", "Therefore"],
+                correct: 1,
+                explanation: "Mệnh đề chứa chỗ trống là nguyên nhân (vài diễn giả hủy chuyến), mệnh đề chính là kết quả (lịch trình phải điều chỉnh). Liên từ chỉ nguyên nhân đi với mệnh đề là <strong>'Because'</strong> (Bởi vì)."
+            },
+            {
+                id: 18,
+                question: "Travelers can explore local culture through our ____, which covers several historic landmarks.",
+                options: ["tour walking guided", "walking guided tour", "guided tour walking", "guided walking tour"],
+                correct: 3,
+                explanation: "Trật tự cụm danh từ chỉ một loại hình du lịch: Phân từ hai làm tính từ (guided) + V-ing làm tính từ phân loại (walking) + Danh từ chính (tour) -> <strong>'guided walking tour'</strong> (tour đi bộ có hướng dẫn)."
+            },
+            {
+                id: 19,
+                question: "____ medical experts interviewed by CNN expressed concern about declining vaccination rates among children.",
+                options: ["Much", "Each", "Every", "Several"],
+                correct: 3,
+                explanation: "'medical experts' là danh từ đếm được số nhiều. Trong các đáp án, chỉ có <strong>'Several'</strong> (Một vài) đi với danh từ số nhiều."
+            },
+            {
+                id: 20,
+                question: "The museum offers free admission on weekends, ____ many families choose to visit during that time.",
+                options: ["so", "or", "for", "yet"],
+                correct: 0,
+                explanation: "Quan hệ nguyên nhân - kết quả. Bảo tàng miễn phí (nguyên nhân) -> nhiều gia đình đến thăm (kết quả). Dùng liên từ <strong>'so'</strong> (vì vậy)."
+            },
+            {
+                id: 21,
+                question: "The exhibition, ____ features rare photographs from Antarctica, will remain open until the end of August.",
+                options: ["that", "what", "which", "where"],
+                correct: 2,
+                explanation: "Thay thế cho 'The exhibition' (vật) làm chủ ngữ trong mệnh đề quan hệ không xác định (có dấu phẩy). Dùng <strong>'which'</strong>. Không dùng 'that' sau dấu phẩy."
+            },
+            {
+                id: 22,
+                question: "The year ____ Netflix released its first major Korean original series marked a turning point in global entertainment.",
+                options: ["who", "when", "which", "where"],
+                correct: 1,
+                explanation: "Thay thế cho danh từ chỉ thời gian 'The year' (Năm mà...), ta dùng trạng từ quan hệ <strong>'when'</strong>."
+            },
+            {
+                id: 23,
+                question: "The new scholarship program aims to increase ____ in STEM subjects among female students.",
+                options: ["participatory", "participant", "participation", "participate"],
+                correct: 2,
+                explanation: "Sau động từ 'increase' (gia tăng) cần một danh từ làm tân ngữ. 'participation' (sự tham gia) là phù hợp nhất về nghĩa. 'increase participation' (gia tăng sự tham gia)."
+            },
+            {
+                id: 24,
+                question: "The company's latest advertising campaign proved highly ____ in attracting younger consumers.",
+                options: ["effect", "effectively", "effective", "effectiveness"],
+                correct: 2,
+                explanation: "Cấu trúc: prove + (adv) + adj (chứng tỏ ra sao). Trạng từ 'highly' bổ nghĩa cho tính từ cần điền. <strong>'effective'</strong> (hiệu quả) là tính từ."
+            },
+            {
+                id: 25,
+                question: "____ residents welcomed the city's decision to expand bicycle lanes throughout downtown districts.",
+                options: ["Much", "Every", "Many", "Another"],
+                correct: 2,
+                explanation: "'residents' (cư dân) là danh từ số nhiều. Chỉ có <strong>'Many'</strong> đi với danh từ số nhiều đếm được."
+            },
+            {
+                id: 26,
+                question: "Guests staying at Ocean Breeze Resort can enjoy access to our ____ throughout their visit.",
+                options: ["beach area private", "private area beach", "private beach area", "area beach private"],
+                correct: 2,
+                explanation: "Trật tự cụm danh từ: Tính từ miêu tả (private) + Danh từ phụ chỉ loại hình (beach) + Danh từ chính (area) -> <strong>'private beach area'</strong> (khu vực bãi biển riêng tư)."
+            },
+            {
+                id: 27,
+                question: "Students participating in the robotics competition ____ intensive training sessions every weekend.",
+                options: ["to attend", "attending", "attended", "attend"],
+                correct: 3,
+                explanation: "Câu thiếu động từ chính (Students... là chủ ngữ, participating... bổ nghĩa cho chủ ngữ). 'every weekend' chỉ thói quen hiện tại. Động từ chính chia thì hiện tại đơn số nhiều: <strong>'attend'</strong>."
+            },
+            {
+                id: 28,
+                question: "Our language center offers a ____ designed for students preparing for international examinations.",
+                options: ["program study comprehensive", "comprehensive study program", "comprehensive program study", "study comprehensive program"],
+                correct: 1,
+                explanation: "Trật tự cụm danh từ: Tính từ miêu tả (comprehensive - toàn diện) + Danh từ phụ (study - học tập) + Danh từ chính (program - chương trình) -> <strong>'comprehensive study program'</strong>."
+            },
+            {
+                id: 29,
+                question: "Students enrolled in Leaders Academy consistently achieve a high ____ of academic performance.",
+                options: ["level", "amount", "scale", "range"],
+                correct: 0,
+                explanation: "Cụm từ kết hợp (collocation): <strong>'a high level of performance'</strong> (mức độ hiệu suất/thành tích cao). 'amount' dùng cho lượng chất, 'scale' (quy mô), 'range' (phạm vi đa dạng)."
+            },
+            {
+                id: 30,
+                question: "The iPhone 17 received positive reviews from technology experts. ____ some consumers criticized its relatively high price.",
+                options: ["Moreover", "However", "Although", "Therefore"],
+                correct: 1,
+                explanation: "Hai câu độc lập có nghĩa tương phản (Nhận đánh giá tích cực. Tuy nhiên, một số người tiêu dùng chỉ trích giá cao). Trạng từ liên kết phù hợp đứng đầu câu, sau dấu chấm và trước dấu phẩy là <strong>'However'</strong> (Tuy nhiên)."
+            },
+            {
+                id: 31,
+                question: "Researchers ____ the effects of social media on teenagers recently published their findings in a leading journal.",
+                options: ["study", "studying", "studied", "are studying"],
+                correct: 1,
+                explanation: "Rút gọn mệnh đề quan hệ chủ động. Đầy đủ: 'Researchers who study/studied...'. Rút gọn thành V-ing: <strong>'studying'</strong> (Các nhà nghiên cứu, những người đang nghiên cứu...)."
+            },
+            {
+                id: 32,
+                question: "Huong Giang became the 2nd runner-up of the Miss Grand International All Stars 2026 competition, ____ countless young people to pursue their dreams.",
+                options: ["inspiring", "inspire", "inspired", "inspires"],
+                correct: 0,
+                explanation: "Mệnh đề hiện tại phân từ (V-ing) đứng sau dấu phẩy dùng để chỉ kết quả của hành động ở mệnh đề trước. '..., <strong>inspiring</strong>...' (..., điều này truyền cảm hứng...)."
+            },
+            {
+                id: 33,
+                question: "Learners can participate in our ____, which helps develop communication and storytelling skills.",
+                options: ["writing creative course", "creative writing course", "course writing creative", "creative course writing"],
+                correct: 1,
+                explanation: "Trật tự cụm danh từ: Cụm danh từ cố định chỉ môn học/nghành học là 'creative writing' (viết sáng tạo) + Danh từ chính 'course' -> <strong>'creative writing course'</strong>."
+            },
+            {
+                id: 34,
+                question: "Young entrepreneurs with innovative business models ____ significant support from private investors.",
+                options: ["to receive", "have received", "receives", "receiving"],
+                correct: 1,
+                explanation: "Câu thiếu động từ chính ('Young entrepreneurs... models' là chủ ngữ). Chỉ có <strong>'have received'</strong> (đã nhận được) là động từ chia thì (hiện tại hoàn thành) phù hợp với chủ ngữ số nhiều."
+            },
+            {
+                id: 35,
+                question: "Researchers investigating the causes of climate change ____ important discoveries in recent years.",
+                options: ["making", "made", "have made", "to make"],
+                correct: 2,
+                explanation: "Câu thiếu động từ chính. Dấu hiệu thì 'in recent years' (trong những năm gần đây) yêu cầu thì Hiện tại hoàn thành. Chủ ngữ số nhiều -> <strong>'have made'</strong>."
+            },
+            {
+                id: 36,
+                question: "The photographs ____ at the National Geographic exhibition captured rare moments from remote regions around the world.",
+                options: ["were displayed", "display", "displayed", "displaying"],
+                correct: 2,
+                explanation: "Rút gọn mệnh đề quan hệ bị động. Động từ chính là 'captured'. Cụm phía trước cần bổ nghĩa cho 'The photographs'. Đầy đủ: 'which were displayed'. Rút gọn còn V3/ed: <strong>'displayed'</strong> (những bức ảnh được trưng bày)."
+            },
+            {
+                id: 37,
+                question: "Solar panels installed on public buildings across the city ____ by local authorities last year.",
+                options: ["funded", "were funded", "funding", "have been funded"],
+                correct: 1,
+                explanation: "Động từ chính của câu ở thể bị động ('by local authorities' - bởi chính quyền) và ở quá khứ ('last year' - năm ngoái). Chủ ngữ 'Solar panels' số nhiều -> <strong>'were funded'</strong> (đã được tài trợ)."
+            },
+            {
+                id: 38,
+                question: "Visitors to the National Science Museum can explore a variety of ____ exhibits designed for children and teenagers.",
+                options: ["educationally", "education", "educate", "educational"],
+                correct: 3,
+                explanation: "Trước danh từ 'exhibits' (vật trưng bày) cần một tính từ để bổ nghĩa. <strong>'educational'</strong> (mang tính giáo dục) là tính từ phù hợp."
+            },
+            {
+                id: 39,
+                question: "Many tourists ____ national parks offering opportunities to observe rare wildlife species.",
+                options: ["to visit", "visited", "visiting", "visit"],
+                correct: 3,
+                explanation: "Câu miêu tả một sự thật chung chung, một thói quen. Câu chưa có động từ chính. Chủ ngữ 'Many tourists' số nhiều -> động từ chính chia hiện tại đơn: <strong>'visit'</strong> (thăm)."
+            },
+            {
+                id: 40,
+                question: "The city council recently announced a major ____ of the metro system to improve urban mobility.",
+                options: ["expansive", "expansion", "expand", "expansively"],
+                correct: 1,
+                explanation: "Sau tính từ 'major' (lớn) và trước giới từ 'of' cần một danh từ. <strong>'expansion'</strong> (sự mở rộng) là danh từ phù hợp ngữ nghĩa."
+            },
+            {
+                id: 41,
+                question: "____ customers purchasing tickets for the Halloween Festival before July 1 will receive a discount.",
+                options: ["Another", "All", "Each", "Every"],
+                correct: 1,
+                explanation: "Danh từ 'customers' (khách hàng) ở dạng số nhiều. 'Each' và 'Every' đi với danh từ số ít, 'Another' đi với số ít hoặc số lượng cụ thể. <strong>'All'</strong> (Tất cả) đi được với danh từ số nhiều."
+            },
+            {
+                id: 42,
+                question: "The city invested heavily in public transportation. ____, traffic congestion decreased noticeably in several busy districts.",
+                options: ["Therefore", "Because", "However", "Moreover"],
+                correct: 0,
+                explanation: "Câu trước là hành động/nguyên nhân (đầu tư vào giao thông), câu sau là kết quả (tắc nghẽn giảm). Trạng từ nối chỉ kết quả đứng đầu câu là <strong>'Therefore'</strong> (Vì vậy)."
+            },
+            {
+                id: 43,
+                question: "Travelers joining the Amazon Rainforest Expedition are advised not to bring ____ luggage because storage space is limited.",
+                options: ["much", "another", "several", "many"],
+                correct: 0,
+                explanation: "'luggage' (hành lý) là danh từ không đếm được. Do đó chỉ có thể dùng lượng từ <strong>'much'</strong> (nhiều)."
+            },
+            {
+                id: 44,
+                question: "Thanks to careful planning, the concert by Phung Khanh Linh was considered a remarkable ____ by both organizers and attendees.",
+                options: ["success", "succeed", "successful", "successfully"],
+                correct: 0,
+                explanation: "Sau mạo từ 'a' và tính từ 'remarkable' (đáng chú ý) cần một danh từ. <strong>'success'</strong> (sự thành công) là danh từ (khi dùng chỉ một sự kiện thành công, nó đếm được)."
+            },
+            {
+                id: 45,
+                question: "____ passengers on Flight VN268 experienced delays because of severe thunderstorms near the destination airport.",
+                options: ["Much", "Another", "Some", "Each"],
+                correct: 2,
+                explanation: "'passengers' là danh từ số nhiều. 'Much' dùng cho KĐĐ, 'Another' và 'Each' dùng cho số ít. Chỉ có <strong>'Some'</strong> (Một vài/Một số) đi được với danh từ đếm được số nhiều."
+            },
+            {
+                id: 46,
+                question: "The 2026 Hanoi Food Festival will take place on a much larger ____ after attracting over 100,000 visitors last year.",
+                options: ["extent", "range", "level", "scale"],
+                correct: 3,
+                explanation: "Cụm từ cố định (collocation): 'on a large <strong>scale</strong>' (trên một quy mô lớn). 'on a much larger scale' (trên quy mô lớn hơn nhiều)."
+            },
+            {
+                id: 47,
+                question: "Thousands of fans attended a concert ____ several award-winning artists from across Asia.",
+                options: ["featuring", "featured", "features", "to feature"],
+                correct: 0,
+                explanation: "Rút gọn mệnh đề quan hệ chủ động bổ nghĩa cho 'a concert' (buổi hòa nhạc mà có sự góp mặt...). Đầy đủ: 'which featured/features'. Rút gọn thành V-ing: <strong>'featuring'</strong>."
+            },
+            {
+                id: 48,
+                question: "Students ____ enroll in our Coding Camp before June 15 will receive a 20% tuition discount.",
+                options: ["who", "whose", "whom", "which"],
+                correct: 0,
+                explanation: "Đại từ quan hệ thay thế cho danh từ chỉ người 'Students' làm chủ ngữ cho động từ 'enroll' trong mệnh đề quan hệ. Dùng <strong>'who'</strong>."
+            },
+            {
+                id: 49,
+                question: "Every guest will receive a ____ highlighting recommended attractions, restaurants, and cultural events.",
+                options: ["travel personal guide", "personal travel guide", "guide travel personal", "personal guide travel"],
+                correct: 1,
+                explanation: "Trật tự cụm danh từ: Tính từ quan điểm/sở hữu (personal - cá nhân) + Danh từ phụ phân loại (travel - du lịch) + Danh từ chính (guide - sách hướng dẫn/người hướng dẫn) -> <strong>'personal travel guide'</strong> (sách hướng dẫn du lịch cá nhân)."
+            },
+            {
+                id: 50,
+                question: "Researchers have expressed growing ____ about the rapid decline of coral reefs in the Pacific Ocean.",
+                options: ["concern", "concerning", "concernment", "concerned"],
+                correct: 0,
+                explanation: "Sau tính từ 'growing' (ngày càng tăng) cần một danh từ. 'express <strong>concern</strong> about' là cụm từ chỉ việc 'bày tỏ sự lo ngại về'."
+            },
+            // Adding a few more to make a decent sized demo, up to 70 in full version
+            {
+                id: 51,
+                question: "Products made from recycled materials ____ increasingly popular among environmentally conscious consumers.",
+                options: ["becomes", "to become", "becoming", "have become"],
+                correct: 3,
+                explanation: "Câu thiếu động từ chính. Chủ ngữ là 'Products' (số nhiều). <strong>'have become'</strong> (đã trở nên) là động từ chia ở hiện tại hoàn thành, phù hợp với sự việc bắt đầu trong quá khứ và kéo dài đến hiện tại."
+            },
+            {
+                id: 52,
+                question: "Since the launch of the Clean Rivers Initiative, a good ____ of progress has been made in improving water quality.",
+                options: ["deal", "number", "level", "amount"],
+                correct: 0,
+                explanation: "Cụm định lượng: <strong>'a good/great deal of'</strong> + danh từ không đếm được (progress - sự tiến bộ). Có nghĩa là 'rất nhiều'."
+            },
+            {
+                id: 53,
+                question: "The documentary ____ millions of viewers worldwide, highlighting the challenges faced by endangered species.",
+                options: ["attracting", "attract", "attracted", "to attract"],
+                correct: 2,
+                explanation: "Câu thiếu động từ chính (phần V-ing phía sau là mệnh đề phân từ bổ nghĩa). Cần một động từ chia thì. <strong>'attracted'</strong> (quá khứ đơn) là phù hợp nhất."
+            },
+            {
+                id: 54,
+                question: "Thousands of spectators attended the opening ceremony, ____ the city's 100th anniversary.",
+                options: ["celebration", "celebrated", "celebrating", "celebrate"],
+                correct: 2,
+                explanation: "Sử dụng hiện tại phân từ (V-ing) sau dấu phẩy để giải thích/bổ sung ý nghĩa cho hành động phía trước mang tính chủ động (nhằm ăn mừng...). <strong>'celebrating'</strong>."
+            },
+            {
+                id: 55,
+                question: "Tickets ____ before June 30 include access to all workshops and events during the conference.",
+                options: ["purchased", "will purchase", "purchase", "purchasing"],
+                correct: 0,
+                explanation: "Rút gọn mệnh đề quan hệ bị động bổ nghĩa cho 'Tickets' (Vé được mua...). Đầy đủ: 'which are/were purchased'. Rút gọn: <strong>'purchased'</strong>."
+            },
+            {
+                id: 56,
+                question: "A large ____ of international students applied for scholarships offered by the Singapore Business Academy.",
+                options: ["number", "scale", "extent", "amount"],
+                correct: 0,
+                explanation: "'students' là danh từ đếm được số nhiều. Dùng cụm <strong>'a large number of'</strong> (số lượng lớn)."
+            },
+            {
+                id: 57,
+                question: "Entrepreneurs ____ startups focus on clean energy solutions were invited to present their ideas at the summit.",
+                options: ["which", "who", "whose", "that"],
+                correct: 2,
+                explanation: "Đại từ quan hệ chỉ sở hữu. 'startups' (các công ty khởi nghiệp) thuộc về 'Entrepreneurs' (các doanh nhân). Dùng <strong>'whose'</strong> (mà công ty khởi nghiệp của họ...)."
+            },
+            {
+                id: 58,
+                question: "The concert was expected to attract mainly teenagers, ____ thousands of adults also attended the event.",
+                options: ["but", "or", "so", "and"],
+                correct: 0,
+                explanation: "Hai mệnh đề tương phản: dự kiến thu hút thanh thiếu niên >< hàng ngàn người lớn cũng tham gia. Liên từ kết hợp phù hợp là <strong>'but'</strong> (nhưng)."
+            },
+            {
+                id: 59,
+                question: "The new transportation system ____ by engineers working for an international consulting firm.",
+                options: ["designing", "were designed", "was designed", "designed"],
+                correct: 2,
+                explanation: "Câu bị động ('by engineers'). Chủ ngữ 'The new transportation system' (hệ thống) là số ít. Động từ to be số ít: <strong>'was designed'</strong> (đã được thiết kế)."
+            },
+            {
+                id: 60,
+                question: "Students ____ projects were selected for the International Science Fair will travel to Switzerland next month.",
+                options: ["that", "which", "who", "whose"],
+                correct: 3,
+                explanation: "Chỉ sự sở hữu giữa 'Students' và 'projects' (các dự án CỦA sinh viên). Đại từ quan hệ sở hữu là <strong>'whose'</strong>."
+            },
+            {
+                id: 61,
+                question: "The documentary ____ explores the impact of artificial intelligence on education attracted millions of viewers within a week.",
+                options: ["who", "that", "whom", "whose"],
+                correct: 1,
+                explanation: "Đại từ quan hệ thay thế cho vật 'The documentary' làm chủ ngữ trong mệnh đề xác định (không có dấu phẩy). Dùng 'which' hoặc <strong>'that'</strong>."
+            },
+            {
+                id: 62,
+                question: "Samsung Galaxy S24 received excellent reviews from journalists, ____ sales during the first month were lower than expected.",
+                options: ["yet", "for", "so", "or"],
+                correct: 0,
+                explanation: "Hai mệnh đề tương phản: nhận review tốt >< doanh số thấp hơn kỳ vọng. Liên từ <strong>'yet'</strong> (nhưng/tuy nhiên) mang nghĩa tương đương 'but'."
+            },
+            {
+                id: 63,
+                question: "Every guest staying at the resort will receive a ____ upon arrival.",
+                options: ["activity complimentary guide", "complimentary guide activity", "guide activity complimentary", "complimentary activity guide"],
+                correct: 3,
+                explanation: "Trật tự cụm danh từ: Tính từ (complimentary - miễn phí) + Danh từ phụ (activity - hoạt động) + Danh từ chính (guide - sách hướng dẫn) -> <strong>'complimentary activity guide'</strong> (sách hướng dẫn hoạt động miễn phí)."
+            },
+            {
+                id: 64,
+                question: "Participants can register online today, ____ they can complete the registration form at the venue tomorrow.",
+                options: ["but", "so", "yet", "or"],
+                correct: 3,
+                explanation: "Đưa ra hai sự lựa chọn (đăng ký online hôm nay HOẶC hoàn thành form tại địa điểm ngày mai). Liên từ lựa chọn: <strong>'or'</strong> (hoặc)."
+            },
+            {
+                id: 65,
+                question: "Due to overwhelming demand, ____ Taylor Swift concert has been scheduled in Singapore next month.",
+                options: ["other", "several", "many", "another"],
+                correct: 3,
+                explanation: "'concert' ở dạng số ít đếm được. 'other', 'several', 'many' phải đi với số nhiều. <strong>'another'</strong> (một ... khác) đi với số ít đếm được."
+            },
+            {
+                id: 66,
+                question: "Visitors to Phu Quoc Eco Resort can enjoy a wide ____ of activities, including snorkeling, kayaking, and jungle trekking.",
+                options: ["amount", "range", "scale", "extent"],
+                correct: 1,
+                explanation: "Cụm từ cố định (collocation): <strong>'a wide range of'</strong> (một loạt/phạm vi đa dạng các...). Dùng để chỉ sự đa dạng của các hoạt động."
+            },
+            {
+                id: 67,
+                question: "The ____ smart-glass technology introduced at CES 2026 attracted attention from industry experts.",
+                options: ["innovatively", "innovation", "innovative", "innovate"],
+                correct: 2,
+                explanation: "Đứng trước cụm danh từ 'smart-glass technology' cần một tính từ bổ nghĩa. <strong>'innovative'</strong> (có tính đổi mới/sáng tạo) là tính từ."
+            },
+            {
+                id: 68,
+                question: "Emergency crews were shocked by the ____ of the damage caused by the earthquake that struck southern Turkey.",
+                options: ["level", "degree", "number", "extent"],
+                correct: 3,
+                explanation: "Khi nói về mức độ tàn phá, thiệt hại (damage), người ta thường dùng collocation <strong>'the extent of the damage'</strong> (mức độ thiệt hại)."
+            },
+            {
+                id: 69,
+                question: "Visitors to the science museum can experience a ____ showcasing future technological innovations.",
+                options: ["virtual reality exhibition", "exhibition reality virtual", "virtual exhibition reality", "reality virtual exhibition"],
+                correct: 0,
+                explanation: "Trật tự cụm danh từ: Cụm danh từ cố định 'virtual reality' (thực tế ảo) đóng vai trò bổ nghĩa cho danh từ chính 'exhibition' (triển lãm) -> <strong>'virtual reality exhibition'</strong>."
+            },
+            {
+                id: 70,
+                question: "The latest Samsung Galaxy model offers a longer battery life than ____ smartphones in the same price range.",
+                options: ["another", "other", "others", "the other"],
+                correct: 1,
+                explanation: "'smartphones' là danh từ đếm được số nhiều. Dùng <strong>'other'</strong> + danh từ số nhiều (các điện thoại thông minh khác nói chung). 'others' không đi kèm danh từ ngay sau nó."
+            }
+        ];
+
+        // App State
+        let currentAnswers = new Array(quizData.length).fill(null);
+        let timerInterval;
+        let timeLeft = 60 * 60; // 60 minutes in seconds
+        let isSubmitted = false;
+        
+        // DOM Elements
+        const startBtn = document.getElementById('start-btn');
+        const startScreen = document.getElementById('start-screen');
+        const quizContainer = document.getElementById('quiz-container');
+        const submitContainer = document.getElementById('submit-container');
+        const submitBtn = document.getElementById('submit-btn');
+        const resultsScreen = document.getElementById('results-screen');
+        const timeDisplay = document.getElementById('time');
+        const timerContainer = document.getElementById('timer-container');
+        
+        // Modal Elements
+        const explanationModal = document.getElementById('explanation-modal');
+        const closeModalBtn = document.getElementById('close-modal');
+        const closeModalBtnBottom = document.getElementById('close-modal-btn');
+        const modalQuestionText = document.getElementById('modal-question-text');
+        const modalExplanationContent = document.getElementById('modal-explanation-content');
+
+        // Audio Elements
+        const soundTick = document.getElementById('sound-tick');
+        const soundAlarm = document.getElementById('sound-alarm');
+        const soundSuccess = document.getElementById('sound-success');
+
+        // Initialize Audio volume
+        soundTick.volume = 0.2;
+        soundAlarm.volume = 0.5;
+        soundSuccess.volume = 0.6;
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                updateTimerDisplay();
+
+                // Warning at 5 minutes
+                if (timeLeft === 300) {
+                    timerContainer.classList.add('timer-warning');
+                    timerContainer.classList.remove('bg-white');
+                    timerContainer.classList.add('bg-red-50');
+                    playSound(soundAlarm);
+                }
+
+                // Tick sound every second in last 10 seconds
+                if (timeLeft <= 10 && timeLeft > 0) {
+                    playSound(soundTick);
+                }
+
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    autoSubmit();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            timeDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        function playSound(audioEl) {
+            // Simple play with catch for browser policies
+            audioEl.currentTime = 0;
+            audioEl.play().catch(e => console.log("Audio play blocked by browser:", e));
+        }
+
+        function renderQuestions() {
+            quizContainer.innerHTML = ''; // Clear container
+
+            quizData.forEach((q, index) => {
+                const questionBlock = document.createElement('div');
+                questionBlock.className = 'glass-panel p-6 md:p-8 question-card opacity-0 translate-y-4 transition-all duration-500 ease-out';
+                questionBlock.id = `q-block-${index}`;
+                // Setup animation delay based on index
+                setTimeout(() => {
+                    questionBlock.classList.remove('opacity-0', 'translate-y-4');
+                }, index * 50);
+
+                // Format options A, B, C, D
+                const labels = ['A', 'B', 'C', 'D'];
+                let optionsHtml = '';
+                
+                q.options.forEach((opt, optIndex) => {
+                    optionsHtml += `
+                        <div class="relative w-full">
+                            <input type="radio" name="q${index}" id="q${index}-opt${optIndex}" value="${optIndex}" class="peer hidden" onchange="handleSelect(${index}, ${optIndex})">
+                            <label for="q${index}-opt${optIndex}" id="label-q${index}-opt${optIndex}" class="option-label flex items-center p-4 rounded-xl w-full bg-white text-gray-800 text-lg">
+                                <span class="w-8 h-8 flex items-center justify-center rounded-lg bg-gray-100 text-gray-500 font-bold mr-4 font-display peer-checked:bg-brand-purple peer-checked:text-white transition-colors">
+                                    ${labels[optIndex]}
+                                </span>
+                                <span>${opt}</span>
+                            </label>
+                        </div>
+                    `;
+                });
+
+                questionBlock.innerHTML = `
+                    <div class="flex flex-col md:flex-row gap-4 mb-6">
+                        <div class="flex-shrink-0">
+                            <span class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-brand-dark text-white font-display font-bold text-xl neo-brutalism">
+                                ${q.id}
+                            </span>
+                        </div>
+                        <h3 class="text-xl md:text-2xl font-medium leading-relaxed pt-2">
+                            ${q.question}
+                        </h3>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 ml-0 md:ml-16">
+                        ${optionsHtml}
+                    </div>
+                    
+                    <!-- Feedback Section (Hidden initially) -->
+                    <div id="feedback-${index}" class="hidden mt-6 ml-0 md:ml-16 p-4 rounded-xl">
+                        <div class="flex justify-between items-center mb-2">
+                            <span id="status-${index}" class="font-bold text-lg flex items-center gap-2"></span>
+                            <button onclick="showExplanation(${index})" class="text-brand-purple font-medium hover:underline flex items-center gap-1">
+                                <i class="fa-solid fa-book-open"></i> Xem giải thích chi tiết
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                quizContainer.appendChild(questionBlock);
+            });
+        }
+
+        // Expose to window for inline onclick
+        window.handleSelect = function(questionIndex, optionIndex) {
+            if (isSubmitted) return; // Prevent changing after submit
+            currentAnswers[questionIndex] = optionIndex;
+            
+            // Check if all answered to highlight submit button
+            if (currentAnswers.every(ans => ans !== null)) {
+                submitBtn.classList.add('animate-pulse');
+            }
+        };
+
+        function evaluateQuiz() {
+            if (isSubmitted) return;
+            isSubmitted = true;
+            clearInterval(timerInterval);
+
+            // Hide submit btn
+            submitContainer.classList.add('hidden');
+            
+            let score = 0;
+
+            quizData.forEach((q, index) => {
+                const selected = currentAnswers[index];
+                const isCorrect = selected === q.correct;
+                
+                const qBlock = document.getElementById(`q-block-${index}`);
+                const feedbackDiv = document.getElementById(`feedback-${index}`);
+                const statusSpan = document.getElementById(`status-${index}`);
+
+                // Disable all radio buttons
+                const radios = document.querySelectorAll(`input[name="q${index}"]`);
+                radios.forEach(radio => radio.disabled = true);
+
+                // Style Correct Answer always
+                const correctLabel = document.getElementById(`label-q${index}-opt${q.correct}`);
+                correctLabel.classList.add('correct-answer');
+                
+                if (isCorrect) {
+                    score++;
+                    feedbackDiv.classList.remove('hidden');
+                    feedbackDiv.classList.add('bg-green-50', 'border', 'border-green-200');
+                    statusSpan.innerHTML = `<i class="fa-solid fa-circle-check text-green-500"></i> <span class="text-green-700">Chính xác! (+1 điểm)</span>`;
+                    qBlock.classList.add('border-l-4', 'border-green-500');
+                } else {
+                    feedbackDiv.classList.remove('hidden');
+                    feedbackDiv.classList.add('bg-red-50', 'border', 'border-red-200');
+                    
+                    if (selected !== null) {
+                        // Mark wrong selected
+                        const wrongLabel = document.getElementById(`label-q${index}-opt${selected}`);
+                        wrongLabel.classList.add('wrong-answer');
+                        statusSpan.innerHTML = `<i class="fa-solid fa-circle-xmark text-red-500"></i> <span class="text-red-700">Chưa đúng rồi!</span>`;
+                    } else {
+                        statusSpan.innerHTML = `<i class="fa-solid fa-circle-exclamation text-yellow-500"></i> <span class="text-yellow-700">Chưa trả lời!</span>`;
+                    }
+                    qBlock.classList.add('border-l-4', 'border-red-500');
+                }
+            });
+
+            showResults(score);
+        }
+
+        function showResults(score) {
+            playSound(soundSuccess);
+            
+            const percentage = (score / quizData.length) * 100;
+            const scoreDisplay = document.getElementById('score-display');
+            const feedbackMsg = document.getElementById('feedback-message');
+            const scoreIcon = document.getElementById('score-icon');
+            
+            // Animation for score counting
+            let count = 0;
+            const duration = 2000;
+            const step = Math.max(1, Math.floor(score / (duration / 20))); // Update every 20ms
+            
+            const counter = setInterval(() => {
+                count += step;
+                if (count >= score) {
+                    count = score;
+                    clearInterval(counter);
+                }
+                scoreDisplay.textContent = count;
+            }, 20);
+
+            // Set Feedback based on score
+            if (percentage >= 90) {
+                feedbackMsg.innerHTML = "Tuyệt đỉnh! Ngữ pháp của bạn quá <strong>Slay</strong>! ✨👑";
+                scoreIcon.textContent = "👑";
+            } else if (percentage >= 70) {
+                feedbackMsg.innerHTML = "Rất tốt! Khá chắc tay rồi đấy, cố gắng chút nữa là hoàn hảo! 🚀";
+                scoreIcon.textContent = "🚀";
+            } else if (percentage >= 50) {
+                feedbackMsg.innerHTML = "Tạm ổn! Cần ôn tập lại các chủ đề bị sai nhé. Cố lên! 💪";
+                scoreIcon.textContent = "💪";
+            } else {
+                feedbackMsg.innerHTML = "Có vẻ bạn cần ôn lại lý thuyết kỹ hơn. Đừng nản, đọc kỹ giải thích nhé! 📚";
+                scoreIcon.textContent = "📚";
+            }
+
+            // Scroll to top to show results
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            
+            // Show results screen, hide quiz temporarily
+            quizContainer.classList.add('hidden');
+            resultsScreen.classList.remove('hidden');
+        }
+
+        function autoSubmit() {
+            alert("⏰ HẾT GIỜ! Hệ thống sẽ tự động nộp bài của bạn."); // Exception case for auto submit warning. 
+            evaluateQuiz();
+        }
+
+        window.showExplanation = function(index) {
+            const q = quizData[index];
+            modalQuestionText.innerHTML = `<strong>Câu ${q.id}:</strong> ${q.question}`;
+            modalExplanationContent.innerHTML = `
+                <div class="mb-4">
+                    <p class="text-sm text-gray-500 mb-1">Đáp án đúng là:</p>
+                    <div class="inline-block px-4 py-2 bg-green-100 text-green-800 rounded-lg font-bold border border-green-200">
+                        ${['A', 'B', 'C', 'D'][q.correct]}. ${q.options[q.correct]}
+                    </div>
+                </div>
+                <div class="bg-blue-50 border-l-4 border-blue-400 p-4 rounded-r-lg">
+                    <h4 class="font-bold text-blue-800 mb-2">Giải thích:</h4>
+                    <p class="text-gray-700">${q.explanation}</p>
+                </div>
+            `;
+            explanationModal.classList.add('active');
+            document.body.style.overflow = 'hidden'; // Prevent background scrolling
+        };
+
+        function hideModal() {
+            explanationModal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Event Listeners
+        startBtn.addEventListener('click', () => {
+            startScreen.classList.add('hidden');
+            quizContainer.classList.remove('hidden');
+            submitContainer.classList.remove('hidden');
+            renderQuestions();
+            startTimer();
+        });
+
+        submitBtn.addEventListener('click', () => {
+            // Check for unanswered questions
+            const unanswered = currentAnswers.filter(ans => ans === null).length;
+            if (unanswered > 0) {
+                const confirmSubmit = confirm(`Bạn còn ${unanswered} câu chưa trả lời. Bạn có chắc chắn muốn nộp bài không?`);
+                if (!confirmSubmit) return;
+            }
+            evaluateQuiz();
+        });
+
+        document.getElementById('review-btn').addEventListener('click', () => {
+            resultsScreen.classList.add('hidden');
+            quizContainer.classList.remove('hidden');
+            // User can now scroll through their graded quiz
+        });
+
+        closeModalBtn.addEventListener('click', hideModal);
+        closeModalBtnBottom.addEventListener('click', hideModal);
+        
+        // Close modal on click outside
+        explanationModal.addEventListener('click', (e) => {
+            if (e.target === explanationModal) {
+                hideModal();
+            }
+        });
+        
+        // Escape key to close modal
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && explanationModal.classList.contains('active')) {
+                hideModal();
+            }
+        });
+
+    </script>
+</body>
+</html>
