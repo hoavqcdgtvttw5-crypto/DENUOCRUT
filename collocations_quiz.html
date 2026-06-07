@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tổng Ôn Collocations & Idioms - Gen Z Style</title>
+    <!-- Tailwind CSS cho phần styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome cho các icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        display: ['Space Grotesk', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            cyan: '#00f5d4',
+                            magenta: '#f15bb5',
+                            yellow: '#fee440',
+                            blue: '#00bbf9',
+                            dark: '#011627'
+                        }
+                    },
+                    animation: {
+                        'bounce-slow': 'bounce 3s infinite',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Phong cách nền trẻ trung, năng động */
+        body {
+            background-color: #f8f9fa;
+            background-image: 
+                radial-gradient(at 0% 0%, hsla(180,100%,74%,1) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, hsla(328,100%,74%,1) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, hsla(60,100%,70%,1) 0px, transparent 50%);
+            background-attachment: fixed;
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 2px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+            border-radius: 24px;
+        }
+
+        .neo-brutalism {
+            border: 3px solid #011627;
+            box-shadow: 4px 4px 0px #011627;
+            transition: all 0.2s ease;
+        }
+
+        .neo-brutalism:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0px #011627;
+        }
+
+        .neo-brutalism:active {
+            transform: translate(2px, 2px);
+            box-shadow: 0px 0px 0px #011627;
+        }
+
+        .option-label {
+            cursor: pointer;
+            border: 2px solid #e2e8f0;
+            transition: all 0.2s ease;
+        }
+        
+        .option-label:hover {
+            border-color: #00bbf9;
+            background-color: #f0faff;
+        }
+
+        input[type="radio"]:checked + .option-label {
+            border-color: #00bbf9;
+            background-color: #e0f2fe;
+            font-weight: 600;
+            box-shadow: 0 4px 6px -1px rgba(0, 187, 249, 0.2);
+        }
+
+        .correct-answer {
+            background-color: #dcfce7 !important;
+            border-color: #22c55e !important;
+            color: #166534 !important;
+            font-weight: bold;
+        }
+
+        .wrong-answer {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+            color: #991b1b !important;
+        }
+
+        .timer-warning {
+            animation: pulse-red 1s infinite;
+            color: #ef4444;
+            font-weight: bold;
+        }
+
+        @keyframes pulse-red {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        
+        #explanation-modal {
+            display: none;
+        }
+        #explanation-modal.active {
+            display: flex;
+        }
+    </style>
+</head>
+<body class="text-brand-dark min-h-screen p-4 md:p-8 flex flex-col font-sans">
+
+    <!-- Header Area -->
+    <header class="max-w-4xl mx-auto w-full mb-8 sticky top-4 z-50">
+        <div class="glass-panel p-4 flex flex-col md:flex-row justify-between items-center gap-4 border-b-4 border-brand-magenta">
+            <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-brand-blue to-brand-cyan flex items-center justify-center text-white text-xl shadow-lg transform -rotate-6">
+                    <i class="fa-solid fa-bolt"></i>
+                </div>
+                <div>
+                    <h1 class="font-display font-bold text-xl md:text-2xl tracking-tight text-brand-dark">
+                        COLLOCATIONS & IDIOMS
+                    </h1>
+                    <p class="text-sm text-gray-600 font-medium">✨ Master the language, slay the exam ✨</p>
+                </div>
+            </div>
+
+            <!-- Timer Dashboard -->
+            <div id="timer-container" class="flex items-center gap-4 neo-brutalism bg-white px-5 py-2 rounded-xl">
+                <i class="fa-regular fa-bell text-xl text-brand-magenta"></i>
+                <div class="font-display text-2xl font-bold font-mono tracking-wider w-24 text-center" id="time">40:00</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="max-w-4xl mx-auto w-full flex-grow relative pb-20">
+        
+        <!-- Welcome / Start Screen -->
+        <div id="start-screen" class="glass-panel p-8 md:p-12 text-center flex flex-col items-center justify-center min-h-[60vh]">
+            <span class="text-6xl mb-6 inline-block animate-bounce-slow">🎯</span>
+            <h2 class="font-display text-4xl md:text-5xl font-bold mb-4 text-brand-dark">Thử Thách 40 Câu</h2>
+            <div class="inline-block bg-brand-yellow px-4 py-1 rounded-full font-bold text-sm mb-6 neo-brutalism border-2">Collocations • Phrasal Verbs • Idioms</div>
+            <p class="text-lg text-gray-700 mb-8 max-w-lg">
+                Bài test có 40 câu hỏi siêu hay. Bạn có <strong>40 phút</strong> để hoàn thành. Khi còn 5 phút, hệ thống sẽ báo chuông cảnh báo. Cố gắng lên nhé!
+            </p>
+            <button id="start-btn" class="neo-brutalism bg-brand-cyan px-8 py-4 rounded-2xl font-bold text-xl uppercase tracking-wider text-brand-dark hover:bg-brand-blue hover:text-white transition-colors">
+                Bắt Đầu Ngay! 🚀
+            </button>
+        </div>
+
+        <!-- Quiz Container -->
+        <div id="quiz-container" class="hidden space-y-6">
+            <!-- Questions injected here by JS -->
+        </div>
+
+        <!-- Submit Button -->
+        <div id="submit-container" class="hidden mt-10 text-center">
+            <button id="submit-btn" class="neo-brutalism bg-brand-magenta px-10 py-4 rounded-2xl font-bold text-xl uppercase tracking-wider text-white hover:bg-brand-dark transition-colors inline-flex items-center gap-3">
+                <i class="fa-solid fa-flag-checkered"></i> Nộp Bài!
+            </button>
+        </div>
+
+        <!-- Results Screen -->
+        <div id="results-screen" class="hidden glass-panel p-8 text-center border-t-8 border-brand-cyan">
+            <div id="score-icon" class="text-7xl mb-4">🏆</div>
+            <h2 class="font-display text-4xl font-bold mb-2">Kết quả của bạn</h2>
+            <div class="text-6xl font-black text-brand-blue my-6">
+                <span id="score-display">0</span>/40
+            </div>
+            <p id="feedback-message" class="text-xl font-medium mb-8 text-gray-700"></p>
+            <button id="review-btn" class="neo-brutalism bg-white px-6 py-3 rounded-xl font-bold text-lg hover:bg-gray-100 transition-colors inline-flex items-center gap-2">
+                <i class="fa-solid fa-list-check"></i> Xem lại đáp án chi tiết
+            </button>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="mt-auto py-6 text-center">
+        <div class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl glass-panel font-medium text-sm text-gray-800 shadow-sm border border-gray-200">
+            <span>✨ Idea for Design:</span>
+            <span class="font-bold text-brand-magenta text-base">Mr Hoa Van!</span>
+        </div>
+    </footer>
+
+    <!-- Explanation Modal -->
+    <div id="explanation-modal" class="fixed inset-0 z-[100] bg-brand-dark/60 backdrop-blur-sm items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-2xl w-full max-h-[85vh] overflow-hidden flex flex-col shadow-2xl transform transition-all neo-brutalism border-4 border-brand-blue">
+            <div class="p-6 bg-brand-blue text-white flex justify-between items-center">
+                <h3 class="font-display font-bold text-2xl flex items-center gap-2">
+                    <i class="fa-solid fa-wand-magic-sparkles text-brand-yellow"></i> Giải Thích Chi Tiết
+                </h3>
+                <button id="close-modal" class="w-10 h-10 rounded-full bg-black/20 hover:bg-black/40 flex items-center justify-center transition-colors">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+            <div class="p-6 md:p-8 overflow-y-auto">
+                <p id="modal-question-text" class="font-medium text-lg mb-5 text-gray-800 pb-4 border-b border-gray-200 leading-relaxed"></p>
+                <div id="modal-explanation-content" class="text-gray-800 leading-relaxed text-lg">
+                    <!-- Content injected here -->
+                </div>
+            </div>
+            <div class="p-4 bg-gray-50 border-t border-gray-200 text-center">
+                <button id="close-modal-btn" class="neo-brutalism bg-brand-dark text-white px-8 py-3 rounded-xl font-bold hover:bg-gray-800 transition-colors">
+                    Mình hiểu rồi! ✌️
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Audio elements -->
+    <audio id="sound-tick" preload="auto">
+        <source src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="sound-alarm" preload="auto">
+        <source src="https://assets.mixkit.co/active_storage/sfx/995/995-preview.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="sound-success" preload="auto">
+        <source src="https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        const quizData = [
+            {
+                id: 1,
+                question: "Rising population growth will ____ a strain on the public water supply systems in big cities.",
+                options: ["drop", "place", "give", "leave"],
+                correct: 1,
+                explanation: "Cụm từ cố định (Collocation): <strong>place a strain on something</strong> có nghĩa là 'đặt áp lực/gây áp lực lên cái gì'. Các động từ khác không đi kèm với 'a strain on' trong ngữ cảnh này."
+            },
+            {
+                id: 2,
+                question: "Practice speaking English every day and you will surely ____ progress in your active communication.",
+                options: ["make", "do", "take", "get"],
+                correct: 0,
+                explanation: "Cụm từ cố định: <strong>make progress</strong> có nghĩa là 'tiến bộ'. Không dùng 'do', 'take' hay 'get' với progress."
+            },
+            {
+                id: 3,
+                question: "Many workplace conflicts ____ miscommunication rather than intentional wrongdoing.",
+                options: ["agree with", "result in", "object to", "stem from"],
+                correct: 3,
+                explanation: "Cụm động từ (Phrasal verb): <strong>stem from</strong> có nghĩa là 'bắt nguồn từ, xuất phát từ'. Câu này mang nghĩa: Nhiều xung đột nơi làm việc bắt nguồn từ việc giao tiếp sai lệch."
+            },
+            {
+                id: 4,
+                question: "Many parents struggle to ____ the demands of remote work and childcare.",
+                options: ["agree with", "focus on", "look for", "cope with"],
+                correct: 3,
+                explanation: "Cụm động từ: <strong>cope with</strong> có nghĩa là 'đương đầu với, đối phó với'. Phù hợp với ngữ cảnh 'struggle to' (chật vật để đối phó với các yêu cầu của công việc và chăm con)."
+            },
+            {
+                id: 5,
+                question: "As AI and intelligent robots gradually ____ routine tasks in the future, creativity and critical thinking will become increasingly valuable.",
+                options: ["take over", "look after", "turn down", "call off"],
+                correct: 0,
+                explanation: "Cụm động từ: <strong>take over</strong> có nghĩa là 'tiếp quản, đảm nhiệm'. Nghĩa của câu: Khi AI đảm nhiệm các công việc thường ngày..."
+            },
+            {
+                id: 6,
+                question: "Apologize immediately if you accidentally put your ____ in it by mispronouncing a foreign dignitary's name.",
+                options: ["mouth", "foot", "head", "hand"],
+                correct: 1,
+                explanation: "Thành ngữ (Idiom): <strong>put your foot in it</strong> có nghĩa là 'nói hớ, làm hoặc nói điều gì đó gây bối rối, xúc phạm người khác một cách vô ý'."
+            },
+            {
+                id: 7,
+                question: "Didn't get accepted into your dream university? Find the silver ____ through our international pathway programs.",
+                options: ["lining", "streak", "circle", "border"],
+                correct: 0,
+                explanation: "Thành ngữ: <strong>find the silver lining</strong> (từ câu gốc 'Every cloud has a silver lining') có nghĩa là 'tìm thấy tia hy vọng, tìm thấy mặt tích cực trong một tình huống tồi tệ'."
+            },
+            {
+                id: 8,
+                question: "Don't sell yourself ____ - apply for the scholarship program even if you think your achievements are not exceptional.",
+                options: ["low", "short", "cheap", "small"],
+                correct: 1,
+                explanation: "Thành ngữ: <strong>sell yourself short</strong> có nghĩa là 'đánh giá thấp bản thân, tự ti về khả năng của mình'."
+            },
+            {
+                id: 9,
+                question: "Every activity in our leadership program is designed to ____ the needs of today's rapidly changing job market.",
+                options: ["settle into", "align with", "break into", "deal with"],
+                correct: 1,
+                explanation: "Cụm từ: <strong>align with</strong> có nghĩa là 'phù hợp với, đồng điệu với, đáp ứng được'. Ở đây là 'phù hợp với/đáp ứng nhu cầu của thị trường lao động'."
+            },
+            {
+                id: 10,
+                question: "On second ____, why settle for an ordinary summer course when you can join our AI and Innovation Camp?",
+                options: ["glance", "thought", "chance", "choice"],
+                correct: 1,
+                explanation: "Cụm từ: <strong>on second thought(s)</strong> có nghĩa là 'sau khi suy nghĩ lại, nghĩ lại thì...' thường dùng khi bạn muốn thay đổi quyết định hoặc đưa ra ý kiến khác."
+            },
+            {
+                id: 11,
+                question: "Smart travelers always take ____ by checking the local weather forecast before going on a long hike.",
+                options: ["preparations", "protections", "preventions", "precautions"],
+                correct: 3,
+                explanation: "Cụm từ cố định: <strong>take precautions</strong> có nghĩa là 'thực hiện các biện pháp phòng ngừa, đề phòng'."
+            },
+            {
+                id: 12,
+                question: "Discover techniques for making better decisions instead of reacting in the ____ of the moment at our Life Skills Seminar.",
+                options: ["warm", "fire", "glow", "heat"],
+                correct: 3,
+                explanation: "Thành ngữ: <strong>in the heat of the moment</strong> có nghĩa là 'trong lúc nóng giận, bốc đồng, không suy nghĩ kỹ'."
+            },
+            {
+                id: 13,
+                question: "If you don't book your tickets now, you might ____ the early bird discount.",
+                options: ["get rid of", "miss out on", "catch up with", "keep track of"],
+                correct: 1,
+                explanation: "Cụm động từ: <strong>miss out on</strong> có nghĩa là 'bỏ lỡ mất (một cơ hội, một lợi ích nào đó)'."
+            },
+            {
+                id: 14,
+                question: "New graduates often struggle to ____ the pressure of tight deadlines and performance evaluations.",
+                options: ["focus on", "cope with", "look for", "agree with"],
+                correct: 1,
+                explanation: "Tương tự câu 4, cụm từ <strong>cope with</strong> có nghĩa là 'đương đầu, đối mặt và xử lý (áp lực)'."
+            },
+            {
+                id: 15,
+                question: "Students will ____ independent research projects under the guidance of experienced university mentors.",
+                options: ["carry out", "give up", "look for", "get over"],
+                correct: 0,
+                explanation: "Cụm động từ: <strong>carry out a project / research</strong> có nghĩa là 'tiến hành, thực hiện một dự án / nghiên cứu'."
+            },
+            {
+                id: 16,
+                question: "We are thrilled to ____ to announce the launch of our new Global Leadership Exchange Program for outstanding students.",
+                options: ["parts", "bits", "pieces", "ends"],
+                correct: 1,
+                explanation: "Thành ngữ: <strong>thrilled to bits</strong> có nghĩa là 'cực kỳ hài lòng, vô cùng sung sướng và hào hứng'."
+            },
+            {
+                id: 17,
+                question: "You must ____ attention to the traffic lights when driving your motorbike on busy city streets.",
+                options: ["bring", "take", "give", "pay"],
+                correct: 3,
+                explanation: "Cụm từ cố định: <strong>pay attention to</strong> có nghĩa là 'chú ý tới, để ý tới'."
+            },
+            {
+                id: 18,
+                question: "Our school board is ____ invested in buying new modern computers for the science laboratory this semester.",
+                options: ["deeply", "strongly", "heavily", "highly"],
+                correct: 2,
+                explanation: "Collocation: <strong>heavily invested in</strong> có nghĩa là 'đầu tư mạnh tay, rót nhiều vốn/tâm huyết vào việc gì'."
+            },
+            {
+                id: 19,
+                question: "Excitement is expected to run ____ during the International Youth Innovation Festival, which will welcome participants from over thirty countries.",
+                options: ["heavy", "intense", "thick", "high"],
+                correct: 3,
+                explanation: "Thành ngữ/Collocation: <strong>emotions/feelings/excitement run high</strong> có nghĩa là 'cảm xúc/sự phấn khích dâng trào, lên cao'."
+            },
+            {
+                id: 20,
+                question: "Don't drag your ____ when opportunities arise; submit your application today and take the first step toward success.",
+                options: ["heels", "toes", "feet", "legs"],
+                correct: 2,
+                explanation: "Thành ngữ: <strong>drag your feet</strong> (hoặc drag one's heels) có nghĩa là 'chần chừ, lề mề, trì hoãn việc gì đó'."
+            },
+            {
+                id: 21,
+                question: "To avoid burnout when working from home, it is essential to ____ clear boundaries between your office hours and personal time.",
+                options: ["make", "give", "do", "set"],
+                correct: 3,
+                explanation: "Collocation: <strong>set boundaries</strong> có nghĩa là 'thiết lập ranh giới'. Ở đây là ranh giới giữa thời gian làm việc và cá nhân."
+            },
+            {
+                id: 22,
+                question: "Participants will be ____ accountable for completing project milestones to ensure progress throughout the program.",
+                options: ["taken", "made", "given", "held"],
+                correct: 3,
+                explanation: "Collocation: <strong>hold someone accountable for something</strong> (bị động: be held accountable for) có nghĩa là 'bắt ai đó phải chịu trách nhiệm cho việc gì'."
+            },
+            {
+                id: 23,
+                question: "The city council will take ____ to increase security presence during the upcoming international film festival.",
+                options: ["motions", "measures", "methods", "manners"],
+                correct: 1,
+                explanation: "Collocation: <strong>take measures</strong> có nghĩa là 'tiến hành/thực hiện các biện pháp'."
+            },
+            {
+                id: 24,
+                question: "You should ____ a routine of reading English books for fifteen minutes before going to bed.",
+                options: ["hold", "make", "take", "keep"],
+                correct: 3,
+                explanation: "Collocation: <strong>keep a routine</strong> có nghĩa là 'duy trì một thói quen/lịch trình'."
+            },
+            {
+                id: 25,
+                question: "Learn how to ____ a balance between academic achievement, personal well-being, and extracurricular involvement.",
+                options: ["mark", "hit", "strike", "find"],
+                correct: 2,
+                explanation: "Collocation: <strong>strike a balance</strong> có nghĩa là 'tạo ra sự cân bằng, dung hòa' giữa các yếu tố."
+            },
+            {
+                id: 26,
+                question: "After reviewing our detailed proposal, the investors finally gave us the green ____ to begin the construction of the new facility.",
+                options: ["mark", "sign", "flag", "light"],
+                correct: 3,
+                explanation: "Thành ngữ: <strong>give someone the green light</strong> có nghĩa là 'bật đèn xanh, cho phép ai đó làm gì'."
+            },
+            {
+                id: 27,
+                question: "Online training programs aim to ____ the gap between academic knowledge and practical workplace skills.",
+                options: ["face", "raise", "bridge", "break"],
+                correct: 2,
+                explanation: "Collocation: <strong>bridge the gap</strong> có nghĩa là 'làm cầu nối, thu hẹp khoảng cách' giữa hai thứ."
+            },
+            {
+                id: 28,
+                question: "Our hands-on courses ____ other traditional classes by emphasizing real-world projects and practical problem-solving skills.",
+                options: ["differ from", "lead to", "result in", "depend on"],
+                correct: 0,
+                explanation: "Cấu trúc: <strong>differ from</strong> có nghĩa là 'khác biệt so với'. Ở đây khóa học thực hành khác với lớp học truyền thống."
+            },
+            {
+                id: 29,
+                question: "If you want to ____ insights into local traditions, you should join the community cooking class this Saturday.",
+                options: ["make", "gain", "hold", "take"],
+                correct: 1,
+                explanation: "Collocation: <strong>gain insights into</strong> có nghĩa là 'có được cái nhìn sâu sắc, thấu hiểu về vấn đề gì'."
+            },
+            {
+                id: 30,
+                question: "It is never a good idea to ____ your medical checkup if you are feeling unwell.",
+                options: ["look up", "take on", "put off", "catch up"],
+                correct: 2,
+                explanation: "Cụm động từ: <strong>put off</strong> có nghĩa là 'trì hoãn'. Không nên trì hoãn việc khám bệnh."
+            },
+            {
+                id: 31,
+                question: "Never burn ____ with former colleagues, as they may help you in the future.",
+                options: ["bridges", "lights", "fields", "houses"],
+                correct: 0,
+                explanation: "Thành ngữ: <strong>burn bridges</strong> (nghĩa đen: đốt cầu) có nghĩa là 'cắt đứt quan hệ, qua cầu rút ván, làm mất lòng không thể hàn gắn'."
+            },
+            {
+                id: 32,
+                question: "Our new eco-friendly engine is designed to break new ____ in the automotive industry with zero-emission.",
+                options: ["field", "land", "floor", "ground"],
+                correct: 3,
+                explanation: "Thành ngữ: <strong>break new ground</strong> có nghĩa là 'khám phá, tạo ra bước đột phá mới mẻ, tiên phong'."
+            },
+            {
+                id: 33,
+                question: "Register before June 30 and receive a free study planner ____ to all early-bird applicants.",
+                options: ["given away", "looked over", "got through", "taken back"],
+                correct: 0,
+                explanation: "Cụm động từ: <strong>give away</strong> có nghĩa là 'phát miễn phí, tặng quà'. Ở dạng bị động rút gọn là 'given away' (được đem tặng)."
+            },
+            {
+                id: 34,
+                question: "Be aware of the potential delays ____ with the heavy construction currently taking place.",
+                options: ["connected", "associated", "attached", "combined"],
+                correct: 1,
+                explanation: "Collocation: <strong>associated with</strong> có nghĩa là 'có liên quan tới, gắn liền với'. Sự chậm trễ liên quan tới việc thi công."
+            },
+            {
+                id: 35,
+                question: "Technology-related occupations are expected to ____ a significant proportion of new jobs created over the next decade.",
+                options: ["look after", "account for", "results from", "consist of"],
+                correct: 1,
+                explanation: "Cụm động từ: <strong>account for</strong> mang nghĩa 'chiếm (bao nhiêu phần trăm/tỉ lệ)'. Nghề nghiệp công nghệ chiếm tỉ lệ lớn."
+            },
+            {
+                id: 36,
+                question: "Take ____ of your future today by joining our summer bootcamp, designed for ambitious high school students.",
+                options: ["head", "lead", "charge", "task"],
+                correct: 2,
+                explanation: "Cụm từ: <strong>take charge of</strong> có nghĩa là 'chịu trách nhiệm, nắm quyền kiểm soát, tự định đoạt'."
+            },
+            {
+                id: 37,
+                question: "You may need to make ____ to the seating plan if more people confirm their attendance.",
+                options: ["adjustments", "improvements", "discoveries", "predictions"],
+                correct: 0,
+                explanation: "Collocation: <strong>make adjustments to</strong> có nghĩa là 'thực hiện các điều chỉnh đối với'."
+            },
+            {
+                id: 38,
+                question: "Avoid spreading yourself too ____ by joining too many extracurricular clubs at the expense of your core academic performance.",
+                options: ["thin", "light", "small", "wide"],
+                correct: 0,
+                explanation: "Thành ngữ: <strong>spread oneself too thin</strong> có nghĩa là 'ôm đồm quá nhiều việc cùng một lúc dẫn đến không làm tốt việc nào, hao tổn năng lượng'."
+            },
+            {
+                id: 39,
+                question: "Missed your first career choice? It may be a ____ in disguise - discover exciting opportunities at our Career Exploration Fair.",
+                options: ["blessing", "miracle", "benefit", "fortune"],
+                correct: 0,
+                explanation: "Thành ngữ: <strong>a blessing in disguise</strong> có nghĩa là 'trong cái rủi có cái may, một điều ban đầu tưởng chừng là tồi tệ nhưng sau đó lại mang lại kết quả tốt đẹp'."
+            },
+            {
+                id: 40,
+                question: "Hundreds of energetic university students love to ____ part in the annual dynamic charity run event.",
+                options: ["make", "join", "do", "take"],
+                correct: 3,
+                explanation: "Collocation quen thuộc: <strong>take part in</strong> = participate in, có nghĩa là 'tham gia vào'."
+            }
+        ];
+
+        let currentAnswers = new Array(quizData.length).fill(null);
+        let timerInterval;
+        let timeLeft = 40 * 60; // 40 phút
+        let isSubmitted = false;
+        
+        const startBtn = document.getElementById('start-btn');
+        const startScreen = document.getElementById('start-screen');
+        const quizContainer = document.getElementById('quiz-container');
+        const submitContainer = document.getElementById('submit-container');
+        const submitBtn = document.getElementById('submit-btn');
+        const resultsScreen = document.getElementById('results-screen');
+        const timeDisplay = document.getElementById('time');
+        const timerContainer = document.getElementById('timer-container');
+        
+        const explanationModal = document.getElementById('explanation-modal');
+        const closeModalBtn = document.getElementById('close-modal');
+        const closeModalBtnBottom = document.getElementById('close-modal-btn');
+        const modalQuestionText = document.getElementById('modal-question-text');
+        const modalExplanationContent = document.getElementById('modal-explanation-content');
+
+        const soundTick = document.getElementById('sound-tick');
+        const soundAlarm = document.getElementById('sound-alarm');
+        const soundSuccess = document.getElementById('sound-success');
+
+        soundTick.volume = 0.2;
+        soundAlarm.volume = 0.5;
+        soundSuccess.volume = 0.6;
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                updateTimerDisplay();
+
+                // Warning at 5 minutes (300 seconds)
+                if (timeLeft === 300) {
+                    timerContainer.classList.add('timer-warning');
+                    timerContainer.classList.remove('bg-white');
+                    timerContainer.classList.add('bg-red-50');
+                    playSound(soundAlarm);
+                }
+
+                // Tick sound every second in last 10 seconds
+                if (timeLeft <= 10 && timeLeft > 0) {
+                    playSound(soundTick);
+                }
+
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    autoSubmit();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            timeDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        function playSound(audioEl) {
+            try {
+                audioEl.currentTime = 0;
+                let playPromise = audioEl.play();
+                if (playPromise !== undefined) {
+                    playPromise.catch(error => {
+                        console.log("Trình duyệt chặn tự động phát âm thanh.", error);
+                    });
+                }
+            } catch (e) {}
+        }
+
+        function renderQuestions() {
+            quizContainer.innerHTML = ''; 
+
+            quizData.forEach((q, index) => {
+                const questionBlock = document.createElement('div');
+                questionBlock.className = 'glass-panel p-6 md:p-8 opacity-0 translate-y-4 transition-all duration-500 ease-out mb-6';
+                questionBlock.id = `q-block-${index}`;
+                
+                // Hiệu ứng load từng câu
+                setTimeout(() => {
+                    questionBlock.classList.remove('opacity-0', 'translate-y-4');
+                }, index * 40); // Nhanh hơn bài 70 câu một chút
+
+                const labels = ['A', 'B', 'C', 'D'];
+                let optionsHtml = '';
+                
+                q.options.forEach((opt, optIndex) => {
+                    optionsHtml += `
+                        <div class="relative w-full">
+                            <input type="radio" name="q${index}" id="q${index}-opt${optIndex}" value="${optIndex}" class="peer hidden" onchange="handleSelect(${index}, ${optIndex})">
+                            <label for="q${index}-opt${optIndex}" id="label-q${index}-opt${optIndex}" class="option-label flex items-center p-4 rounded-xl w-full bg-white text-gray-800 text-lg">
+                                <span class="w-8 h-8 flex items-center justify-center rounded-lg bg-gray-100 text-gray-500 font-bold mr-4 font-display peer-checked:bg-brand-blue peer-checked:text-white transition-colors">
+                                    ${labels[optIndex]}
+                                </span>
+                                <span>${opt}</span>
+                            </label>
+                        </div>
+                    `;
+                });
+
+                questionBlock.innerHTML = `
+                    <div class="flex flex-col md:flex-row gap-4 mb-6">
+                        <div class="flex-shrink-0">
+                            <span class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-brand-magenta text-white font-display font-bold text-xl neo-brutalism border-brand-dark">
+                                ${q.id}
+                            </span>
+                        </div>
+                        <h3 class="text-xl md:text-2xl font-medium leading-relaxed pt-2 text-brand-dark">
+                            ${q.question}
+                        </h3>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 ml-0 md:ml-16">
+                        ${optionsHtml}
+                    </div>
+                    
+                    <div id="feedback-${index}" class="hidden mt-6 ml-0 md:ml-16 p-4 rounded-xl border-2">
+                        <div class="flex justify-between items-center mb-2">
+                            <span id="status-${index}" class="font-bold text-lg flex items-center gap-2"></span>
+                            <button onclick="showExplanation(${index})" class="text-brand-magenta font-bold hover:underline flex items-center gap-2 px-4 py-2 bg-white rounded-lg border-2 border-brand-magenta hover:bg-pink-50 transition-colors">
+                                <i class="fa-solid fa-lightbulb"></i> Xem giải thích
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                quizContainer.appendChild(questionBlock);
+            });
+        }
+
+        window.handleSelect = function(questionIndex, optionIndex) {
+            if (isSubmitted) return;
+            currentAnswers[questionIndex] = optionIndex;
+            
+            if (currentAnswers.every(ans => ans !== null)) {
+                submitBtn.classList.add('animate-pulse');
+                submitBtn.innerHTML = `<i class="fa-solid fa-rocket"></i> Nộp Bài Ngay!`;
+            }
+        };
+
+        function evaluateQuiz() {
+            if (isSubmitted) return;
+            isSubmitted = true;
+            clearInterval(timerInterval);
+
+            submitContainer.classList.add('hidden');
+            
+            let score = 0;
+
+            quizData.forEach((q, index) => {
+                const selected = currentAnswers[index];
+                const isCorrect = selected === q.correct;
+                
+                const qBlock = document.getElementById(`q-block-${index}`);
+                const feedbackDiv = document.getElementById(`feedback-${index}`);
+                const statusSpan = document.getElementById(`status-${index}`);
+
+                const radios = document.querySelectorAll(`input[name="q${index}"]`);
+                radios.forEach(radio => radio.disabled = true);
+
+                const correctLabel = document.getElementById(`label-q${index}-opt${q.correct}`);
+                correctLabel.classList.add('correct-answer');
+                
+                if (isCorrect) {
+                    score++;
+                    feedbackDiv.classList.remove('hidden');
+                    feedbackDiv.classList.add('bg-green-50', 'border-green-400');
+                    statusSpan.innerHTML = `<i class="fa-solid fa-check-double text-green-600"></i> <span class="text-green-800">Chính xác! (+1 điểm)</span>`;
+                    qBlock.classList.add('border-l-8', 'border-green-500');
+                } else {
+                    feedbackDiv.classList.remove('hidden');
+                    feedbackDiv.classList.add('bg-red-50', 'border-red-400');
+                    
+                    if (selected !== null) {
+                        const wrongLabel = document.getElementById(`label-q${index}-opt${selected}`);
+                        wrongLabel.classList.add('wrong-answer');
+                        statusSpan.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-red-500"></i> <span class="text-red-700">Sai rồi bạn ơi!</span>`;
+                    } else {
+                        statusSpan.innerHTML = `<i class="fa-solid fa-circle-question text-yellow-500"></i> <span class="text-yellow-700">Bỏ trống!</span>`;
+                    }
+                    qBlock.classList.add('border-l-8', 'border-red-500');
+                }
+            });
+
+            showResults(score);
+        }
+
+        function showResults(score) {
+            playSound(soundSuccess);
+            
+            const percentage = (score / quizData.length) * 100;
+            const scoreDisplay = document.getElementById('score-display');
+            const feedbackMsg = document.getElementById('feedback-message');
+            const scoreIcon = document.getElementById('score-icon');
+            
+            let count = 0;
+            const duration = 2000;
+            const step = Math.max(1, Math.floor(score / (duration / 20)));
+            
+            const counter = setInterval(() => {
+                count += step;
+                if (count >= score) {
+                    count = score;
+                    clearInterval(counter);
+                }
+                scoreDisplay.textContent = count;
+            }, 20);
+
+            if (percentage >= 90) {
+                feedbackMsg.innerHTML = "Quá đỉnh! Trùm idiom và collocations đây rồi! 🌟🔥";
+                scoreIcon.textContent = "👑";
+            } else if (percentage >= 75) {
+                feedbackMsg.innerHTML = "Rất tốt! Vốn từ của bạn rất 'out trình' đấy! 🚀";
+                scoreIcon.textContent = "🚀";
+            } else if (percentage >= 50) {
+                feedbackMsg.innerHTML = "Khá ổn! Chịu khó đọc thêm giải thích để nhớ lâu hơn nha! 💪";
+                scoreIcon.textContent = "💪";
+            } else {
+                feedbackMsg.innerHTML = "Phần này hơi 'khoai' đúng không? Không sao, học kỹ giải thích là làm trùm liền! 📚✨";
+                scoreIcon.textContent = "📚";
+            }
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            quizContainer.classList.add('hidden');
+            resultsScreen.classList.remove('hidden');
+        }
+
+        function autoSubmit() {
+            // Thay bằng thông báo custom hiển thị trên màn hình thay vì alert để tránh chặn trình duyệt
+            const endMsg = document.createElement('div');
+            endMsg.className = "fixed top-4 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-6 py-3 rounded-xl font-bold shadow-2xl z-[999] neo-brutalism animate-bounce";
+            endMsg.innerHTML = "⏰ HẾT GIỜ! HỆ THỐNG TỰ ĐỘNG NỘP BÀI!";
+            document.body.appendChild(endMsg);
+            
+            setTimeout(() => {
+                endMsg.remove();
+            }, 4000);
+            
+            evaluateQuiz();
+        }
+
+        window.showExplanation = function(index) {
+            const q = quizData[index];
+            modalQuestionText.innerHTML = `<strong>Câu ${q.id}:</strong> ${q.question}`;
+            modalExplanationContent.innerHTML = `
+                <div class="mb-6 bg-gray-50 p-4 rounded-xl border-2 border-gray-200">
+                    <p class="text-sm text-gray-500 mb-2 uppercase font-bold tracking-wider">Đáp án chính xác</p>
+                    <div class="inline-block px-5 py-2 bg-brand-cyan/20 text-teal-800 rounded-lg font-bold border-2 border-brand-cyan text-lg">
+                        ${['A', 'B', 'C', 'D'][q.correct]}. ${q.options[q.correct]}
+                    </div>
+                </div>
+                <div class="bg-blue-50 border-l-4 border-brand-blue p-5 rounded-r-xl shadow-sm">
+                    <h4 class="font-display font-bold text-brand-blue mb-3 text-xl">💡 Góc giải ngố:</h4>
+                    <p class="text-gray-800 text-lg">${q.explanation}</p>
+                </div>
+            `;
+            explanationModal.classList.add('active');
+            document.body.style.overflow = 'hidden'; 
+        };
+
+        function hideModal() {
+            explanationModal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Event Listeners
+        startBtn.addEventListener('click', () => {
+            startScreen.classList.add('hidden');
+            quizContainer.classList.remove('hidden');
+            submitContainer.classList.remove('hidden');
+            renderQuestions();
+            startTimer();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        submitBtn.addEventListener('click', () => {
+            const unanswered = currentAnswers.filter(ans => ans === null).length;
+            if (unanswered > 0) {
+                // Tạo custom confirm box đẹp mắt thay vì dùng confirm() mặc định
+                const isConfirmed = confirm(`Khoan đã! Bạn còn ${unanswered} câu chưa chọn đáp án. Vẫn muốn nộp bài chứ?`);
+                if (!isConfirmed) return;
+            }
+            evaluateQuiz();
+        });
+
+        document.getElementById('review-btn').addEventListener('click', () => {
+            resultsScreen.classList.add('hidden');
+            quizContainer.classList.remove('hidden');
+        });
+
+        closeModalBtn.addEventListener('click', hideModal);
+        closeModalBtnBottom.addEventListener('click', hideModal);
+        
+        explanationModal.addEventListener('click', (e) => {
+            if (e.target === explanationModal) {
+                hideModal();
+            }
+        });
+        
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && explanationModal.classList.contains('active')) {
+                hideModal();
+            }
+        });
+
+    </script>
+</body>
+</html>
