@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tổng Ôn Quảng Cáo Tờ Rơi & Sắp Xếp Câu</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+            background-attachment: fixed;
+            color: #1f2937;
+        }
+        
+        /* Custom Scrollbar for a clean look */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #c7c7cc; 
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a1a1aa; 
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        /* Glassmorphism elements */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Gen Z Border Style */
+        .genz-border {
+            border: 3px solid #1f2937;
+            box-shadow: 6px 6px 0px 0px #1f2937;
+            transition: all 0.2s ease;
+        }
+        
+        /* 3D Option button styling (Gen Z Neobrutalism) */
+        .option-label {
+            cursor: pointer;
+            display: block;
+            position: relative;
+            margin-top: 12px;
+        }
+        .option-box {
+            border: 2px solid #1f2937;
+            border-radius: 0.75rem;
+            box-shadow: 3px 3px 0px 0px #1f2937;
+            transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .option-label:hover .option-box {
+            transform: translate(-3px, -3px);
+            box-shadow: 6px 6px 0px 0px #1f2937;
+        }
+        .option-label:active .option-box {
+            transform: translate(2px, 2px);
+            box-shadow: 0px 0px 0px 0px #1f2937;
+        }
+        
+        /* Checked State Styling */
+        input[type="radio"]:checked + .option-box {
+            background-color: #1f2937 !important; /* Bold Dark Gray */
+            border-color: #1f2937;
+            box-shadow: 4px 4px 0px 0px #a855f7 !important; /* Neon Purple Shadow */
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+        input[type="radio"]:checked + .option-box .opt-text {
+            color: white !important;
+        }
+        input[type="radio"]:checked + .option-box .letter-circle {
+            background-color: #a855f7 !important;
+            color: white !important;
+            border-color: #1f2937;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.95); }
+            50% { transform: scale(1.03); }
+            100% { transform: scale(1); }
+        }
+
+        /* Result states after submission (Disabled mode - no colors shown) */
+        input:disabled + .option-box {
+            cursor: not-allowed;
+            opacity: 0.8;
+        }
+
+        /* Sticky top offset for header */
+        .sticky-offset {
+            top: 5rem;
+        }
+        
+        .blank-space {
+            display: inline-block;
+            padding: 0 8px;
+            font-weight: bold;
+            color: #8b5cf6;
+            background: #ede9fe;
+            border-radius: 6px;
+            margin: 0 2px;
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col relative">
+
+    <!-- OVERLAY: START TEST -->
+    <div id="startOverlay" class="fixed inset-0 z-50 flex items-center justify-center bg-white/80 backdrop-blur-md">
+        <div class="bg-white p-8 md:p-12 rounded-3xl genz-border text-center max-w-lg mx-4">
+            <h1 class="text-3xl md:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-500 mb-4">
+                ✨ Sẵn sàng chưa?
+            </h1>
+            <p class="text-gray-600 mb-8 text-lg">Bài thi môn Tiếng Anh có thời gian làm bài là <b>50 phút</b>. Hệ thống sẽ có chuông báo khi còn 1 phút.</p>
+            <button onclick="startTest()" class="w-full bg-gradient-to-r from-violet-500 to-fuchsia-500 hover:from-violet-600 hover:to-fuchsia-600 text-white font-bold py-4 px-8 rounded-2xl shadow-lg transform hover:scale-105 transition-all duration-200 text-xl">
+                Bắt Đầu Làm Bài 🚀
+            </button>
+        </div>
+    </div>
+
+    <!-- HEADER / TIMER -->
+    <header class="sticky top-0 z-40 glass-panel border-b border-gray-200 px-4 py-3 shadow-sm">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <span class="text-2xl">📝</span>
+                <h1 class="font-bold text-lg hidden sm:block bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600">Tổng Ôn Quảng Cáo Tờ Rơi & Sắp Xếp Câu</h1>
+            </div>
+            <div class="flex items-center gap-4">
+                <div id="timerBox" class="bg-indigo-100 text-indigo-800 font-mono font-bold text-xl px-4 py-2 rounded-xl border-2 border-indigo-200 flex items-center gap-2 transition-colors">
+                    ⏳ <span id="timeDisplay">50:00</span>
+                </div>
+                <button onclick="submitTest()" id="submitBtnTop" class="bg-gray-900 hover:bg-gray-800 text-white font-bold py-2 px-6 rounded-xl transition-colors hidden sm:block">
+                    Nộp Bài
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="flex-grow max-w-7xl mx-auto w-full px-4 py-8">
+        
+        <form id="testForm" onsubmit="event.preventDefault(); submitTest();">
+            
+            <!-- SECTION 1: CLOZE TEST 1 (News) -->
+            <div class="mb-12">
+                <h2 class="text-xl font-bold mb-4 text-purple-700 bg-purple-100 inline-block px-4 py-1 rounded-full border-2 border-purple-200">Part 1: Piece of News (Questions 1 - 6)</h2>
+                <p class="italic text-gray-600 mb-4 font-medium">Read the following piece of news and mark the letter A, B, C or D on your answer sheet to indicate the correct option that best fits each of the numbered blanks.</p>
+                <div class="flex flex-col lg:flex-row gap-6">
+                    <div class="lg:w-[70%] glass-panel rounded-3xl p-6 lg:p-8 lg:sticky lg:top-24 lg:max-h-[80vh] overflow-y-auto custom-scrollbar border border-gray-200">
+                        <h3 class="text-2xl font-bold mb-4 uppercase tracking-wide">Hanoi Proposes Banes on Petrol Motorbikes</h3>
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            The Hanoi Department of Construction has proposed a historic roadmap to restrict fossil-fuel vehicles <span class="blank-space">(1)</span> an effort to combat the city's severe air pollution. Under the pilot scheme, petrol-powered motorbikes will face restrictions within the city's Ring Road 1 starting from January 1 to June 30, before a total ban on fossil-fuel motorbikes takes <span class="blank-space">(2)</span> in this zone on July 1. The ban will expand to Ring Road 2 by 2028, alongside new limits on private petrol and diesel cars. By 2050, the city aims to <span class="blank-space">(3)</span> all non-green motor vehicles entirely across the capital.
+                        </p>
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            Local authorities are preparing for this transition by prioritizing the installation of charging stations on sidewalks and encouraging clean energy alternatives. <span class="blank-space">(4)</span> environmental data, standard emissions are a critical issue, with nearly 7 million unmonitored motorbikes and 800,000 cars contributing to 56.1% of Hanoi's air pollution. To discourage the use of polluting vehicles, the city will also introduce congestion fees and adjust parking <span class="blank-space">(5)</span>.
+                        </p>
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            While changing long-standing commuting habits is never easy, city planners believe these measures will directly address the root cause of the city's air crisis. By tackling the primary source of urban smog, the roadmap is expected to <span class="blank-space">(6)</span> improve public health and transform Hanoi into a more livable, green city.
+                        </p>
+                        <p class="text-sm text-gray-400 mt-4">(Adapted from https://thanhnien.vn)</p>
+                    </div>
+                    <div class="lg:w-[30%] flex flex-col gap-4" id="q-container-part1"></div>
+                </div>
+            </div>
+
+            <!-- SECTION 2: CLOZE TEST 2 (News) -->
+            <div class="mb-12">
+                <h2 class="text-xl font-bold mb-4 text-green-700 bg-green-100 inline-block px-4 py-1 rounded-full border-2 border-green-200">Part 2: Piece of News (Questions 7 - 12)</h2>
+                <p class="italic text-gray-600 mb-4 font-medium">Read the following piece of news and mark the letter A, B, C or D on your answer sheet to indicate the correct option that best fits each of the numbered blanks.</p>
+                <div class="flex flex-col lg:flex-row gap-6">
+                    <div class="lg:w-[70%] glass-panel rounded-3xl p-6 lg:p-8 lg:sticky lg:top-24 lg:max-h-[80vh] overflow-y-auto custom-scrollbar border border-gray-200">
+                        <h3 class="text-2xl font-bold mb-4 uppercase tracking-wide">Vietnam Culture Day</h3>
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            General Secretary To Lam has signed Resolution 80 of the Politburo, establishing November 24 as "Vietnam Culture Day." Notably, this day will become an official national public holiday, allowing workers across the country to take a paid day off. The move aims to encourage the public to engage <span class="blank-space">(7)</span> cultural activities, motivate artists to innovate, and inspire society to practice a civilized lifestyle.
+                        </p>
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            The resolution sets ambitious goals for 2030, aiming to build an advanced national culture rich in identity. This development will expand into digital spaces and the education system, ensuring that 100% of students <span class="blank-space">(8)</span> regularly in cultural heritage activities. Culturally, the policy looks to transform Vietnam into a dynamic hub for creative industries, <span class="blank-space">(9)</span> major regional and international events.
+                        </p>
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            Through this <span class="blank-space">(10)</span> initiative, the government is determined to <span class="blank-space">(11)</span> a long-term cultural renaissance in the new era. Officials believe that making cultural enjoyment accessible to every citizen through a national holiday is a crucial step forward. Supporters are confident that this landmark decision will elevate the country's soft power and put Vietnam on the map as a <span class="blank-space">(12)</span>.
+                        </p>
+                        <p class="text-sm text-gray-400 mt-4">(Adapted from https://tuoitre.vn)</p>
+                    </div>
+                    <div class="lg:w-[30%] flex flex-col gap-4" id="q-container-part2"></div>
+                </div>
+            </div>
+
+            <!-- SECTION 3: CLOZE TEST 3 (Leaflet) -->
+            <div class="mb-12">
+                <h2 class="text-xl font-bold mb-4 text-blue-700 bg-blue-100 inline-block px-4 py-1 rounded-full border-2 border-blue-200">Part 3: Leaflet (Questions 13 - 18)</h2>
+                <p class="italic text-gray-600 mb-4 font-medium">Read the following leaflet and mark the letter A, B, C or D on your answer sheet to indicate the correct option that best fits each of the numbered blanks.</p>
+                <div class="flex flex-col lg:flex-row gap-6">
+                    <div class="lg:w-[70%] glass-panel rounded-3xl p-6 lg:p-8 lg:sticky lg:top-24 lg:max-h-[80vh] overflow-y-auto custom-scrollbar border border-gray-200">
+                        <h3 class="text-2xl font-bold mb-4 uppercase tracking-wide">The Best Diet: Fuel Your Body Right</h3>
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            With so many fitness trends online, finding the perfect diet can feel challenging. The truth is, there is no single plan <span class="blank-space">(13)</span> works for everyone, and starving yourself is never the answer.
+                        </p>
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            Here are some useful tips to help you eat effectively:
+                        </p>
+                        <ul class="list-disc pl-6 text-gray-700 leading-relaxed text-lg mb-4 space-y-4">
+                            <li><span class="blank-space">(14)</span> processed foods, sugary drinks, and late-night snacks.</li>
+                            <li>Listen to your body's natural hunger cues and stop <span class="blank-space">(15)</span> when you feel comfortably full.</li>
+                            <li>Keep track of your <span class="blank-space">(16)</span> as staying hydrated is just as important as the food you eat.</li>
+                            <li>Fill your plate with colorful vegetables, lean proteins, and whole grains to get a wide mix of <span class="blank-space">(17)</span>.</li>
+                            <li>Focus on consistency over quick fixes, because a healthy lifestyle is a marathon, not a sprint.</li>
+                            <li>Give yourself permission to enjoy your favorite treats <span class="blank-space">(18)</span> rather than completely banning them.</li>
+                        </ul>
+                        <p class="text-sm text-gray-400 mt-4">(Adapted from https://www.eatright.org)</p>
+                    </div>
+                    <div class="lg:w-[30%] flex flex-col gap-4" id="q-container-part3"></div>
+                </div>
+            </div>
+
+            <!-- SECTION 4: CLOZE TEST 4 (Leaflet) -->
+            <div class="mb-12">
+                <h2 class="text-xl font-bold mb-4 text-orange-700 bg-orange-100 inline-block px-4 py-1 rounded-full border-2 border-orange-200">Part 4: Leaflet (Questions 19 - 24)</h2>
+                <p class="italic text-gray-600 mb-4 font-medium">Read the following leaflet and mark the letter A, B, C or D on your answer sheet to indicate the correct option that best fits each of the numbered blanks.</p>
+                <div class="flex flex-col lg:flex-row gap-6">
+                    <div class="lg:w-[70%] glass-panel rounded-3xl p-6 lg:p-8 lg:sticky lg:top-24 lg:max-h-[80vh] overflow-y-auto custom-scrollbar border border-gray-200">
+                        <h3 class="text-2xl font-bold mb-4 uppercase tracking-wide">Conquer the Exam, Control the Stress</h3>
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            With the exams fast approaching, students find themselves overwhelmed by endless revision and high expectations. Experiencing a bit of anxiety during this time is completely normal; however, letting stress <span class="blank-space">(19)</span> will only hold you back. Here are some useful tips to help you stay calm:
+                        </p>
+                        <ul class="list-disc pl-6 text-gray-700 leading-relaxed text-lg mb-4 space-y-4">
+                            <li>Break down your study guides <span class="blank-space">(20)</span> smaller, daily tasks if they feel too heavy to carry alone.</li>
+                            <li>Take a breather for five to ten minutes after <span class="blank-space">(21)</span> hour of hard work to clear your mind.</li>
+                            <li>Talk it over with a friend or a teacher if the emotional weight becomes <span class="blank-space">(22)</span> much.</li>
+                            <li>Fuel your brain with nutritious meals and plenty of water instead of relying <span class="blank-space">(23)</span> on energy drinks or coffee.</li>
+                            <li>Focus on your own pace rather than <span class="blank-space">(24)</span> your progress to others, because everyone's learning journey is different.</li>
+                        </ul>
+                        <p class="text-sm text-gray-400 mt-4">(Adapted from https://www.psychologytoday.com)</p>
+                    </div>
+                    <div class="lg:w-[30%] flex flex-col gap-4" id="q-container-part4"></div>
+                </div>
+            </div>
+
+            <!-- SECTION 5: SENTENCE ARRANGEMENT -->
+            <div class="mb-12">
+                <h2 class="text-xl font-bold mb-4 text-teal-700 bg-teal-100 inline-block px-4 py-1 rounded-full border-2 border-teal-200">Part 5: Sentence Arrangement (Questions 25 - 45)</h2>
+                <p class="italic text-gray-600 mb-4 font-medium">Mark the letter A, B, C, or D on your answer sheet to indicate the correct arrangement of the sentence to make a meaningful paragraph/letter in each of the following questions.</p>
+                <div class="glass-panel rounded-3xl p-6 lg:p-8 grid grid-cols-1 md:grid-cols-2 gap-8 border border-gray-200" id="q-container-part5">
+                    <!-- Sentences injected via JS -->
+                </div>
+            </div>
+
+            <!-- SUBMIT BUTTON BOTTOM -->
+            <div class="text-center mt-12 mb-8">
+                <button type="submit" id="submitBtnBottom" class="bg-gray-900 hover:bg-gray-800 text-white font-bold py-4 px-12 rounded-2xl shadow-xl transform hover:-translate-y-1 transition-all duration-200 text-xl genz-border">
+                    Nộp Bài & Xem Điểm ✨
+                </button>
+            </div>
+
+        </form>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-white border-t border-gray-200 py-6 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p class="font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-500 text-xl">Idea for Design: Mr Hoa Van!</p>
+            <p class="text-gray-400 text-sm mt-1">© 2026 - Tinh Hoa Dự Đoán THPT</p>
+        </div>
+    </footer>
+
+    <!-- RESULT MODAL -->
+    <div id="resultModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm hidden">
+        <div class="bg-white p-8 md:p-12 rounded-3xl genz-border text-center max-w-md mx-4 animate-[fadeIn_0.3s_ease]">
+            <div class="text-6xl mb-4" id="resultIcon">🎉</div>
+            <h2 class="text-3xl font-extrabold mb-2">Điểm số của bạn</h2>
+            <p class="text-5xl font-black text-purple-600 mb-6"><span id="scoreText">0</span>/45</p>
+            <p class="text-gray-600 mb-8 font-medium">Kết quả bài làm đã được hệ thống ghi nhận thành công!</p>
+            <button onclick="closeModal()" class="w-full bg-gray-900 text-white font-bold py-3 px-6 rounded-xl hover:bg-gray-800 transition">
+                Đóng
+            </button>
+        </div>
+    </div>
+
+    <!-- DATA & SCRIPT -->
+    <script>
+        // QUESTION DATA - TỔNG ÔN TỜ RƠI VÀ SẮP XẾP CÂU
+        // Không hiển thị lời giải, hệ thống chỉ cần chấm điểm ngầm.
+        const questionsData = [
+            // Part 1: News 1
+            { id: 1, part: 1, options: ["in", "for", "with", "at"], correct: 0 },
+            { id: 2, part: 1, options: ["impact", "effect", "influence", "implication"], correct: 1 },
+            { id: 3, part: 1, options: ["sort out", "work out", "phase out", "leave out"], correct: 2 },
+            { id: 4, part: 1, options: ["According to", "In spite of", "Rather than", "With regard to"], correct: 0 },
+            { id: 5, part: 1, options: ["levels", "rates", "numbers", "qualities"], correct: 1 },
+            { id: 6, part: 1, options: ["significant", "signify", "significantly", "significance"], correct: 2 },
+
+            // Part 2: News 2
+            { id: 7, part: 2, options: ["for", "in", "with", "about"], correct: 1 },
+            { id: 8, part: 2, options: ["participate", "participative", "participation", "participation"], correct: 0 },
+            { id: 9, part: 2, options: ["have attracted", "to attract", "attracted", "attracting"], correct: 3 },
+            { id: 10, part: 2, options: ["leading", "sweeping", "flowing", "prevailing"], correct: 1 },
+            { id: 11, part: 2, options: ["bring about", "settle down", "factor in", "take over"], correct: 0 },
+            { id: 12, part: 2, options: ["cultural leading destination", "leading cultural destination", "cultural destination leading", "leading destination cultural"], correct: 1 },
+
+            // Part 3: Leaflet 1
+            { id: 13, part: 3, options: ["who", "where", "that", "whose"], correct: 2 },
+            { id: 14, part: 3, options: ["Cut down on", "Make up for", "Watch out for", "Fall back on"], correct: 0 },
+            { id: 15, part: 3, options: ["to eat", "have eaten", "to eating", "eating"], correct: 3 },
+            { id: 16, part: 3, options: ["daily intake water", "daily water intake", "water intake daily", "water daily intake"], correct: 1 },
+            { id: 17, part: 3, options: ["recipes", "nutrients", "therapies", "ingredients"], correct: 1 },
+            { id: 18, part: 3, options: ["continuously", "occasionally", "temporarily", "subsequently"], correct: 1 },
+
+            // Part 4: Leaflet 2
+            { id: 19, part: 4, options: ["get over", "hand over", "look over", "take over"], correct: 3 },
+            { id: 20, part: 4, options: ["into", "for", "with", "by"], correct: 0 },
+            { id: 21, part: 4, options: ["every", "much", "several", "another"], correct: 0 },
+            { id: 22, part: 4, options: ["so", "too", "such", "enough"], correct: 1 },
+            { id: 23, part: 4, options: ["severely", "rapidly", "strongly", "heavily"], correct: 3 },
+            { id: 24, part: 4, options: ["contrasting", "engaging", "comparing", "involving"], correct: 2 },
+
+            // Part 5: Sentence Arrangement (Q25-45)
+            { id: 25, part: 5, text: "(a) Lucy: My younger brother has suddenly become obsessed with basketball recently.<br>(b) Lucy: Oh... he literally watches highlight videos every single night now.<br>(c) Jack: That happens to a lot of people during the NBA season honestly.", options: ["c-b-a", "b-a-c", "a-c-b", "c-a-b"], correct: 2 },
+            { id: 26, part: 5, text: "(a) Lucy: No wonder you looked so bored on the bus earlier.<br>(b) Jack: The ride felt twice as long without music honestly.<br>(c) Lucy: I would probably go crazy during traffic jams without my playlist too.<br>(d) Jack: Exactly. Music somehow makes everything less tiring.<br>(e) Jack: I accidentally left my headphones at home this morning.", options: ["b-c-e-a-d", "e-a-d-c-b", "b-c-d-a-e", "e-a-b-c-d"], correct: 3 },
+            { id: 27, part: 5, text: "Dear Employees,<br>(a) All department managers are requested to attend and ensure that the necessary reports are prepared beforehand.<br>(b) Several important updates regarding the company's upcoming projects and quarterly targets will be discussed during the session.<br>(c) The meeting will still take place in the main conference room and is expected to last approximately two hours.<br>(d) Thank you for your cooperation and understanding regarding this unexpected schedule adjustment.<br>(e) We would like to inform all staff members that next Monday's meeting will be moved from 9:00 a.m. to 2:00 p.m. due to scheduling conflicts.<br>Kind regards,<br>Human Resources Department", options: ["e-a-b-d-c", "e-b-a-c-d", "e-c-b-a-d", "e-b-d-a-c"], correct: 2 },
+            { id: 28, part: 5, text: "(a) Rather than buying it immediately, I spent additional time comparing alternatives and searching for discounts.<br>(b) A few weeks ago, I decided to look for a new laptop that I could use for university.<br>(c) The experience reminded me that patience can often lead to better financial decisions in the long run.<br>(d) After visiting several electronics stores, I discovered that the model I preferred would \"cost an arm and a leg\".<br>(e) Eventually, I found another device that offered similar features at a much more reasonable price.", options: ["b-a-d-e-c", "b-d-a-e-c", "b-a-e-d-c", "b-e-a-d-c"], correct: 1 },
+            { id: 29, part: 5, text: "(a) Local authorities also introduced recycling programs that rewarded residents for participating in waste collection efforts.<br>(b) The city invested heavily in green spaces and public transportation while encouraging environmentally responsible urban development.<br>(c) Consequently, Curitiba is often regarded as one of the world's most successful examples of sustainable city planning.<br>(d) These initiatives helped improve living conditions while reducing some of the environmental pressures associated with urbanization.<br>(e) Long before sustainability became a global trend, Curitiba in Brazil had already adopted innovative environmental policies.", options: ["e-a-c-d-b", "e-b-a-d-c", "e-d-a-c-b", "e-d-b-a-c"], correct: 1 },
+            { id: 30, part: 5, text: "(a) Although getting out of bed at 5 a.m. felt quite exhausting at first, the quiet atmosphere helped me concentrate far better.<br>(b) I had enough time to review my notes calmly and arrived at the interview feeling much more relaxed and confident than expected.<br>(c) In the end, I performed far better than I had imagined and successfully received the scholarship that I had wanted for months.<br>(d) Before an important scholarship interview at school, I decided to wake up much earlier than usual to prepare more carefully.<br>(e) That experience eventually made me understand why people often say \"the early bird catches the worm\" in many different situations.", options: ["b-d-a-e-c", "d-e-b-a-c", "d-a-b-c-e", "b-d-e-a-c"], correct: 2 },
+            { id: 31, part: 5, text: "Dear Customer Service Team,<br>(a) As the product does not match the description provided on your website, I would appreciate a full refund at your earliest convenience.<br>(b) Although the product was advertised as brand new, the item I received had several noticeable scratches and technical issues.<br>(c) Please let me know if any additional information or supporting documents are required to process this request.<br>(d) I attempted to contact your support department two days ago, but I have not yet received any response regarding this matter.<br>(e) I am writing to request a refund for a wireless headset that I purchased from your online store last week.<br>Best regards,<br>Michael", options: ["e-c-a-b-d", "e-b-a-c-d", "e-b-d-a-c", "e-d-b-a-c"], correct: 2 },
+            { id: 32, part: 5, text: "(a) Nam: A little. My friends want to go on a short trip together after exams.<br>(b) Jessica: Have you started planning for summer vacation yet?<br>(c) Nam: Same. Everyone seems exhausted these days.<br>(d) Jessica: At least summer break is getting closer now.<br>(e) Jessica: That sounds fun. I honestly can't wait for this semester to end.", options: ["b-c-d-a-e", "d-a-b-c-e", "d-c-e-a-b", "b-a-e-c-d"], correct: 3 },
+            { id: 33, part: 5, text: "(a) Linda: I have three tests tomorrow, so I need to revise everything tonight.<br>(b) Peter: Why are you carrying so many books today?<br>(c) Peter: That sounds exhausting honestly.", options: ["b-a-c", "a-c-b", "c-a-b", "b-c-a"], correct: 0 },
+            { id: 34, part: 5, text: "(a) The term describes consumers purchasing goods or experiences after long periods of restricted spending opportunities.<br>(b) In conclusion, revenge spending played a significant role in the recovery of several consumer-focused industries.<br>(c) For example, many people increased spending on travel, luxury products, and entertainment once restrictions were lifted.<br>(d) Researchers suggest that the behavior was partly driven by a desire to compensate for missed experiences.<br>(e) Following the COVID-19 pandemic, economists observed a trend commonly referred to as revenge spending.", options: ["e-a-d-c-b", "e-b-a-d-c", "e-d-a-c-b", "e-a-c-d-b"], correct: 0 },
+            { id: 35, part: 5, text: "(a) Mai: I'm not sure. I was really craving a big bowl of traditional beef pho or something with a bit more flavor.<br>(b) Mai: Oh... I heard they only serve kale smoothies and raw vegetable bowls with no seasoning.<br>(c) Huy: I understand, but I already promised the owner we would drop by; can we just try a small salad and go somewhere else later?<br>(d) Huy: It's supposed to be very good for the environment and our health, so maybe we should just give it a try once.<br>(e) Huy: Do you want to go to that new \"Green Soul\" organic cafe for lunch today?", options: ["e-d-a-b-c", "e-b-a-d-c", "e-b-d-a-c", "e-d-b-a-c"], correct: 2 },
+            { id: 36, part: 5, text: "Dear Ms. Thao,<br>(a) Our HR department will contact you early next week to discuss the official contract, salary details, and your start date.<br>(b) I am very pleased to formally offer you the position of Academic Content Creator at our center.<br>(c) Your strong teaching background and design skills are a perfect match for the projects we are planning this year.<br>(d) After reviewing all the candidates, we were truly impressed by your professional portfolio and the creative sample materials you shared.<br>(e) We are excited to have you join our team and look forward to your contributions. Congratulations on this success, and we hope to see you soon.<br>Sincerely,<br>Mr. Minh Tri", options: ["b-d-c-a-e", "d-a-b-c-e", "d-b-c-a-e", "b-c-a-d-e"], correct: 0 },
+            { id: 37, part: 5, text: "(a) Ms. Hoa: Hi Nam, how was your English mock test today? Did you do well?<br>(b) Ms. Hoa: Don't worry, just keep practicing and you will improve next time.<br>(c) Nam: It was okay, but I struggled a bit with the reading part.", options: ["b-a-c", "a-c-b", "c-a-b", "b-c-a"], correct: 1 },
+            { id: 38, part: 5, text: "(a) I reviewed each suggestion once again and selected the one that seemed most practical.<br>(b) During a group project, my teammates and I spent several days discussing different ideas together.<br>(c) The project was completed successfully, and the entire group was satisfied with the outcome.<br>(d) After evaluating all the options carefully, our leader told me that \"the ball is in your court\".<br>(e) Although making the final decision felt somewhat stressful, I appreciated the responsibility I was given.", options: ["b-a-d-e-c", "b-d-a-e-c", "b-a-e-d-c", "b-e-a-d-c"], correct: 1 },
+            { id: 39, part: 5, text: "(a) The system allows residents to enjoy diverse meals while preserving culinary practices passed down through generations.<br>(b) Today, hawker centres remain an essential part of both community life and national identity in Singapore.<br>(c) Recognizing their cultural significance, UNESCO added Singapore's hawker culture to its heritage list in 2020.<br>(d) These large food complexes bring together hundreds of affordable vendors offering dishes from different cultural traditions.<br>(e) Food culture plays an important role in daily life, and Singapore's hawker centres provide a unique example.", options: ["e-a-c-d-b", "e-b-a-d-c", "e-d-a-c-b", "e-d-b-a-c"], correct: 2 },
+            { id: 40, part: 5, text: "(a) Waiter: I'm very sorry for the error, I will print a new bill for you right away.<br>(b) Waiter: Let me see; oh, I see that the computer added an extra slice of cake by mistake.<br>(c) Tu: No problem at all, I just wanted to make sure the total was correct before paying.<br>(d) Tu: Yes, we saw the cake in the display, but we decided not to order it today.<br>(e) Tu: Excuse me, I think there is a mistake on our bill because we only ordered two coffees.", options: ["e-d-a-b-c", "e-b-a-d-c", "e-b-d-a-c", "e-d-b-a-c"], correct: 2 },
+            { id: 41, part: 5, text: "(a) Rather than admitting defeat, I moved the campaign online and used social media to collect donations from friends and family.<br>(b) I organized a large charity bake sale and contacted local businesses for donations, expecting to reach our financial goal in a single weekend.<br>(c) However, the turnover was lower than expected due to the heavy rain that kept many people away from the outdoor market.<br>(d) Leading a small team to raise money for a local animal shelter was a project I felt very passionate about.<br>(e) Surpassing our original goal was a wonderful surprise and showed me the power of creative problem-solving.", options: ["b-d-c-a-e", "d-a-b-c-e", "d-b-c-a-e", "b-c-a-d-e"], correct: 2 },
+            { id: 42, part: 5, text: "(a) Ms. Thao: That is fine, I accept the charge; please just send the confirmation email to me as soon as the process is finished.<br>(b) Ms. Thao: I'm calling to cancel my double room booking for tomorrow because my flight was suddenly delayed.<br>(c) Receptionist: I understand the situation, Ms. Thao; however, since the cancellation is less than 24 hours in advance, a small fee will apply according to our policy.", options: ["b-a-c", "a-c-b", "c-a-b", "b-c-a"], correct: 3 },
+            { id: 43, part: 5, text: "Dear Mike,<br>(a) It is truly inspiring to see someone turn their long-term passion for literature into a successful and professional business venture.<br>(b) I am planning to visit the store personally next Friday afternoon to browse your collection and congratulate you in person.<br>(c) I was delighted to read the recent news regarding the official opening of your new independent bookstore in the city center.<br>(d) I have no doubt that your dedication to quality and your knowledge of books will make the shop a favorite destination for many.<br>(e) I wish you the very best of luck with this new chapter and I hope that your business continues to flourish.<br>Sincerely,<br>Hoang", options: ["e-c-a-d-b", "c-a-d-b-e", "b-e-c-d-a", "e-a-d-c-b"], correct: 1 },
+            { id: 44, part: 5, text: "(a) Many volunteers worked hard throughout the day, and some were willing to \"go the extra mile\".<br>(b) Last winter, I participated in a community event that collected donations for disadvantaged families.<br>(c) It also encouraged me to become more active in future volunteer projects within my community.<br>(d) Inspired by their dedication, I stayed longer than expected and helped with additional tasks.<br>(e) Working alongside such committed people made the experience both meaningful and personally rewarding.", options: ["b-a-d-e-c", "b-d-a-e-c", "b-a-e-d-c", "b-e-a-d-c"], correct: 0 },
+            { id: 45, part: 5, text: "(a) The term refers to individuals who withdraw from society and remain isolated at home for extended periods.<br>(b) As awareness increases, governments and researchers continue exploring ways to support socially isolated individuals.<br>(c) Experts believe that academic pressure, workplace expectations, and mental health challenges may contribute to the issue.<br>(d) Although the phenomenon was first widely associated with Japan, similar patterns have since been observed elsewhere.<br>(e) Japan has drawn international attention because of a social phenomenon known as hikikomori.", options: ["e-a-c-d-b", "e-b-a-d-c", "e-d-a-c-b", "e-d-b-a-c"], correct: 0 }
+        ];
+
+        // RENDER QUESTIONS
+        function renderQuestions() {
+            // Mảng màu Gen Z sặc sỡ cho 4 lựa chọn (Hồng, Xanh lam, Vàng, Xanh lá)
+            const optionBgColors = [
+                'bg-[#ffe4e6] hover:bg-[#fecdd3]', // A: Rose pastel
+                'bg-[#e0e7ff] hover:bg-[#c7d2fe]', // B: Indigo pastel
+                'bg-[#fef9c3] hover:bg-[#fef08a]', // C: Yellow pastel
+                'bg-[#dcfce7] hover:bg-[#bbf7d0]'  // D: Green pastel
+            ];
+
+            questionsData.forEach((q, index) => {
+                const container = document.getElementById(`q-container-part${q.part}`);
+                if (!container) return;
+
+                const qDiv = document.createElement('div');
+                qDiv.className = "bg-white rounded-2xl p-5 shadow-sm border border-gray-200 hover:shadow-md transition";
+                
+                let extraText = '';
+                if(q.part === 5 && q.text) {
+                    extraText = `<div class="mb-4 text-gray-700 bg-blue-50 p-4 rounded-xl text-sm leading-relaxed border border-blue-100">${q.text}</div>`;
+                }
+
+                // Hiển thị phần câu hỏi dẫn (Question Text) nếu có
+                let qTextDisplay = '';
+                if(q.qText) {
+                    qTextDisplay = `<p class="mb-4 text-gray-800 font-semibold text-[1.05rem] leading-snug">${q.qText}</p>`;
+                }
+
+                let optionsHtml = q.options.map((opt, i) => `
+                    <label class="option-label">
+                        <input type="radio" name="q${q.id}" value="${i}" class="peer hidden">
+                        <div class="option-box p-3 flex items-center gap-3 ${optionBgColors[i]}">
+                            <span class="letter-circle w-8 h-8 rounded-full bg-white flex items-center justify-center font-black text-sm shrink-0 transition-colors border-2 border-gray-900 text-gray-900">${String.fromCharCode(65 + i)}</span>
+                            <span class="opt-text text-base font-semibold text-gray-800 transition-colors">${opt}</span>
+                        </div>
+                    </label>
+                `).join('');
+
+                qDiv.innerHTML = `
+                    <h4 class="font-bold text-lg mb-3">Question ${q.id}.</h4>
+                    ${qTextDisplay}
+                    ${extraText}
+                    <div class="space-y-2">
+                        ${optionsHtml}
+                    </div>
+                `;
+                container.appendChild(qDiv);
+            });
+        }
+
+        // TIMER LOGIC
+        let timeLeft = 3000; // 50 minutes (50 * 60)
+        let timerInterval;
+        let audioCtx;
+        let isSubmitted = false;
+
+        function startTest() {
+            // Init Audio Context on user gesture
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            
+            document.getElementById('startOverlay').style.display = 'none';
+            
+            timerInterval = setInterval(() => {
+                if(isSubmitted) return;
+                
+                timeLeft--;
+                updateTimerDisplay();
+
+                if (timeLeft === 60) {
+                    playAlarm();
+                    document.getElementById('timerBox').classList.replace('bg-indigo-100', 'bg-red-100');
+                    document.getElementById('timerBox').classList.replace('text-indigo-800', 'text-red-600');
+                    document.getElementById('timerBox').classList.replace('border-indigo-200', 'border-red-300');
+                    document.getElementById('timerBox').classList.add('animate-pulse');
+                }
+
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    submitTest();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            let m = Math.floor(timeLeft / 60);
+            let s = timeLeft % 60;
+            document.getElementById('timeDisplay').innerText = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+        }
+
+        function playAlarm() {
+            if(!audioCtx) return;
+            // Create a sequence of 3 beeps
+            for(let i=0; i<3; i++) {
+                const osc = audioCtx.createOscillator();
+                const gainNode = audioCtx.createGain();
+                
+                osc.type = 'square';
+                osc.frequency.setValueAtTime(880, audioCtx.currentTime + i*0.4); // A5 note
+                
+                gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime + i*0.4);
+                gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + i*0.4 + 0.3);
+                
+                osc.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+                
+                osc.start(audioCtx.currentTime + i*0.4);
+                osc.stop(audioCtx.currentTime + i*0.4 + 0.3);
+            }
+        }
+
+        // SUBMIT LOGIC (Just score, no explanations)
+        function submitTest() {
+            if(isSubmitted) return;
+            isSubmitted = true;
+            clearInterval(timerInterval);
+            
+            let score = 0;
+            
+            questionsData.forEach(q => {
+                const selected = document.querySelector(`input[name="q${q.id}"]:checked`);
+                const allOptionsBox = document.querySelectorAll(`input[name="q${q.id}"] + .option-box`);
+                
+                // Vô hiệu hoá click sau khi nộp
+                document.querySelectorAll(`input[name="q${q.id}"]`).forEach(input => input.disabled = true);
+
+                let userAnsIndex = selected ? parseInt(selected.value) : -1;
+                
+                // Xóa hiệu ứng hover để giao diện cố định
+                allOptionsBox.forEach((box) => {
+                    box.classList.remove('hover:bg-[#fecdd3]', 'hover:bg-[#c7d2fe]', 'hover:bg-[#fef08a]', 'hover:bg-[#bbf7d0]');
+                });
+
+                if (userAnsIndex === q.correct) {
+                    score++;
+                }
+            });
+
+            // Ẩn nút Nộp bài
+            document.getElementById('submitBtnTop').style.display = 'none';
+            document.getElementById('submitBtnBottom').style.display = 'none';
+            
+            // Hiện Modal Kết quả
+            document.getElementById('scoreText').innerText = score;
+            if(score >= 40) document.getElementById('resultIcon').innerText = '🏆';
+            else if(score >= 25) document.getElementById('resultIcon').innerText = '🔥';
+            else document.getElementById('resultIcon').innerText = '💪';
+            
+            document.getElementById('resultModal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('resultModal').classList.add('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Khởi tạo render
+        window.onload = renderQuestions;
+    </script>
+</body>
+</html>
