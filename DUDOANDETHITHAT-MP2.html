@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kỳ thi THPT 2026 - Đề Dự Đoán Đề Thi Thật (Lần 2)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+            background-attachment: fixed;
+            color: #1f2937;
+        }
+        
+        /* Custom Scrollbar for a clean look */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #c7c7cc; 
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a1a1aa; 
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        /* Glassmorphism elements */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Gen Z Border Style */
+        .genz-border {
+            border: 3px solid #1f2937;
+            box-shadow: 6px 6px 0px 0px #1f2937;
+            transition: all 0.2s ease;
+        }
+        
+        /* 3D Option button styling (Gen Z Neobrutalism) */
+        .option-label {
+            cursor: pointer;
+            display: block;
+            position: relative;
+            margin-top: 12px;
+        }
+        .option-box {
+            border: 2px solid #1f2937;
+            border-radius: 0.75rem;
+            box-shadow: 3px 3px 0px 0px #1f2937;
+            transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .option-label:hover .option-box {
+            transform: translate(-3px, -3px);
+            box-shadow: 6px 6px 0px 0px #1f2937;
+        }
+        .option-label:active .option-box {
+            transform: translate(2px, 2px);
+            box-shadow: 0px 0px 0px 0px #1f2937;
+        }
+        
+        /* Checked State Styling */
+        input[type="radio"]:checked + .option-box {
+            background-color: #1f2937 !important; /* Bold Dark Gray */
+            border-color: #1f2937;
+            box-shadow: 4px 4px 0px 0px #a855f7 !important; /* Neon Purple Shadow */
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+        input[type="radio"]:checked + .option-box .opt-text {
+            color: white !important;
+        }
+        input[type="radio"]:checked + .option-box .letter-circle {
+            background-color: #a855f7 !important;
+            color: white !important;
+            border-color: #1f2937;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.95); }
+            50% { transform: scale(1.03); }
+            100% { transform: scale(1); }
+        }
+
+        /* Result states after submission (Disabled mode - no colors shown) */
+        input:disabled + .option-box {
+            cursor: not-allowed;
+            opacity: 0.8;
+        }
+
+        /* Sticky top offset for header */
+        .sticky-offset {
+            top: 5rem;
+        }
+        
+        .blank-space {
+            display: inline-block;
+            padding: 0 8px;
+            font-weight: bold;
+            color: #8b5cf6;
+            background: #ede9fe;
+            border-radius: 6px;
+            margin: 0 2px;
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col relative">
+
+    <!-- OVERLAY: START TEST -->
+    <div id="startOverlay" class="fixed inset-0 z-50 flex items-center justify-center bg-white/80 backdrop-blur-md">
+        <div class="bg-white p-8 md:p-12 rounded-3xl genz-border text-center max-w-lg mx-4">
+            <h1 class="text-3xl md:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-500 mb-4">
+                ✨ Sẵn sàng chưa?
+            </h1>
+            <p class="text-gray-600 mb-8 text-lg">Bài thi môn Tiếng Anh có thời gian làm bài là <b>50 phút</b>. Hệ thống sẽ có chuông báo khi còn 1 phút.</p>
+            <button onclick="startTest()" class="w-full bg-gradient-to-r from-violet-500 to-fuchsia-500 hover:from-violet-600 hover:to-fuchsia-600 text-white font-bold py-4 px-8 rounded-2xl shadow-lg transform hover:scale-105 transition-all duration-200 text-xl">
+                Bắt Đầu Làm Bài 🚀
+            </button>
+        </div>
+    </div>
+
+    <!-- HEADER / TIMER -->
+    <header class="sticky top-0 z-40 glass-panel border-b border-gray-200 px-4 py-3 shadow-sm">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <span class="text-2xl">📝</span>
+                <h1 class="font-bold text-lg hidden sm:block bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600">Đề Dự Đoán Đề Thi Thật (Lần 2)</h1>
+            </div>
+            <div class="flex items-center gap-4">
+                <div id="timerBox" class="bg-indigo-100 text-indigo-800 font-mono font-bold text-xl px-4 py-2 rounded-xl border-2 border-indigo-200 flex items-center gap-2 transition-colors">
+                    ⏳ <span id="timeDisplay">50:00</span>
+                </div>
+                <button onclick="submitTest()" id="submitBtnTop" class="bg-gray-900 hover:bg-gray-800 text-white font-bold py-2 px-6 rounded-xl transition-colors hidden sm:block">
+                    Nộp Bài
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="flex-grow max-w-7xl mx-auto w-full px-4 py-8">
+        
+        <form id="testForm" onsubmit="event.preventDefault(); submitTest();">
+            
+            <!-- SECTION 1: CLOZE TEST 1 (Leaflet) -->
+            <div class="mb-12">
+                <h2 class="text-xl font-bold mb-4 text-purple-700 bg-purple-100 inline-block px-4 py-1 rounded-full border-2 border-purple-200">Part 1: Leaflet (Questions 1 - 6)</h2>
+                <p class="italic text-gray-600 mb-4 font-medium">Read the following leaflet and mark the letter A, B, C, or D to indicate the correct option that best fits each of the numbered blanks from 1 to 6.</p>
+                <div class="flex flex-col lg:flex-row gap-6">
+                    <div class="lg:w-[70%] glass-panel rounded-3xl p-6 lg:p-8 lg:sticky lg:top-24 lg:max-h-[80vh] overflow-y-auto custom-scrollbar border border-gray-200">
+                        <h3 class="text-2xl font-bold mb-4 uppercase tracking-wide">The top 7 in-demand degrees for the future</h3>
+                        <div class="space-y-4">
+                            <p class="text-gray-700 leading-relaxed text-lg text-justify">
+                                <b>1. Computer science/ artificial intelligence (AI):</b> As industries worldwide continue to adopt automation, the demand for Al and computer science professionals is increasing. The rapid growth of AI, machine learning, and robotics is creating a great <span class="blank-space">(1)</span> of career opportunities.
+                            </p>
+                            <p class="text-gray-700 leading-relaxed text-lg text-justify">
+                                <b>2. Data science/ analytics:</b> Data is often referred to as the "new oil," and companies need professionals <span class="blank-space">(2)</span> can analyse and interpret vast amounts of data.
+                            </p>
+                            <p class="text-gray-700 leading-relaxed text-lg text-justify">
+                                <b>3. Cybersecurity:</b> <span class="blank-space">(3)</span> the rise in cyber threats and digital attacks, cybersecurity has become a vital part of every organisation's operations. As more businesses and services move online, the demand for cybersecurity experts is expected <span class="blank-space">(4)</span> growing.
+                            </p>
+                            <p class="text-gray-700 leading-relaxed text-lg text-justify">
+                                <b>4. Healthcare/ nursing/ biomedical sciences:</b> An ageing population and rapid medical innovations are <span class="blank-space">(5)</span> the need for healthcare professionals. Careers in nursing, biomedical research, and clinical sciences are in high demand.
+                            </p>
+                            <p class="text-gray-700 leading-relaxed text-lg text-justify">
+                                <b>5. Food science/ human nutrition:</b> With the increasing global focus on health, wellness, and nutrition, careers <span class="blank-space">(6)</span> food science and human nutrition are more relevant than ever. These industries play a vital role in combating health issues such as obesity and malnutrition.
+                            </p>
+                        </div>
+                        <p class="text-sm text-gray-400 mt-4">(Adapted from monash.edu.my)</p>
+                    </div>
+                    <div class="lg:w-[30%] flex flex-col gap-4" id="q-container-part1"></div>
+                </div>
+            </div>
+
+            <!-- SECTION 2: CLOZE TEST 2 (Advertisement) -->
+            <div class="mb-12">
+                <h2 class="text-xl font-bold mb-4 text-green-700 bg-green-100 inline-block px-4 py-1 rounded-full border-2 border-green-200">Part 2: Advertisement (Questions 7 - 12)</h2>
+                <p class="italic text-gray-600 mb-4 font-medium">Read the following advertisement and mark the letter A, B, C, or D to indicate the correct option that best fits each of the numbered blanks from 7 to 12.</p>
+                <div class="flex flex-col lg:flex-row gap-6">
+                    <div class="lg:w-[70%] glass-panel rounded-3xl p-6 lg:p-8 lg:sticky lg:top-24 lg:max-h-[80vh] overflow-y-auto custom-scrollbar border border-gray-200">
+                        <h3 class="text-2xl font-bold mb-4 uppercase tracking-wide text-center">READY TO BECOME A MARKETING EXPERT?</h3>
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            Do you want to create eye-catching advertisements, build famous brands, or understand why customers buy certain products? Our Marketing Mastery Course will help you <span class="blank-space">(7)</span> your ideas into real success.
+                        </p>
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            In this exciting course, you will learn modern <span class="blank-space">(8)</span>, including social media marketing, content creation, branding, and advertising strategies. Instead of studying only theory, students will also work on real projects and practical activities <span class="blank-space">(9)</span> by experienced instructors. As a result, learning becomes both useful and enjoyable.
+                        </p>
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            Whether you are a student, a future entrepreneur, or simply someone who loves creativity, this course is designed <span class="blank-space">(10)</span> for you. With flexible schedules, interactive lessons, and a friendly learning environment, you will gain valuable knowledge and improve your communication and business skills confidently.
+                        </p>
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            Thousands of companies today are searching for people who understand marketing. <span class="blank-space">(11)</span> joining this course can open many opportunities for your future career. Don't miss the chance to invest in yourself and discover your <span class="blank-space">(12)</span>.
+                        </p>
+                        <p class="text-gray-700 leading-relaxed text-lg font-bold text-center text-blue-600">
+                            Sign up now and start your journey toward success today!
+                        </p>
+                    </div>
+                    <div class="lg:w-[30%] flex flex-col gap-4" id="q-container-part2"></div>
+                </div>
+            </div>
+
+            <!-- SECTION 3: SENTENCE ARRANGEMENT -->
+            <div class="mb-12">
+                <h2 class="text-xl font-bold mb-4 text-blue-700 bg-blue-100 inline-block px-4 py-1 rounded-full border-2 border-blue-200">Part 3: Sentence Arrangement (Questions 13 - 17)</h2>
+                <p class="italic text-gray-600 mb-4 font-medium">Mark the letter A, B, C, or D to indicate the best arrangement of utterances or sentences to make a meaningful exchange or text in each of the following questions from 13 to 17.</p>
+                <div class="glass-panel rounded-3xl p-6 lg:p-8 grid grid-cols-1 md:grid-cols-2 gap-8 border border-gray-200" id="q-container-part3">
+                    <!-- Sentences injected via JS -->
+                </div>
+            </div>
+
+            <!-- SECTION 4: READING / CLOZE 3 -->
+            <div class="mb-12">
+                <h2 class="text-xl font-bold mb-4 text-orange-700 bg-orange-100 inline-block px-4 py-1 rounded-full border-2 border-orange-200">Part 4: Guided Cloze (Questions 18 - 22)</h2>
+                <p class="italic text-gray-600 mb-4 font-medium">Read the following passage and mark the letter A, B, C, or D to indicate the correct option that best fits each of the numbered blanks from 18 to 22.</p>
+                <div class="flex flex-col lg:flex-row gap-6">
+                    <div class="lg:w-[70%] glass-panel rounded-3xl p-6 lg:p-8 lg:sticky lg:top-24 lg:max-h-[80vh] overflow-y-auto custom-scrollbar border border-gray-200">
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            Artificial intelligence has become an important part of modern life, especially since tools such as OpenAI's ChatGPT became widely accessible to the public. Many students and workers now use AI to search for information, translate languages, or generate ideas within seconds. <span class="blank-space">(18)</span>, people are becoming increasingly concerned about the amount of resources required to operate them. Behind every simple question asked to an Al system, there is actually a large network of computers working continuously in massive data centers.
+                        </p>
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            <span class="blank-space">(19)</span>. In order to train and maintain advanced language models, companies must use thousands of powerful servers, which require energy twenty-four hours a day. Moreover, these machines produce a great deal of heat, so cooling systems are also necessary. As a result, Al development not only increases electricity consumption but also contributes indirectly to environmental problems such as carbon emissions and climate change. In addition, large quantities of water are often used to cool data centers, <span class="blank-space">(20)</span>.
+                        </p>
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            Despite these concerns, Al is unlikely to disappear because of its usefulness and rapid development. Therefore, instead of rejecting the technology completely, <span class="blank-space">(21)</span>. Technology companies should invest in renewable energy and develop more energy-efficient systems, while users should avoid unnecessarily depending on Al for every small task. If both developers and users become more aware of the environmental costs behind artificial intelligence, <span class="blank-space">(22)</span>.
+                        </p>
+                    </div>
+                    <div class="lg:w-[30%] flex flex-col gap-4" id="q-container-part4"></div>
+                </div>
+            </div>
+
+            <!-- SECTION 5: READING COMPREHENSION 1 -->
+            <div class="mb-12">
+                <h2 class="text-xl font-bold mb-4 text-teal-700 bg-teal-100 inline-block px-4 py-1 rounded-full border-2 border-teal-200">Part 5: Reading Comprehension 1 (Questions 23 - 30)</h2>
+                <p class="italic text-gray-600 mb-4 font-medium">Read the following passage and mark the letter A, B, C, or D to indicate the correct answer to each of the questions from 23 to 30.</p>
+                <div class="flex flex-col lg:flex-row gap-6">
+                    <div class="lg:w-[70%] glass-panel rounded-3xl p-6 lg:p-8 lg:sticky lg:top-24 lg:max-h-[80vh] overflow-y-auto custom-scrollbar border border-gray-200">
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            The Piltdown Man hoax is not unique in the history of science. The exploration of the North Pole includes another case of this nature. The two main players in this story are Robert Peary, a famous explorer in the early 20th century, and Dr. Frederick Cook, another explorer who frequently accompanied Peary on his expeditions.
+                        </p>
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            Both men began their own quest to reach the North Pole in the early 1900s. However, the question of who reached the North Pole first, if either, remains hotly debated. According to Dr. Cook, he reached the pole on April 21, 1908. His claim is recorded in his diary: "With a step, it was possible to go from one part of the globe to the opposite side... North, east, and west had <u>vanished</u>. It was south in every direction." Cook then became lost in the Arctic for almost a year.
+                        </p>
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            Meanwhile, Peary was also trying to reach the North Pole. He claimed to have arrived there on April 6, 1909, almost a year after Cook. However, Peary believed Cook had never made it to the Pole and had, in fact, died trying to reach it. This led Peary to believe that he was the first to reach the Pole. In September 1909, both men managed to make it back to civilization alive and well and, within days of each other, telegraphed <u>their</u> rival claims to the newspapers.
+                        </p>
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            <u>Controversy ensued when Peary accused Cook of fraud, claiming that he had no compelling evidence to support his claim.</u> In fact, the controversy lingers to this day. Who was the first man to reach the North Pole? For many years, Peary's supporters, backed by National Geographic magazine, had the upper hand. However, new evidence suggests that both explorers faked their claims. In other words, neither of them reached the Pole, which would put later explorers in line for the title of "first to reach the North Pole."
+                        </p>
+                        <p class="text-sm text-gray-400 mt-4">(Adapted from Reading for the Real World 3)</p>
+                    </div>
+                    <div class="lg:w-[30%] flex flex-col gap-4" id="q-container-part5"></div>
+                </div>
+            </div>
+
+            <!-- SECTION 6: READING COMPREHENSION 2 -->
+            <div class="mb-12">
+                <h2 class="text-xl font-bold mb-4 text-pink-700 bg-pink-100 inline-block px-4 py-1 rounded-full border-2 border-pink-200">Part 6: Reading Comprehension 2 (Questions 31 - 40)</h2>
+                <p class="italic text-gray-600 mb-4 font-medium">Read the following passage and mark the letter A, B, C, or D to indicate the correct answer to each of the questions from 31 to 40.</p>
+                <div class="flex flex-col lg:flex-row gap-6">
+                    <div class="lg:w-[70%] glass-panel rounded-3xl p-6 lg:p-8 lg:sticky lg:top-24 lg:max-h-[80vh] overflow-y-auto custom-scrollbar border border-gray-200">
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            While air pollution is not entirely restricted to man-made substances, in the vast majority of areas where it is a problem, human activity has been the primary cause. The Industrial Revolution, which took place from the late eighteenth to the early nineteenth century, generated the first notable increase of air pollution. As the use of coal became widespread to fuel factories and heat homes during this period, residents of large cities began to notice a smoky haze that hung over their heads. <b>[I]</b> This haze was termed "smog" in the early twentieth century by Dr. Henry Antoine Des Voeux, who spoke at a public health meeting about the combination of smoke and fog that had <u>adversely</u> affected the health of London citizens.
+                        </p>
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            Further modernization, especially of transportation, has led to smog being introduced into suburban and rural environments. The extensive rail system that started expanding in the late 1800s across the United States conveyed people and cargo to distant locations while the trains simultaneously puffed clouds of coal-produced smog along their path. <b>[II]</b> The introduction of automobiles with oil as their fuel source compounded the issue by allowing individuals to add to the steadily increasing amount of air pollution. <u>Personal vehicles permitted couples and families to travel long distances more easily, and promoted the settlement of previously untouched areas.</u> An ever-growing global network of roads, and the proliferation of affordable vehicles have allowed air pollution to impact areas once considered safe from <u>its</u> effects.
+                        </p>
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            In actuality, smog is far more hazardous in warm, sunny, dry weather than during rainy weather. <b>[III]</b> This is because the air in the upper part of the atmosphere can become warm enough in these types of climatic conditions to prevent vertical circulation. Warm air tends to rise, so when the upper atmosphere is cooler than the lower, it pushes the cool air down and the warm air up, carrying whatever pollutants are trapped in the lower level up and away from people. However, when the upper layer of air is as warm as, or warmer than the lower level, the air does not circulate vertically and the impurities remain in the lower level of air that people breathe. The issue is made worse for cities that are in the basin of valleys, surrounded by mountains. <b>[IV]</b> Thus, cities that sit in valleys, and are in climates where it is warm and dry for much of the year, such as Los Angeles, suffer the harmful effects of air pollution more than other locales.
+                        </p>
+                        <p class="text-sm text-gray-400 mt-4">(Adapted from Longman Preparation Course for the TOEFL iBT® Test)</p>
+                    </div>
+                    <div class="lg:w-[30%] flex flex-col gap-4" id="q-container-part6"></div>
+                </div>
+            </div>
+
+            <!-- SUBMIT BUTTON BOTTOM -->
+            <div class="text-center mt-12 mb-8">
+                <button type="submit" id="submitBtnBottom" class="bg-gray-900 hover:bg-gray-800 text-white font-bold py-4 px-12 rounded-2xl shadow-xl transform hover:-translate-y-1 transition-all duration-200 text-xl genz-border">
+                    Nộp Bài & Xem Điểm ✨
+                </button>
+            </div>
+
+        </form>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-white border-t border-gray-200 py-6 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p class="font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-500 text-xl">Idea for Design: Mr Hoa Van!</p>
+            <p class="text-gray-400 text-sm mt-1">© 2026 - Tinh Hoa Dự Đoán THPT</p>
+        </div>
+    </footer>
+
+    <!-- RESULT MODAL -->
+    <div id="resultModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm hidden">
+        <div class="bg-white p-8 md:p-12 rounded-3xl genz-border text-center max-w-md mx-4 animate-[fadeIn_0.3s_ease]">
+            <div class="text-6xl mb-4" id="resultIcon">🎉</div>
+            <h2 class="text-3xl font-extrabold mb-2">Điểm số của bạn</h2>
+            <p class="text-5xl font-black text-purple-600 mb-6"><span id="scoreText">0</span>/40</p>
+            <p class="text-gray-600 mb-8 font-medium">Kết quả bài làm đã được hệ thống ghi nhận thành công!</p>
+            <button onclick="closeModal()" class="w-full bg-gray-900 text-white font-bold py-3 px-6 rounded-xl hover:bg-gray-800 transition">
+                Đóng
+            </button>
+        </div>
+    </div>
+
+    <!-- DATA & SCRIPT -->
+    <script>
+        // QUESTION DATA - ĐỀ DỰ ĐOÁN LẦN 2
+        // Không hiển thị lời giải, hệ thống chỉ cần chấm điểm ngầm.
+        const questionsData = [
+            // Part 1: Cloze 1 (Leaflet)
+            { id: 1, part: 1, options: ["level", "number", "amount", "minority"], correct: 1 },
+            { id: 2, part: 1, options: ["which", "whose", "who", "whom"], correct: 2 },
+            { id: 3, part: 1, options: ["Due to", "Instead of", "In spite of", "In addition to"], correct: 0 },
+            { id: 4, part: 1, options: ["continued", "continuing", "continue", "to continue"], correct: 3 },
+            { id: 5, part: 1, options: ["pooling", "riding", "driving", "fighting"], correct: 2 },
+            { id: 6, part: 1, options: ["by", "in", "for", "of"], correct: 1 },
+
+            // Part 2: Cloze 2 (Advertisement)
+            { id: 7, part: 2, options: ["turn", "run", "fall", "come"], correct: 0 },
+            { id: 8, part: 2, options: ["skills digital marketing", "marketing digital skills", "marketing skills digital", "digital marketing skills"], correct: 3 },
+            { id: 9, part: 2, options: ["to guide", "guided", "guiding", "guide"], correct: 1 },
+            { id: 10, part: 2, options: ["especially", "speciality", "special", "specialise"], correct: 0 },
+            { id: 11, part: 2, options: ["Otherwise", "Because", "However", "Therefore"], correct: 3 },
+            { id: 12, part: 2, options: ["behaviour", "potential", "objective", "interaction"], correct: 1 },
+
+            // Part 3: Sentence Arrangement
+            { id: 13, part: 3, text: "a. Later, millions of immigrants from Europe moved to the United States...<br>b. As a result, different cultures gradually mixed together...<br>c. The United States gradually became a multicultural country...<br>d. During the 19th and 20th centuries, immigrants from Asia and Latin America...<br>e. In the beginning, America was inhabited by Native Americans...", options: ["c – e – b – a – d", "c – a – b – d – e", "c – e – a – d – b", "c – a – e – b – d"], correct: 2 },
+            { id: 14, part: 3, text: "a. A biography is a piece of writing that tells the story of a person's life...<br>b. Nowadays, biographies remain popular since many people enjoy learning...<br>c. Biographies are often written about great people...<br>d. However, writing a biography is not always easy...<br>e. In addition, reading biographies helps people understand historical events...", options: ["c – e – b – d – a", "a – c – e – d – b", "c – a – d – b – e", "b – e – d – c – a"], correct: 1 },
+            { id: 15, part: 3, text: "a. Daniel: Yes, I recently read a biography about Steve Jobs last weekend.<br>b. Daniel: I admired his creativity and determination despite facing many difficult challenges.<br>c. Emma: I think successful people usually inspire teenagers to work harder every day.<br>d. Emma: Have you ever read books about famous inventors or businessmen before?<br>e. Emma: What impressed you most about his personal life and career journey?", options: ["d – a – e – b – c", "e – a – d – b – c", "d – b – c – a – e", "e – b – c – a – d"], correct: 0 },
+            { id: 16, part: 3, text: "a. Grace: Same here, but teachers still encourage us to think independently first.<br>b. Grace: Do you often use artificial intelligence tools for studying, Ethan?<br>c. Ethan: Sometimes, especially when I need help understanding difficult science homework questions.", options: ["c – b – a", "b – a – c", "c – a – b", "b – c – a"], correct: 3 },
+            { id: 17, part: 3, text: "Dear Customer,<br>a. It includes attractive discounts on selected products...<br>b. We would like to sincerely thank you for supporting BrightWave Company...<br>c. To show our appreciation, we are happy to introduce a special promotion program...<br>d. Once again, thank you for choosing BrightWave Company...<br>e. We truly hope that these offers will improve your shopping experience...<br>Best regards,", options: ["b – a – c – d – e", "b – c – a – e – d", "e – d – c – a – b", "c – e – d – a – b"], correct: 1 },
+
+            // Part 4: Cloze 3 (AI Passage)
+            { id: 18, part: 4, options: ["When such Al systems become easier to access", "Because these digital tools are highly convenient", "Although these technologies are extremely useful", "Since these modern technologies save people time"], correct: 2 },
+            { id: 19, part: 4, options: ["Another positive effect is that AI can help students learn foreign languages", "A key benefit lies in how quickly AI systems can process large amounts of data", "Many experts argue that Al tools will soon replace most human workers", "One major issue is the enormous amount of electricity consumed by Al systems"], correct: 3 },
+            { id: 20, part: 4, options: ["of which increasing stress on local water sources in several areas", "places pressure on nearby water supplies in some regions", "which may place pressure on local water resources in certain areas", "to put additional pressure on regional water supplies"], correct: 2 },
+            { id: 21, part: 4, options: ["governments should ban all Al tools from public use", "society should focus on using it more responsibly", "these environmental problems have become more serious", "data centers continue to require large amounts of water"], correct: 1 },
+            { id: 22, part: 4, options: ["technological progress may become more sustainable in the future", "future innovation became less harmful to the environment over time", "digital advancement becomes more eco-friendly in the years ahead", "greener technological growth would be achieved in the near future"], correct: 3 },
+
+            // Part 5: Reading Comprehension 1 (Piltdown Man/North Pole)
+            { id: 23, part: 5, qText: "All of the following events with dates are mentioned in the passage <b class='text-red-600 underline'>EXCEPT</b> ______.", options: ["Cook claimed to reach the Pole on April 21, 1908", "Peary officially proved Cook's fraud in October 1909", "Peary claimed to reach the Pole on April 6, 1909", "Both Cook and Peary returned in September 1909"], correct: 1 },
+            { id: 24, part: 5, qText: "The word \"<b class='text-blue-700'><i>vanished</i></b>\" in paragraph 2 can be best replaced by ______.", options: ["expanded", "appeared", "disappeared", "returned"], correct: 2 },
+            { id: 25, part: 5, qText: "Which of the following best paraphrases the <u class='font-bold text-gray-900'>underlined sentence</u> in paragraph 4?", options: ["Debate continued after newspapers questioned whether either explorer had actually reached the North Pole.", "Peary accepted Cook's claim because strong scientific evidence clearly supported his Arctic journey.", "Debate continued because both explorers presented limited evidence supporting their North Pole journeys publicly.", "Debate increased after Peary argued that Cook lacked strong evidence supporting his North Pole claim."], correct: 3 },
+            { id: 26, part: 5, qText: "The word \"<b class='text-blue-700'><i>debated</i></b>\" in paragraph 2 is <b class='text-red-600 underline'>OPPOSITE</b> in meaning to ______.", options: ["settled", "disputed", "questioned", "challenged"], correct: 0 },
+            { id: 27, part: 5, qText: "The word \"<b class='text-blue-700'><i>their</i></b>\" in paragraph 3 refers to ______.", options: ["the newspapers", "days of each other", "rival claims", "both men"], correct: 3 },
+            { id: 28, part: 5, qText: "Which of the following is <b class='text-green-600 underline'>TRUE</b> according to paragraph 4?", options: ["Some recent evidence suggests that neither Cook nor Peary reached the North Pole.", "Cook and Peary announced their rival claims several years after returning to civilization.", "Peary believed Cook returned after completing his Arctic exploration journey alone.", "The controversy ended when scientists confirmed Peary's North Pole expedition records."], correct: 0 },
+            { id: 29, part: 5, qText: "In which paragraph does the writer mention that Cook became lost in the Arctic for nearly a year?", options: ["Paragraph 1", "Paragraph 2", "Paragraph 3", "Paragraph 4"], correct: 1 },
+            { id: 30, part: 5, qText: "In which paragraph does the writer mention that some evidence suggests both explorers lied?", options: ["Paragraph 1", "Paragraph 2", "Paragraph 3", "Paragraph 4"], correct: 3 },
+
+            // Part 6: Reading Comprehension 2 (Air Pollution)
+            { id: 31, part: 6, qText: "According to the passage, air pollution includes non-human-made substances, but ______.", options: ["most polluted cities reduced smog after the Industrial Revolution", "natural changes create more pollution than industrial activities", "modern transportation systems completely replaced factories", "human activity has been the main cause in most polluted areas"], correct: 3 },
+            { id: 32, part: 6, qText: "The word \"<b class='text-blue-700'><i>adversely</i></b>\" in paragraph 1 is <b class='text-red-600 underline'>OPPOSITE</b> in meaning to ______.", options: ["beneficially", "negatively", "harmfully", "unfavorably"], correct: 0 },
+            { id: 33, part: 6, qText: "What caused smog to spread into suburban and rural areas?", options: ["Mountains surrounding suburban regions prevented polluted air from escaping.", "Rainy weather pushed polluted air from cities into farming communities regularly.", "Rural factories produced larger amounts of smoke than industries in urban areas.", "Further modernization, especially transportation, introduced smog into new areas."], correct: 3 },
+            { id: 34, part: 6, qText: "The word \"<b class='text-blue-700'><i>its</i></b>\" in paragraph 2 refers to ______.", options: ["affordable vehicles", "air pollution", "global network", "the proliferation"], correct: 1 },
+            { id: 35, part: 6, qText: "Which of the following best summarises paragraph 3?", options: ["Rainy weather and cooler upper air increase smog because polluted air cannot circulate through urban valleys.", "Warm, sunny, dry weather and valley locations worsen smog because polluted air becomes trapped near ground levels.", "Flat cities experience severe pollution because mountains fail to prevent polluted air from spreading widely outward.", "Vertical air circulation becomes stronger during warm weather, helping pollutants move away from populated cities."], correct: 1 },
+            { id: 36, part: 6, qText: "According to paragraph 3, what happens when the upper layer of air is as warm as or warmer than the lower layer?", options: ["Mountain barriers become less effective at preventing polluted air from spreading.", "Warm air rises and carries polluted particles away from urban environments.", "Rainy conditions develop and remove impurities from lower atmospheric levels.", "Air stops circulating vertically, so pollutants remain trapped near the ground."], correct: 3 },
+            { id: 37, part: 6, qText: "Which of the following best paraphrases the <u class='font-bold text-gray-900'>underlined sentence</u> in paragraph 2?", options: ["Automobiles mainly improved transportation inside crowded cities without affecting settlement patterns significantly today.", "Personal vehicles reduced long-distance travel and prevented families from moving into rural environments completely.", "Private vehicles allowed people to travel farther conveniently and encouraged population growth in undeveloped regions.", "Families avoided remote regions because personal vehicles made transportation more difficult and expensive historically."], correct: 2 },
+            { id: 38, part: 6, qText: "Where in the passage does the following sentence best fit?<br><i class='text-purple-700 font-semibold mt-2 block'>This is because the mountains act as an additional barrier to air movement.</i>", options: ["[I]", "[II]", "[III]", "[IV]"], correct: 3 },
+            { id: 39, part: 6, qText: "Which of the following can be inferred from the passage?", options: ["Modern transportation systems have reduced smog in suburban and rural environments.", "Rainy weather conditions trap polluted air near the ground more effectively than dry climates.", "Cities located in warm valleys are especially vulnerable to serious air pollution problems.", "Human activity plays a minor role in creating air pollution across industrialized regions."], correct: 2 },
+            { id: 40, part: 6, qText: "Which of the following best summarises the passage?", options: ["Industrial growth, suburban transport, valley geography, and cleaner fuels have made air pollution less harmful in many crowded urban areas.", "Natural substances, industrialisation, transportation growth, and certain weather conditions have become the main causes of air pollution everywhere.", "Human activity, modernisation, transport expansion, and rainy weather have generally helped reduce smog across many different environments.", "Human activity, industrialisation, transportation growth, and certain weather or geographic conditions have worsened air pollution across some regions."], correct: 3 }
+        ];
+
+        // RENDER QUESTIONS
+        function renderQuestions() {
+            // Mảng màu Gen Z sặc sỡ cho 4 lựa chọn (Hồng, Xanh lam, Vàng, Xanh lá)
+            const optionBgColors = [
+                'bg-[#ffe4e6] hover:bg-[#fecdd3]', // A: Rose pastel
+                'bg-[#e0e7ff] hover:bg-[#c7d2fe]', // B: Indigo pastel
+                'bg-[#fef9c3] hover:bg-[#fef08a]', // C: Yellow pastel
+                'bg-[#dcfce7] hover:bg-[#bbf7d0]'  // D: Green pastel
+            ];
+
+            questionsData.forEach((q, index) => {
+                const container = document.getElementById(`q-container-part${q.part}`);
+                if (!container) return;
+
+                const qDiv = document.createElement('div');
+                qDiv.className = "bg-white rounded-2xl p-5 shadow-sm border border-gray-200 hover:shadow-md transition";
+                
+                let extraText = '';
+                if(q.part === 3 && q.text) {
+                    extraText = `<div class="mb-4 text-gray-700 bg-blue-50 p-4 rounded-xl text-sm leading-relaxed border border-blue-100">${q.text}</div>`;
+                }
+
+                // Hiển thị phần câu hỏi dẫn (Question Text) nếu có
+                let qTextDisplay = '';
+                if(q.qText) {
+                    qTextDisplay = `<p class="mb-4 text-gray-800 font-semibold text-[1.05rem] leading-snug">${q.qText}</p>`;
+                }
+
+                let optionsHtml = q.options.map((opt, i) => `
+                    <label class="option-label">
+                        <input type="radio" name="q${q.id}" value="${i}" class="peer hidden">
+                        <div class="option-box p-3 flex items-center gap-3 ${optionBgColors[i]}">
+                            <span class="letter-circle w-8 h-8 rounded-full bg-white flex items-center justify-center font-black text-sm shrink-0 transition-colors border-2 border-gray-900 text-gray-900">${String.fromCharCode(65 + i)}</span>
+                            <span class="opt-text text-base font-semibold text-gray-800 transition-colors">${opt}</span>
+                        </div>
+                    </label>
+                `).join('');
+
+                qDiv.innerHTML = `
+                    <h4 class="font-bold text-lg mb-3">Question ${q.id}.</h4>
+                    ${qTextDisplay}
+                    ${extraText}
+                    <div class="space-y-2">
+                        ${optionsHtml}
+                    </div>
+                `;
+                container.appendChild(qDiv);
+            });
+        }
+
+        // TIMER LOGIC
+        let timeLeft = 3000; // 50 minutes (50 * 60)
+        let timerInterval;
+        let audioCtx;
+        let isSubmitted = false;
+
+        function startTest() {
+            // Init Audio Context on user gesture
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            
+            document.getElementById('startOverlay').style.display = 'none';
+            
+            timerInterval = setInterval(() => {
+                if(isSubmitted) return;
+                
+                timeLeft--;
+                updateTimerDisplay();
+
+                if (timeLeft === 60) {
+                    playAlarm();
+                    document.getElementById('timerBox').classList.replace('bg-indigo-100', 'bg-red-100');
+                    document.getElementById('timerBox').classList.replace('text-indigo-800', 'text-red-600');
+                    document.getElementById('timerBox').classList.replace('border-indigo-200', 'border-red-300');
+                    document.getElementById('timerBox').classList.add('animate-pulse');
+                }
+
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    submitTest();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            let m = Math.floor(timeLeft / 60);
+            let s = timeLeft % 60;
+            document.getElementById('timeDisplay').innerText = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+        }
+
+        function playAlarm() {
+            if(!audioCtx) return;
+            // Create a sequence of 3 beeps
+            for(let i=0; i<3; i++) {
+                const osc = audioCtx.createOscillator();
+                const gainNode = audioCtx.createGain();
+                
+                osc.type = 'square';
+                osc.frequency.setValueAtTime(880, audioCtx.currentTime + i*0.4); // A5 note
+                
+                gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime + i*0.4);
+                gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + i*0.4 + 0.3);
+                
+                osc.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+                
+                osc.start(audioCtx.currentTime + i*0.4);
+                osc.stop(audioCtx.currentTime + i*0.4 + 0.3);
+            }
+        }
+
+        // SUBMIT LOGIC (Just score, no explanations)
+        function submitTest() {
+            if(isSubmitted) return;
+            isSubmitted = true;
+            clearInterval(timerInterval);
+            
+            let score = 0;
+            
+            questionsData.forEach(q => {
+                const selected = document.querySelector(`input[name="q${q.id}"]:checked`);
+                const allOptionsBox = document.querySelectorAll(`input[name="q${q.id}"] + .option-box`);
+                
+                // Vô hiệu hoá click sau khi nộp
+                document.querySelectorAll(`input[name="q${q.id}"]`).forEach(input => input.disabled = true);
+
+                let userAnsIndex = selected ? parseInt(selected.value) : -1;
+                
+                // Xóa hiệu ứng hover để giao diện cố định
+                allOptionsBox.forEach((box) => {
+                    box.classList.remove('hover:bg-[#fecdd3]', 'hover:bg-[#c7d2fe]', 'hover:bg-[#fef08a]', 'hover:bg-[#bbf7d0]');
+                });
+
+                if (userAnsIndex === q.correct) {
+                    score++;
+                }
+            });
+
+            // Ẩn nút Nộp bài
+            document.getElementById('submitBtnTop').style.display = 'none';
+            document.getElementById('submitBtnBottom').style.display = 'none';
+            
+            // Hiện Modal Kết quả
+            document.getElementById('scoreText').innerText = score;
+            if(score >= 35) document.getElementById('resultIcon').innerText = '🏆';
+            else if(score >= 25) document.getElementById('resultIcon').innerText = '🔥';
+            else document.getElementById('resultIcon').innerText = '💪';
+            
+            document.getElementById('resultModal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('resultModal').classList.add('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Khởi tạo render
+        window.onload = renderQuestions;
+    </script>
+</body>
+</html>
