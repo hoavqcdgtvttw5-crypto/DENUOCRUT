@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bảng Vàng AI - Khoa Thi 2026</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'giay-diep': '#F4E8D3',
+                        'chu-sa': '#8B0000',
+                        'vang-kim': '#DAA520',
+                        'muc-tau': '#2B2B2B',
+                        'go-lim': '#3E2723'
+                    },
+                    fontFamily: {
+                        'serif': ['"Playfair Display"', 'serif'],
+                        'sans': ['"Inter"', 'sans-serif'],
+                    },
+                    backgroundImage: {
+                        'paper-texture': "url('data:image/svg+xml,%3Csvg width=\"100\" height=\"100\" viewBox=\"0 0 100 100\" xmlns=\"http://www.w3.org/2000/svg\"%3E%3Cfilter id=\"noise\"%3E%3CfeTurbulence type=\"fractalNoise\" baseFrequency=\"0.8\" numOctaves=\"4\" stitchTiles=\"stitch\"/%3E%3C/filter%3E%3Crect width=\"100\" height=\"100\" filter=\"url(%23noise)\" opacity=\"0.05\"/%3E%3C/svg%3E')"
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- React & ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <!-- Babel for JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <style>
+        body {
+            background-color: #0A192F; /* Đổi nền thành xanh đậm */
+            color: #FFD700; /* Chữ vàng */
+        }
+        .scroll-container::-webkit-scrollbar { width: 8px; }
+        .scroll-container::-webkit-scrollbar-track { background: #061025; border-radius: 4px; }
+        .scroll-container::-webkit-scrollbar-thumb { background: #1e4da6; border-radius: 4px; }
+        
+        /* Hiệu ứng chữ vàng viền đỏ tía */
+        .chuvang-viendo {
+            color: #FFD700;
+            text-shadow: 
+                -1px -1px 0 #8B0000, 
+                 1px -1px 0 #8B0000, 
+                -1px  1px 0 #8B0000, 
+                 1px  1px 0 #8B0000;
+        }
+        .chuvang-viendo-dam {
+            color: #FFD700;
+            text-shadow: 
+                -2px -2px 0 #8B0000, 
+                 2px -2px 0 #8B0000, 
+                -2px  2px 0 #8B0000, 
+                 2px  2px 0 #8B0000,
+                 4px 4px 6px rgba(0,0,0,0.8);
+        }
+        .chuvang-body {
+            color: #FFF2A8; /* Vàng sáng dịu hơn cho nội dung dài dễ đọc */
+            text-shadow: 1px 1px 0px #8B0000;
+        }
+
+        /* Hiệu ứng khung 3D nổi */
+        .box-3d {
+            background: linear-gradient(145deg, #0b1f3d, #08172e);
+            box-shadow: 10px 10px 20px #040a14, -5px -5px 15px #102850;
+            border-top: 2px solid #1a3b75;
+            border-left: 2px solid #1a3b75;
+            border-bottom: 4px solid #040a14;
+            border-right: 4px solid #040a14;
+            border-radius: 12px;
+        }
+        .item-3d {
+            background: linear-gradient(145deg, #102a5c, #0e234d);
+            box-shadow: 5px 5px 10px #061025, -2px -2px 6px #1a4493;
+            border-top: 2px solid #23498f;
+            border-left: 2px solid #23498f;
+            border-bottom: 4px solid #050d1f;
+            border-right: 4px solid #050d1f;
+            border-radius: 8px;
+            transition: all 0.15s ease-in-out;
+            cursor: pointer;
+        }
+        .item-3d:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.1);
+        }
+        .item-3d:active, .item-3d.active {
+            background: #0e234d;
+            box-shadow: inset 4px 4px 8px #050d1f, inset -4px -4px 8px #1a4493;
+            border-top: 4px solid #050d1f;
+            border-left: 4px solid #050d1f;
+            border-bottom: 2px solid #23498f;
+            border-right: 2px solid #23498f;
+            transform: translateY(2px);
+        }
+
+        /* Hiệu ứng chữ số 3D của lượt truy cập */
+        .digit-3d {
+            display: inline-block;
+            padding: 4px 10px;
+            margin: 0 3px;
+            font-family: monospace;
+            font-weight: 900;
+            font-size: 1.75rem;
+            background: linear-gradient(180deg, #333, #111);
+            border-top: 2px solid #666;
+            border-left: 2px solid #555;
+            border-bottom: 4px solid #000;
+            border-right: 3px solid #000;
+            border-radius: 6px;
+            box-shadow: 2px 4px 8px rgba(0,0,0,0.9), inset 0px 2px 4px rgba(255,255,255,0.2);
+            text-shadow: 2px 2px 0px rgba(0,0,0,0.9);
+        }
+    </style>
+</head>
+<body class="font-sans antialiased min-h-screen flex flex-col">
+
+    <div id="root" class="flex-grow flex flex-col"></div>
+
+    <script type="text/babel">
+        const { useState, useMemo } = React;
+
+        // DỮ LIỆU ĐẦY ĐỦ TỪ PDF
+        const promptsData = [
+            {
+                id: 1,
+                category: "Hình Ảnh Mầm Non",
+                title: "Thư Mời Họp PHHS",
+                shortDesc: "Tạo poster thư mời họp phụ huynh mầm non, tiểu học (pastel, luxury, Pixar).",
+                longDesc: "Tạo thư mời cực kỳ sang trọng, dễ thương với hình ảnh cô giáo mặc áo dài và học sinh chibi. Yêu cầu đặc biệt là GIỮ NGUYÊN 100% KHUÔN MẶT THẬT của cô giáo từ ảnh tham chiếu, kết hợp background sân trường mầm non mùa hè, bầu trời xanh, Typography bubble text 3D.",
+                promptText: "Thiết kế poster “Thư mời họp phụ huynh cuối năm học” khổ A4 dọc, phong cách luxury pastel Korean school event poster kết hợp Disney Pixar cao cấp. Tông màu: hồng pastel, xanh mint, vàng champagne. \n\nTrung tâm là cô giáo mặc áo dài xanh sapphire pha ánh kim sang trọng đứng cùng 6 học sinh mầm non chibi dễ thương. Sử dụng ảnh tham chiếu cô giáo làm nhân vật chính. GIỮ NGUYÊN 100% KHUÔN MẶT THẬT của cô giáo trong ảnh tham chiếu (preserve exact facial identity). \n\nTiêu đề: “TRƯỜNG MẦM NON BẢO ĐÀI” “Thư mời” “HỌP PHỤ HUYNH”... GVCN: Nguyễn Thị Thanh Huyền.",
+                usage: "Dùng để thiết kế thư mời gửi Zalo cho phụ huynh cuối năm, đầu năm."
+            },
+            {
+                id: 2,
+                category: "Hình Ảnh Học Sinh",
+                title: "Nhãn Vở Cá Nhân Hóa (Bé Gái/Trai)",
+                shortDesc: "Tạo nhãn vở giữ nguyên khuôn mặt thật của bé ghép vào thân hình chibi.",
+                longDesc: "Dùng ảnh chân dung học sinh ghép vào thân hình chibi dễ thương (kawaii) để làm nhãn vở. Khung thông tin bo tròn ghi rõ Trường, Lớp, Họ Tên. Xung quanh trang trí thỏ, mèo, gấu bông pastel.",
+                promptText: "THIẾT KẾ NHÃN VỞ HỌC SINH TIỂU HỌC CÁ NHÂN HÓA CHO BÉ GÁI VỚI GƯƠNG MẶT THẬT.\nGiữ nguyên 100% khuôn mặt thật từ ảnh tham chiếu (không AI hóa, facial identity preserved). Ghép tự nhiên với cơ thể minh họa phong cách kawaii học đường. Đeo balo, cầm sách vở. \nKhung thông tin trung tâm:\nTRƯỜNG TIỂU HỌC HẠNH PHÚC\nHỌ VÀ TÊN: Nguyễn Mai Linh\nLỚP: 2A\nMÔN HỌC: Toán\nTrang trí xung quanh: Thỏ kawaii, gấu bông pastel, cầu vồng. Tỷ lệ ngang chuẩn nhãn vở Việt Nam.",
+                usage: "In nhãn vở độc quyền tặng học sinh dịp khai giảng."
+            },
+            {
+                id: 3,
+                category: "Học Liệu",
+                title: "Phiếu Ôn Tập Hè Thông Minh",
+                shortDesc: "Thiết kế phiếu bài tập Toán, Tiếng Anh, Ngữ Văn (Có trò chơi).",
+                longDesc: "Đóng vai chuyên gia giáo dục thiết kế phiếu ôn tập hè cực kỳ đẹp mắt, bám sát SGK. Gồm: Khởi động, Luyện tập, Thử thách ngôi sao, Trò chơi (Mê cung, Ô chữ), và Góc Tự Đánh Giá.",
+                promptText: "Bạn là giáo viên Tiểu học xuất sắc, chuyên gia thiết kế học liệu số. Hãy thiết kế một PHIẾU ÔN TẬP HÈ MÔN TOÁN LỚP 5 thật đẹp mắt, sinh động. \nChủ đề: [Số thập phân / Phân số]. Số lượng: 15-20 câu. \nMức độ: 30% nhận biết, 40% thông hiểu, 30% vận dụng. \nCấu trúc: Phần A Khởi động, Phần B Luyện tập, Phần C Thử thách, Phần D Trò chơi (Mê cung toán học), Phần E Tự đánh giá. Tạo riêng phần đáp án.",
+                usage: "Làm bài tập cuối tuần, ôn tập hè dạng bản in hoặc tương tác số."
+            },
+            {
+                id: 4,
+                category: "Hình Ảnh Chuyên Nghiệp",
+                title: "Thư Tri Ân PHHS & Giấy Khen",
+                shortDesc: "Mẫu thư cảm ơn cuối năm và 10 mẫu giấy khen học sinh.",
+                longDesc: "Tạo các ấn phẩm cao cấp (Editorial, Cinematic, Storybook) tri ân phụ huynh và các mẫu giấy khen (Thanh lịch, Thiên nhiên, Công nghệ).",
+                promptText: "MẪU THƯ TRI ÂN CAO CẤP: Thiết kế thư tri ân phụ huynh cuối năm học, poster dọc 9:16. Khung cảnh bầu trời đêm xanh navy sâu, ánh sao lấp lánh. Một phong bì lớn mở ra ở trung tâm, tờ thư giấy ngà cổ điển. Tiêu đề: 'Cảm ơn vì đã đồng hành'. Giữ nguyên khuôn mặt cô giáo... \n\nGIẤY KHEN MẪU 1: Giấy khen học sinh phong cách thanh lịch, nền trắng kem, viền lá xanh watercolor tinh tế, góc trang trí hoa lá nhẹ nhàng. Text: 'GIẤY KHEN – Luôn cố gắng mỗi ngày'. Độ nét cao 4K.",
+                usage: "In ấn gửi tặng phụ huynh, học sinh lễ tổng kết."
+            },
+            {
+                id: 5,
+                category: "Giáo Án & Kịch Bản",
+                title: "Chuyển Giáo Án Thành Slide Bài Giảng",
+                shortDesc: "Ra lệnh AI tóm tắt giáo án Word thành 10 slide thuyết trình.",
+                longDesc: "Nhờ AI chia bố cục giáo án dài thành các slide ngắn gọn, gạch đầu dòng, kèm gợi ý hình ảnh minh họa, màu sắc và hiệu ứng phù hợp.",
+                promptText: "Bạn là chuyên gia thiết kế bài giảng. Hãy dựa vào giáo án tôi cung cấp để tạo thành 10 slide bài giảng hoàn chỉnh dành cho trẻ 5-6 tuổi. \nYêu cầu:\n- Mỗi slide chỉ 1 nội dung trọng tâm.\n- Tone màu: pastel kết hợp cầu vồng.\n- Trình bày dạng: SLIDE ... | TIÊU ĐỀ | NỘI DUNG | GỢI Ý HÌNH ẢNH | HIỆU ỨNG.\n- Kết thúc bằng slide 'Bé học giỏi quá!' kèm pháo giấy.\nSau đây là nội dung giáo án: [Dán giáo án vào đây].",
+                usage: "Tạo nhanh khung sườn để làm slide trên Canva/PowerPoint."
+            },
+            {
+                id: 6,
+                category: "Giáo Án & Kịch Bản",
+                title: "Giáo Án Tích Hợp AI",
+                shortDesc: "Phân tích giáo án truyền thống và bổ sung ứng dụng AI.",
+                longDesc: "Nâng cấp giáo án để thi giáo viên giỏi: Thêm vai trò của AI (ChatGPT, Canva, Gemini) vào từng bước dạy học, đảm bảo tính sáng tạo và đạo đức.",
+                promptText: "Bạn là chuyên gia thiết kế giáo án định hướng chuyển đổi số. Hãy đọc giáo án dưới đây và thiết kế lại thành giáo án tích hợp AI (chuẩn thi GVG). \nYêu cầu bắt buộc mỗi hoạt động: Mục tiêu, Vai trò GV, Vai trò Trẻ, Công cụ AI sử dụng, Mục đích sư phạm của việc dùng AI. \nĐảm bảo quan điểm 'lấy trẻ làm trung tâm', có lưu ý an toàn và kiểm duyệt nội dung AI. \nNội dung giáo án gốc: [Dán vào đây].",
+                usage: "Nộp hồ sơ thi Giáo viên dạy giỏi, áp dụng CNTT xuất sắc."
+            },
+            {
+                id: 7,
+                category: "Code & Game",
+                title: "Vòng Quay May Mắn (Code React)",
+                shortDesc: "Yêu cầu AI lập trình Game vòng quay may mắn cực đẹp.",
+                longDesc: "Tạo trò chơi vòng quay quay thưởng có âm thanh, pháo giấy, popup trúng thưởng. Nhập danh sách câu hỏi hoặc phần thưởng.",
+                promptText: "Hãy tạo cho tôi một mini game 'Vòng Quay May Mắn' cực kỳ đẹp, phong cách cao cấp như game mobile chạy bằng React. \nNội dung các ô: 1 gấu bông, 1 lốc sữa, 1 bộ sáp màu, 1 tràng pháo tay, 1 chiếc váy công chúa... \nHiệu ứng: âm thanh quay, hiệu ứng pháo giấy confetti khi trúng, popup nổi bật. \nTính năng: Ô nhập danh sách tùy chỉnh, bảng lịch sử kết quả, nút xóa lịch sử. Code không bị tràn màn hình mobile.",
+                usage: "Chạy file code trực tiếp trên lớp để tổ chức bốc thăm, trả lời câu hỏi."
+            },
+            {
+                id: 8,
+                category: "Video AI",
+                title: "Cô Giáo Bước Ra Từ Facebook",
+                shortDesc: "Tạo video siêu thực 3D cô giáo bước ra khỏi màn hình MXH.",
+                longDesc: "Làm intro đỉnh cao: Cô giáo mặc áo dài trắng, bước từ giao diện Facebook với hiệu ứng rách giấy 3D, mảnh giấy bay chậm, thần thái uyển chuyển.",
+                promptText: "Tạo video siêu thực phong cách điện ảnh 4K. Giữ nguyên hoàn toàn khuôn mặt và mái tóc của người phụ nữ trong ảnh gốc.\nNhân vật là giáo viên mầm non mặc áo dài trắng tinh khôi. Cô bước nhẹ nhàng, uyển chuyển ra khỏi một màn hình mạng xã hội khổng lồ (giao diện Facebook cá nhân). \nHiệu ứng rách giấy 3D dạng mở mềm: đường rách cong nhẹ, mảnh giấy bay chậm xung quanh. \nMàn hình sau hiển thị: Tên: Thanh Huyền, 56.358 người theo dõi.",
+                usage: "Làm video giới thiệu bản thân, xây kênh thương hiệu cá nhân."
+            },
+            {
+                id: 9,
+                category: "Video AI",
+                title: "Chuyển Ảnh SGK Thành Video",
+                shortDesc: "Biến ảnh bài toán chia bánh thành hoạt hình 3D.",
+                longDesc: "Cung cấp ảnh bài toán cho ChatGPT, nhờ tách cảnh và tạo lệnh prompt cho VEO 3 / Kling AI để dựng video hoạt hình lớp học.",
+                promptText: "[Prompt 1]: Cảnh lớp học, cô giáo mặc trang phục đầu bếp đứng bên trái, tay cầm hộp bánh mở nắp. 4 học sinh nhìn chăm chú. Camera pan nhẹ. Giọng đọc nữ: 'Hôm nay chúng ta sẽ làm 564 cái bánh. Mỗi hộp 12 cái.' \n[Prompt 2]: Một học sinh giơ tay phát biểu. Cô giáo khích lệ. Giọng đọc: 'Vậy 564 cái bánh thì xếp được bao nhiêu hộp? ... 564 chia 12 bằng 47. Có 47 hộp bánh.'",
+                usage: "Biến các bài học khô khan thành video Elearning sinh động."
+            },
+            {
+                id: 10,
+                category: "Video AI",
+                title: "Video Hội Thoại 2 Nhân Vật",
+                shortDesc: "Prompt tạo video học sinh đối thoại bằng VEO 3.",
+                longDesc: "Thiết lập prompt tạo nhân vật nam, nữ đồng nhất, sau đó yêu cầu VEO 3.1 tạo video đối thoại 60s, khớp khẩu hình tiếng Việt.",
+                promptText: "Dựa trên kịch bản, hãy soạn prompt tạo video bằng VEO 3.1. Tổng thời lượng 60s, mỗi cảnh 8s.\n[Nhân vật nam]: Tóc nâu ngắn, áo trắng cà vạt đỏ. [Nhân vật nữ]: Tóc nâu bện, váy xếp ly.\nNội dung thoại tiếng Việt trong prompt: \nNam: 'Chào Mai! Hôm nay cậu có bài kiểm tra gì không?' \nNữ: 'Chào An! Có, hôm nay tớ có bài kiểm tra toán, tớ hơi lo lắng...'. Giữ nguyên giọng nói xuyên suốt.",
+                usage: "Dựng phim hoạt hình giáo dục, minh họa tình huống đạo đức."
+            },
+            {
+                id: 11,
+                category: "Nhạc AI",
+                title: "Sáng Tạo Nhạc Suno AI",
+                shortDesc: "Sáng tác ca khúc ý nghĩa cho trường mầm non.",
+                longDesc: "Dùng Suno AI viết lời và phối nhạc cho bài hát chia tay học sinh 5 tuổi lên lớp 1 tại trường Mầm non Bảo Đài.",
+                promptText: "Viết một ca khúc thiếu nhi Việt Nam cảm động về lễ tổng kết trường Mầm non Bảo Đài, chia tay các bé 5 tuổi lên lớp 1. \nPhong cách âm nhạc: Ballad hiện đại pha cinematic, piano cảm xúc. \nKhông khí: Ấm áp, xúc động, đầy yêu thương của cô giáo.\nNội dung: Sân trường ngập nắng, tiếng cười, cô giáo dõi theo, các bé nay khôn lớn, tạm biệt tuổi thơ. \nGiọng hát nữ ấm áp. Tên bài: 'Mái Trường Bảo Đài Ngày Chia Xa'.",
+                usage: "Làm nhạc nền cho clip tri ân, video tổng kết cuối năm."
+            },
+            {
+                id: 12,
+                category: "Hình Ảnh Lễ Hội",
+                title: "Poster 30/4 & Giỗ Tổ",
+                shortDesc: "Tạo poster hoạt hình vui tươi cho các ngày lễ truyền thống.",
+                longDesc: "Tạo hình ảnh lễ hội với vua Hùng, cờ đỏ sao vàng, em bé mặc áo đỏ sao vàng ở quảng trường...",
+                promptText: "Thiết kế poster thông báo nghỉ lễ Giỗ Tổ Hùng Vương, phong cách minh họa hoạt hình thiếu nhi. Bối cảnh lễ hội với đền Hùng cổ kính, lá cờ đỏ sao vàng. Hai bên là hai nhân vật vua Hùng chibi (một áo đỏ cầm trượng, một áo xanh cầm rìu). Ở giữa có bảng cuộn giấy cổ ghi 'Thời gian nghỉ... Lịch đi học lại'. Góc dưới có trống đồng, hoa sen, học sinh tiểu học hoạt hình.",
+                usage: "Tạo poster đẹp gửi phụ huynh thay cho văn bản thông báo nhàm chán."
+            },
+            {
+                id: 13,
+                category: "Tiện Ích AI",
+                title: "Sơ Đồ Tư Duy & Infographic",
+                shortDesc: "Dùng NotebookLM và Mermaid tạo sơ đồ bài học.",
+                longDesc: "Trích xuất tóm tắt từ SGK thành code Mermaid, sau đó vẽ Infographic 3D.",
+                promptText: "[Bước 1]: Bạn là một Visual Notetaker. Hãy lập sơ đồ tư duy tóm tắt bài [Tây Tiến] dưới dạng mã Mermaid.\n[Bước 2 - Sang Gemini]: Tạo infographic 3D từ đoạn mã Mermaid sau: Màu chủ đạo xanh lá, trắng và xanh biển. Phong cách trực quan, hình ảnh icon sắc nét, tỷ lệ 16:9. \n(Dán mã code Mermaid vào đây).",
+                usage: "Hệ thống kiến thức nhanh, làm slide dạy học mindmap."
+            },
+            {
+                id: 14,
+                category: "Hình Ảnh Giáo Viên",
+                title: "Thầy Cô Kiến Tạo Tri Thức",
+                shortDesc: "Tạo ảnh cinematic cô giáo điều khiển tri thức bay lơ lửng.",
+                longDesc: "Phong cách cinematic, dark, hologram. Cô giáo đưa tay điều khiển các vật thể giáo dục bay xoay quanh.",
+                promptText: "Tạo poster 16:9, phong cách cinematic - dark - giáo dục hiện đại. \nNữ giáo viên Việt Nam, thần thái bản lĩnh, mặc blazer tối màu. Tư thế: Một tay đưa ra điều khiển không gian. \nHiệu ứng: Vật thể giáo dục (sách, bút, laptop, AI icon, dữ liệu) bay xoáy dạng vortex quanh nhân vật, motion blur mạnh. Light trails + vòng năng lượng hologram. Title: 'LÀM CHỦ TRI THỨC'.",
+                usage: "Ảnh cover giáo án, bìa sách, poster cá nhân của giáo viên."
+            },
+            {
+                id: 15,
+                category: "Tiện Ích AI",
+                title: "Biến Ảnh Chụp Thành File Word",
+                shortDesc: "OCR trích xuất chữ từ ảnh giáo án siêu chuẩn.",
+                longDesc: "Tránh lỗi font, mất bảng biểu khi dùng các app chuyển đổi thông thường.",
+                promptText: "Hãy quét hình ảnh này và chuyển đổi toàn bộ nội dung thành văn bản. Lưu ý giữ nguyên các đoạn xuống dòng, các mục phân tách và cấu trúc văn bản (đặc biệt là bảng biểu nếu có) để mình có thể sao chép trực tiếp vào file Word một cách chuyên nghiệp nhất. Đảm bảo chính xác 100% về chính tả.",
+                usage: "Số hóa tài liệu, giáo án giấy nhanh chóng."
+            },
+            {
+                id: 16,
+                category: "Hình Ảnh Tuyên Truyền",
+                title: "Bộ Ảnh Áo Dài Tự Hào 30/4",
+                shortDesc: "Ảnh cô giáo mặc áo dài cờ đỏ sao vàng ở Sapa, Lăng Bác.",
+                longDesc: "Tạo các bộ ảnh cực nét ở các địa danh lịch sử, du lịch với khăn rằn ri.",
+                promptText: "Create a stunning portrait of the SAME Vietnamese woman (consistent face) wearing a white áo dài with Vietnam flag badge on chest and khăn rằn scarf. \nShe stands in Sapa terraced rice fields, misty clouds. Add small Vietnamese flags in the background. Elegant text: '51 NĂM THỐNG NHẤT ĐẤT NƯỚC (1975-2026)'. Soft morning light, ultra realistic 8k.",
+                usage: "Thay avatar, đăng truyền thông kỷ niệm ngày Giải phóng miền Nam."
+            },
+            {
+                id: 17,
+                category: "Hình Ảnh Học Sinh",
+                title: "Chụp Ảnh Bé Yêu Ngày Tết",
+                shortDesc: "Tạo ảnh bé mặc vest, áo dài cầm phong bao lì xì, bánh chưng.",
+                longDesc: "Ghép khuôn mặt bé vào các bối cảnh studio Tết cao cấp.",
+                promptText: "Giữ nguyên khuôn mặt, màu da như ảnh gốc. Portrait chụp Tết bé trai VN 1-3 tuổi. Bé mặc bộ vest trắng cao cấp, nơ cổ nâu, quần âu trắng. Bé đứng vững, tay ôm bánh chưng nhỏ. \nBối cảnh: Không gian trong nhà, hoa mai, chậu cây xanh, lì xì đỏ. Ánh sáng tự nhiên mềm tông ấm. Ảnh 8K, 50mm portrait f1.8, phong cách studio cao cấp.",
+                usage: "Làm album kỉ niệm, tặng học sinh dịp Tết nguyên đán."
+            },
+            {
+                id: 18,
+                category: "Hình Ảnh MXH",
+                title: "Bộ Sticker Zalo Cô Giáo",
+                shortDesc: "Thiết kế bộ icon Zalo mang khuôn mặt của chính bạn.",
+                longDesc: "Tạo set 9 hình (3x3) với các biểu cảm khác nhau để chat nhóm.",
+                promptText: "Create a cute Vietnamese Zalo sticker pack in a 3x3 grid layout. Use the SAME woman from reference image. \nPoses: smiling thumbs up, holding green book, worried reminder face, blowing a kiss... Add doodle decorations: sparkles, hearts. \nAdd bold Vietnamese captions in bubble font: 'HỌC AI CÙNG THANH HUYỀN NÀO!', 'QUÁ ĐỈNH'. Cute 1:1 square.",
+                usage: "Dùng để chat trong nhóm Zalo phụ huynh, học sinh rất thân thiện."
+            },
+            {
+                id: 19,
+                category: "Code & Game",
+                title: "Trò Chơi Kéo Thả Canva",
+                shortDesc: "Hướng dẫn tạo game kéo thả phân loại trên Canva.",
+                longDesc: "Prompt để lấy ý tưởng kịch bản làm trò chơi kéo chữ H, K vào giỏ tương ứng.",
+                promptText: "Viết cho tôi 1 prompt hoàn chỉnh chi tiết để tôi tạo trò chơi trên Canva. Nội dung: Trò chơi kéo thả phân loại chữ H, chữ K (mỗi chữ có 5 biến thể) và các chữ nhiễu S, X, E, U... \nDưới màn hình có 2 cái giỏ: Giỏ hồng chữ H, giỏ xanh chữ K. Cần có âm thanh đúng sai, icon hiệu ứng, màu nền vui nhộn dễ thương.",
+                usage: "Làm bài giảng tương tác trên màn hình TV cho lớp mầm non."
+            },
+            {
+                id: 20,
+                category: "Tiện Ích AI",
+                title: "Lấy Minh Chứng Chuẩn Nghề Nghiệp",
+                shortDesc: "Tự động điền phụ lục minh chứng đánh giá giáo viên.",
+                longDesc: "Gửi mẫu bảng Chuẩn nghề nghiệp cho AI để tự động suy luận và viết các minh chứng cụ thể.",
+                promptText: "Bạn là chuyên gia giáo dục và nhiều năm công tác. Tôi đạt hoàn thành xuất sắc nhiệm vụ (91 điểm). \nHãy đọc phụ lục hướng dẫn minh chứng chuẩn nghề nghiệp (Tải file mẫu lên), và hoàn thiện đầy đủ toàn bộ nội dung còn thiếu. Nhận xét thực tế, logic, thể hiện rõ phẩm chất, trách nhiệm. Không viết chung chung.",
+                usage: "Làm hồ sơ đánh giá viên chức cuối năm siêu nhanh."
+            }
+        ];
+
+        // Component hiển thị Bộ đếm số 3D
+        const Counter3D = ({ count }) => {
+            const countStr = count.toString().padStart(8, '0');
+            // Mảng màu sắc cho từng chữ số
+            const colors = ['#FF3B30', '#34C759', '#00C7BE', '#FF9500', '#AF52DE', '#FF2D55', '#5856D6', '#FFCC00'];
+            
+            return (
+                <div className="flex flex-col md:flex-row justify-center items-center gap-3 mt-6 pt-4 border-t border-[#1a3b75]">
+                    <span className="text-lg chuvang-viendo uppercase font-bold tracking-widest">Lượt truy cập:</span>
+                    <div className="flex">
+                        {countStr.split('').map((digit, i) => (
+                            <span key={i} className="digit-3d" style={{ color: colors[i % colors.length] }}>
+                                {digit}
+                            </span>
+                        ))}
+                    </div>
+                </div>
+            );
+        };
+
+        const App = () => {
+            const [selectedPrompt, setSelectedPrompt] = useState(promptsData[0]);
+            const [copyStatus, setCopyStatus] = useState('');
+            const [searchTerm, setSearchTerm] = useState('');
+            
+            // State Âm nhạc và Lượt truy cập
+            const [isPlaying, setIsPlaying] = useState(false);
+            const audioRef = React.useRef(null);
+            const [visitors, setVisitors] = useState(2584109);
+
+            // Giả lập tăng lượt truy cập khi tải trang
+            React.useEffect(() => {
+                setVisitors(prev => prev + 1);
+            }, []);
+
+            const toggleMusic = () => {
+                if (!audioRef.current) return;
+                
+                if(isPlaying) {
+                    audioRef.current.pause();
+                    setIsPlaying(false);
+                } else {
+                    const playPromise = audioRef.current.play();
+                    if (playPromise !== undefined) {
+                        playPromise.then(() => {
+                            setIsPlaying(true);
+                        }).catch(error => {
+                            console.error("Không thể phát nhạc:", error);
+                            setIsPlaying(false);
+                            setCopyStatus('Lỗi: Trình duyệt chặn hoặc không hỗ trợ nhạc!');
+                            setTimeout(() => setCopyStatus(''), 3000);
+                        });
+                    }
+                }
+            };
+
+            // Xử lý Filter
+            const filteredPrompts = useMemo(() => {
+                if (!searchTerm.trim()) return promptsData;
+                const lowerTerm = searchTerm.toLowerCase();
+                return promptsData.filter(p => 
+                    p.title.toLowerCase().includes(lowerTerm) || 
+                    p.category.toLowerCase().includes(lowerTerm) ||
+                    p.shortDesc.toLowerCase().includes(lowerTerm)
+                );
+            }, [searchTerm]);
+
+            const handleCopy = (text) => {
+                const el = document.createElement('textarea');
+                el.value = text;
+                document.body.appendChild(el);
+                el.select();
+                document.execCommand('copy');
+                document.body.removeChild(el);
+                setCopyStatus('Đã lĩnh hội (Sao chép)!');
+                setTimeout(() => setCopyStatus(''), 2500);
+            };
+
+            return (
+                <div className="flex-grow flex flex-col relative z-10">
+                    {/* Trình phát nhạc */}
+                    <div className="fixed bottom-6 right-6 z-50">
+                        {/* Sử dụng nguồn nhạc từ SoundHelix - máy chủ mở CORS hoàn toàn giúp trình duyệt không bao giờ bị chặn */}
+                        <audio ref={audioRef} loop preload="none">
+                            <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-17.mp3" type="audio/mpeg" />
+                        </audio>
+                        <button 
+                            onClick={toggleMusic} 
+                            className="item-3d px-6 py-3 rounded-full flex items-center justify-center gap-2 chuvang-viendo-dam text-lg"
+                        >
+                            {isPlaying ? '⏸ Tắt Nhạc' : '🎵 Nhạc Nhẹ'}
+                        </button>
+                    </div>
+
+                    {/* Header */}
+                    <header className="box-3d m-4 md:m-8 relative overflow-hidden">
+                        <div className="absolute inset-0 opacity-5 bg-[url('data:image/svg+xml,%3Csvg%20width=%2220%22%20height=%2220%22%20xmlns=%22http://www.w3.org/2000/svg%22%3E%3Ccircle%20cx=%2210%22%20cy=%2210%22%20r=%222%22%20fill=%22%23ffffff%22/%3E%3C/svg%3E')]"></div>
+                        <div className="max-w-7xl mx-auto px-4 py-6 md:py-8 text-center relative z-10">
+                            <h1 className="text-3xl md:text-5xl font-serif font-bold uppercase tracking-widest chuvang-viendo-dam drop-shadow-2xl">
+                                Bảng Vàng Cẩm Nang AI
+                            </h1>
+                            <p className="mt-2 text-base md:text-xl font-serif italic chuvang-viendo">
+                                Tuyển tập 20+ bí kíp chuyển đổi số toàn diện dành cho bậc phu tử
+                            </p>
+                            <p className="mt-2 text-sm md:text-base font-sans chuvang-body">
+                                (Tổng hợp và sưu tầm từ nhiều nguồn, đặc biệt cảm ơn cô giáo Thanh Huyền)
+                            </p>
+                        </div>
+                    </header>
+
+                    {/* Main Content */}
+                    <main className="flex-grow max-w-7xl mx-auto w-full flex flex-col md:flex-row gap-6 p-4 md:p-8 pt-0 md:pt-0">
+                        
+                        {/* 40% Cột Trái: Danh Sách Bí Kíp */}
+                        <div className="w-full md:w-[40%] box-3d flex flex-col overflow-hidden h-[700px]">
+                            
+                            <div className="py-4 px-6 text-center border-b-2 border-[#1a3b75] flex flex-col gap-2">
+                                <h2 className="text-2xl font-serif font-bold tracking-wide chuvang-viendo-dam">Mục Lục Bí Kíp</h2>
+                                {/* Thanh Tìm Kiếm */}
+                                <div className="relative mt-2">
+                                    <input 
+                                        type="text" 
+                                        placeholder="🔍 Tìm kiếm (vd: Video, Giáo án, Phiếu)..." 
+                                        className="w-full px-4 py-2 rounded-md bg-[#050d1f] border-2 border-[#1a3b75] text-[#FFD700] font-sans text-sm focus:outline-none focus:border-[#FFD700] shadow-inner placeholder-[#FFD700]/50"
+                                        value={searchTerm}
+                                        onChange={(e) => setSearchTerm(e.target.value)}
+                                    />
+                                </div>
+                                {/* Nút liên kết Google Drive thường trực */}
+                                <div className="text-right mt-1">
+                                    <a 
+                                        href="LINK_GOOGLE_DRIVE_CUA_BAN" 
+                                        target="_blank" 
+                                        rel="noopener noreferrer"
+                                        className="text-xs font-sans chuvang-body hover:text-white italic underline decoration-[#8B0000] transition-colors"
+                                    >
+                                        Mở Kho tàng gốc (133 trang) trên Google Drive ↗
+                                    </a>
+                                </div>
+                            </div>
+                            
+                            <div className="flex-grow overflow-y-auto scroll-container p-4 space-y-4">
+                                {filteredPrompts.length === 0 ? (
+                                    <div className="text-center py-12 px-4 flex flex-col items-center gap-4">
+                                        <svg className="w-16 h-16 text-[#FFD700] opacity-30 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                        <p className="chuvang-body italic text-base">Bí kíp <strong className="text-white">"{searchTerm}"</strong> chưa được khắc lên Bảng Vàng.</p>
+                                        
+                                        {/* Nút chuyển hướng sang Google Drive khi không tìm thấy */}
+                                        <a 
+                                            href="LINK_GOOGLE_DRIVE_CUA_BAN" 
+                                            target="_blank" 
+                                            rel="noopener noreferrer"
+                                            className="item-3d px-6 py-3 mt-4 rounded-md flex items-center justify-center gap-2 chuvang-viendo-dam text-sm w-full max-w-[250px]"
+                                        >
+                                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                            Tìm trong File Gốc (Drive)
+                                        </a>
+                                        <p className="text-[10px] text-gray-400 mt-2">Bấm để mở kho tài liệu lưu trữ đầy đủ</p>
+                                    </div>
+                                ) : (
+                                    filteredPrompts.map((prompt, index) => (
+                                        <button 
+                                            key={prompt.id}
+                                            onClick={() => setSelectedPrompt(prompt)}
+                                            className={`w-full text-left p-4 group ${
+                                                selectedPrompt.id === prompt.id ? 'item-3d active' : 'item-3d'
+                                            }`}
+                                        >
+                                            <div className="flex items-start gap-3">
+                                                <div className={`font-serif font-bold text-xl min-w-[28px] mt-0.5 ${selectedPrompt.id === prompt.id ? 'chuvang-viendo-dam' : 'chuvang-viendo'}`}>
+                                                    {String(index + 1).padStart(2, '0')}
+                                                </div>
+                                                <div className="flex-1">
+                                                    <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded box-3d chuvang-viendo mb-2 inline-block shadow-sm border-none">
+                                                        {prompt.category}
+                                                    </span>
+                                                    <h3 className={`font-bold text-base font-serif leading-tight mt-1 ${selectedPrompt.id === prompt.id ? 'chuvang-viendo-dam' : 'chuvang-viendo'}`}>
+                                                        {prompt.title}
+                                                    </h3>
+                                                    <p className="text-xs mt-2 font-sans line-clamp-2 leading-relaxed chuvang-body">
+                                                        {prompt.shortDesc}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </button>
+                                    ))
+                                )}
+                            </div>
+                        </div>
+
+                        {/* 60% Cột Phải: Chi Tiết */}
+                        <div className="w-full md:w-[60%] box-3d flex flex-col h-[700px] relative">
+                            <div className="py-4 px-6 text-center border-b-2 border-[#1a3b75]">
+                                <h2 className="text-2xl font-serif font-bold tracking-wide chuvang-viendo-dam">Chi Tiết Chiếu Chỉ</h2>
+                            </div>
+
+                            <div className="p-6 md:p-8 flex-grow overflow-y-auto scroll-container flex flex-col">
+                                {selectedPrompt && (
+                                    <>
+                                        <div className="mb-6 border-b-2 border-[#1a3b75] pb-4">
+                                            <span className="text-xs font-bold uppercase tracking-wider box-3d border-none chuvang-viendo px-3 py-1 rounded mb-3 inline-block">
+                                                Phân loại: {selectedPrompt.category}
+                                            </span>
+                                            <h1 className="text-2xl md:text-3xl font-serif font-bold chuvang-viendo-dam mb-3 leading-tight mt-2">
+                                                {selectedPrompt.title}
+                                            </h1>
+                                            <p className="italic font-serif text-lg chuvang-viendo">
+                                                {selectedPrompt.shortDesc}
+                                            </p>
+                                        </div>
+
+                                        <div className="space-y-6 flex-grow">
+                                            <div>
+                                                <h4 className="flex items-center text-lg font-bold mb-2 font-serif chuvang-viendo-dam">
+                                                    <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                                                    Mô Tả Tổng Quan
+                                                </h4>
+                                                <p className="leading-relaxed font-sans text-justify text-sm md:text-base chuvang-body">
+                                                    {selectedPrompt.longDesc}
+                                                </p>
+                                            </div>
+
+                                            {/* Khối hiển thị Prompt để copy */}
+                                            {selectedPrompt.promptText && (
+                                                <div className="item-3d p-1 group">
+                                                    <div className="bg-[#050d1f] p-4 rounded">
+                                                        <div className="flex justify-between items-center mb-3 pb-2 border-b border-[#1a3b75]">
+                                                            <h4 className="text-sm font-bold uppercase tracking-wide font-serif chuvang-viendo">
+                                                                Mẫu Câu Lệnh (Prompt):
+                                                            </h4>
+                                                            <button 
+                                                                onClick={() => handleCopy(selectedPrompt.promptText)}
+                                                                className="text-xs font-bold item-3d text-[#FFD700] px-4 py-2 rounded flex items-center gap-2 hover:brightness-125"
+                                                            >
+                                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                                                                {copyStatus ? copyStatus : "SAO CHÉP LỆNH NÀY"}
+                                                            </button>
+                                                        </div>
+                                                        <div className="text-sm font-mono whitespace-pre-wrap max-h-64 overflow-y-auto scroll-container pr-2 leading-relaxed chuvang-body p-2">
+                                                            {selectedPrompt.promptText}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            )}
+
+                                            <div className="item-3d p-1">
+                                                <div className="bg-[#050d1f] p-4 rounded">
+                                                    <h4 className="flex items-center text-lg font-bold mb-2 font-serif chuvang-viendo">
+                                                        <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                                                        Hiệu Quả Thực Chiến
+                                                    </h4>
+                                                    <p className="leading-relaxed font-sans text-sm md:text-base chuvang-body">
+                                                        {selectedPrompt.usage}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* BỘ ĐẾM 3D NẰM Ở CHÂN TRANG BÊN PHẢI */}
+                                        <Counter3D count={visitors} />
+                                    </>
+                                )}
+                            </div>
+                        </div>
+                    </main>
+
+                    {/* Footer */}
+                    <footer className="box-3d m-4 md:m-8 mt-0 md:mt-0 py-6">
+                        <div className="max-w-7xl mx-auto px-4 text-center space-y-4">
+                            <div className="mb-4">
+                                <h3 className="text-xl md:text-2xl font-serif font-bold tracking-wide chuvang-viendo-dam">
+                                    "Khơi nguồn trí tuệ Việt - Ứng dụng AI hôm nay, Kiến tạo Trạng Nguyên ngày mai."
+                                </h3>
+                            </div>
+                            
+                            <div className="w-24 h-px bg-[#1a3b75] mx-auto"></div>
+
+                            <div className="font-sans text-sm space-y-1 pt-2 chuvang-body">
+                                <p className="uppercase tracking-widest font-semibold">Bản quyền thuộc về Mr Hoa Van &copy; {new Date().getFullYear()}</p>
+                                <p className="font-mono">Phiên bản 02-2026 | Thư viện 20+ Prompt Gốc</p>
+                            </div>
+                        </div>
+                    </footer>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
