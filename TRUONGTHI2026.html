@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trường Thi Sĩ Tử 2026</title>
+    <!-- Tải Tailwind CSS để dựng giao diện nhanh -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Tải Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Source+Sans+Pro:wght@400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Playfair Display', serif;
+            background-color: #e6dabb;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23cbb78d' fill-opacity='0.2' fill-rule='evenodd'/%3E%3C/svg%3E");
+        }
+        
+        .font-sans-pro {
+            font-family: 'Source Sans Pro', sans-serif;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f7eedc;
+            border-left: 1px solid #eaddc5;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cba770;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #8b2323;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .animate-fade-in-up {
+            animation: fadeInUp 0.5s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- Header Phần Tiêu Đề -->
+    <header class="bg-[#8b2323] text-[#f7e6c1] py-8 px-4 text-center border-b-[8px] border-double border-[#d4af37] shadow-lg relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none" style="background-image: url('https://www.transparenttextures.com/patterns/stardust.png');"></div>
+        <div class="max-w-6xl mx-auto relative z-10">
+            <h1 class="text-4xl md:text-6xl font-bold mb-2 tracking-wider uppercase" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">
+                <span class="text-[#d4af37]">💮</span> Trường Thi Nước Rút <span class="text-[#d4af37]">💮</span>
+            </h1>
+            <p class="text-lg md:text-xl italic text-yellow-200 opacity-90 mt-2">Nơi Sĩ Tử Hội Tụ - Ghi Danh Bảng Vàng</p>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow w-full max-w-7xl mx-auto flex flex-col md:flex-row shadow-2xl my-8 bg-[#fdf5e6] rounded-xl overflow-hidden border border-[#d4af37]">
+        
+        <!-- CỘT TRÁI (40%): Danh sách bài thi -->
+        <section class="w-full md:w-[40%] bg-[#f7eedc] border-b md:border-b-0 md:border-r border-[#cba770] flex flex-col h-[600px]">
+            <div class="p-5 bg-[#d4af37] text-[#5a1818] text-center font-bold text-2xl border-b-2 border-[#8b2323]">
+                📜 Danh Sách Khoa Thi
+            </div>
+            
+            <div id="exam-list" class="overflow-y-auto flex-grow p-4 space-y-3 custom-scrollbar">
+                <!-- Danh sách bài thi sẽ được tạo bằng Javascript -->
+            </div>
+        </section>
+
+        <!-- CỘT PHẢI (60%): Chi tiết bài thi & Nút làm bài -->
+        <section class="w-full md:w-[60%] p-8 md:p-12 relative flex items-center justify-center min-h-[500px]">
+            <!-- Nền trang trí cho phần chi tiết (giống tờ chiếu chỉ) -->
+            <div class="absolute inset-4 border-[3px] border-[#d4af37] rounded-lg opacity-30 pointer-events-none"></div>
+            <div class="absolute inset-6 border border-[#8b2323] rounded pointer-events-none"></div>
+
+            <div id="exam-detail" class="relative z-10 w-full max-w-xl text-center animate-fade-in-up">
+                <div class="inline-block mb-6 text-[#8b2323]">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/>
+                        <polyline points="10 2 10 10 13 7 16 10 16 2"/>
+                    </svg>
+                </div>
+                
+                <h4 id="detail-category" class="text-[#8b2323] font-bold tracking-widest uppercase mb-2 text-sm border-b border-[#cba770] inline-block pb-1">
+                    <!-- Ngự Bút - Danh Mục -->
+                </h4>
+                
+                <h2 id="detail-title" class="text-3xl md:text-4xl font-bold text-[#3a2f25] mt-4 mb-6 leading-snug">
+                    <!-- Tiêu đề -->
+                </h2>
+                
+                <p id="detail-description" class="text-lg text-[#5a4d41] mb-10 leading-relaxed font-sans-pro">
+                    <!-- Mô tả -->
+                </p>
+
+                <a id="detail-link" href="#" target="_blank" rel="noopener noreferrer"
+                    class="inline-flex items-center justify-center gap-2 bg-[#8b2323] hover:bg-[#a62b2b] text-[#f7e6c1] font-bold text-xl py-4 px-10 rounded shadow-[0_4px_14px_0_rgba(139,35,35,0.39)] transition-transform hover:-translate-y-1 hover:shadow-xl">
+                    <span>Chấp Bút Thi Tài</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                    </svg>
+                </a>
+                
+                <p class="mt-6 text-sm text-[#8b2323] italic">
+                    * Nhấn vào nút trên để tiến vào trường thi
+                </p>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer Phần Chân Trang -->
+    <footer class="bg-[#2c1e16] text-[#e8d5b5] py-10 px-4 text-center mt-auto border-t-4 border-[#d4af37]">
+        <div class="max-w-4xl mx-auto space-y-4">
+            <p class="text-2xl md:text-3xl font-bold text-[#d4af37] italic mb-6">
+                "Mài dùi kinh sử, hóa rồng năm Bính Ngọ.<br/> Sĩ tử 2026 quyết chí ghi danh bảng vàng!"
+            </p>
+            
+            <div class="w-24 h-px bg-[#d4af37] mx-auto mb-6 opacity-50"></div>
+            
+            <p class="text-lg uppercase tracking-widest font-semibold">
+                Bản quyền thuộc về <span class="text-[#d4af37]">Mr Hoa Van</span>
+            </p>
+            <p class="text-sm opacity-70 font-sans-pro">
+                Phiên bản 02-2026
+            </p>
+        </div>
+    </footer>
+
+    <!-- Logic Javascript điều khiển nội dung -->
+    <script>
+        const examData = [
+            {
+                id: 1,
+                title: 'Kỳ Khảo Thí: Siêu Dự Đoán Số 3',
+                category: 'Đề Thi Thử',
+                description: 'Đề thi bám sát cấu trúc của Bộ, giúp sĩ tử rèn luyện tâm lý phòng thi, trau dồi binh pháp làm bài. Đề số 3 tập trung vào các bẫy ngữ pháp thường gặp và từ vựng nâng cao.',
+                link: 'https://hoavqcdgtvttw5-crypto.github.io/DENUOCRUT/SIEUDUDOANSO3.html'
+            },
+            {
+                id: 2,
+                title: 'Kỳ Khảo Thí: Siêu Dự Đoán Số 5',
+                category: 'Đề Thi Thử',
+                description: 'Bản thảo đề thi số 5 với độ khó tương đương đề thi thật. Yêu cầu sĩ tử phải tĩnh tâm, vận dụng hết nội công để hoàn thành trong đúng thời gian quy định.',
+                link: 'https://hoavqcdgtvttw5-crypto.github.io/DENUOCRUT/SIEUDUDOANSO5.html'
+            },
+            {
+                id: 3,
+                title: 'Kỳ Khảo Thí: Siêu Dự Đoán Số 7',
+                category: 'Đề Thi Thử',
+                description: 'Tuyệt kỹ luyện đề số 7. Đây là lúc sĩ tử cần kiểm tra lại toàn bộ kiến thức, vá lỗ hổng và rèn giũa độ nhạy bén với các câu hỏi phân loại học sinh giỏi.',
+                link: 'https://hoavqcdgtvttw5-crypto.github.io/DENUOCRUT/SIEUDUDOANSO7.html'
+            },
+            {
+                id: 4,
+                title: 'Kỳ Khảo Thí: Siêu Dự Đoán Số 9',
+                category: 'Đề Thi Thử',
+                description: 'Chặng nước rút cuối cùng! Đề số 9 tổng hòa các kiến thức trọng tâm, dự đoán sát nhất với xu hướng ra đề của năm nay.',
+                link: 'https://hoavqcdgtvttw5-crypto.github.io/DENUOCRUT/SIEUDUDOANSO9.html'
+            },
+            {
+                id: 5,
+                title: 'Bí Kíp: Dự Đoán Đề Thi Thật MP2',
+                category: 'Tài Liệu Đặc Biệt',
+                description: 'Tài liệu mật mã MP2, phân tích chuyên sâu các dạng bài có khả năng xuất hiện cao nhất trên bảng vàng. Sĩ tử không thể bỏ qua.',
+                link: 'https://hoavqcdgtvttw5-crypto.github.io/DENUOCRUT/DUDOANDETHITHAT-MP2.html'
+            },
+            {
+                id: 6,
+                title: 'Ôn Luyện: Biển Báo, Quảng Cáo & Sắp Xếp',
+                category: 'Chuyên Đề',
+                description: 'Luyện tập thao tác đọc hiểu nhanh, phân tích ngữ cảnh để vượt qua các câu hỏi về Biển báo, Quảng cáo và Sắp xếp câu - phần thi đòi hỏi sự nhanh trí.',
+                link: 'https://hoavqcdgtvttw5-crypto.github.io/DENUOCRUT/T%C3%94NGNTOROIQUANGCAO%26SAPXEP.html'
+            },
+            {
+                id: 7,
+                title: 'Ôn Luyện: Đọc Điền Khuyết',
+                category: 'Chuyên Đề',
+                description: 'Chuyên đề "Đọc Điền Khuyết". Giúp sĩ tử thấu hiểu mạch văn, điền đúng từ, đúng nghĩa, không để trống bất kỳ lỗ hổng nào trong bài thi.',
+                link: 'https://hoavqcdgtvttw5-crypto.github.io/DENUOCRUT/DOCDIENKHUYET.html'
+            },
+            {
+                id: 8,
+                title: 'Bảo Điển: Collocations Phần 2',
+                category: 'Lý Thuyết & Vận Dụng',
+                description: 'Tiếp tục chuỗi bí kíp "Sự kết hợp từ" (Collocations) phần 2. Nắm vững bí kíp này để văn phong mượt mà, ghi điểm tối đa trong phần từ vựng.',
+                link: 'https://hoavqcdgtvttw5-crypto.github.io/DENUOCRUT/COLLOCATIONS2.html'
+            },
+            {
+                id: 9,
+                title: 'Thử Thách: Quiz Collocations (40 Câu)',
+                category: 'Trắc Nghiệm',
+                description: 'Trắc nghiệm thực chiến 40 câu Collocations. Kiểm tra xem sĩ tử đã "nhập tâm" được bao nhiêu thành ngữ, cụm từ trong thời gian qua.',
+                link: 'https://hoavqcdgtvttw5-crypto.github.io/DENUOCRUT/collocationsQUIZ40CAU.html'
+            },
+            {
+                id: 10,
+                title: 'Thử Thách: Quiz Ngữ Pháp (70 Câu)',
+                category: 'Trắc Nghiệm',
+                description: 'Trận chiến lớn với 70 câu Ngữ Pháp toàn diện. Vượt qua thử thách này, sĩ tử hoàn toàn tự tin bước qua cánh cổng Trường Thi.',
+                link: 'https://hoavqcdgtvttw5-crypto.github.io/DENUOCRUT/grammarquiz70CAU.html'
+            }
+        ];
+
+        let selectedItem = examData[0];
+
+        function renderExamList() {
+            const listContainer = document.getElementById('exam-list');
+            listContainer.innerHTML = '';
+
+            examData.forEach((exam, index) => {
+                const isSelected = selectedItem.id === exam.id;
+                const btn = document.createElement('button');
+                
+                btn.className = `w-full text-left p-4 rounded transition-all duration-300 flex items-center gap-4 group ${
+                    isSelected 
+                        ? 'bg-[#8b2323] text-[#f7e6c1] shadow-md transform translate-x-2' 
+                        : 'bg-white text-[#4a3f35] hover:bg-[#eaddc5] border border-[#d8c3a5]'
+                }`;
+                
+                btn.onclick = () => {
+                    selectedItem = exam;
+                    renderExamList();
+                    updateExamDetail();
+                };
+
+                const numberCircleClass = isSelected 
+                    ? 'border-[#d4af37] bg-[#701a1a] text-[#d4af37]' 
+                    : 'border-[#8b2323] bg-[#f7eedc] text-[#8b2323]';
+                
+                const titleClass = isSelected ? 'text-[#f7e6c1]' : 'group-hover:text-[#8b2323]';
+
+                btn.innerHTML = `
+                    <div class="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center font-bold text-lg border-2 ${numberCircleClass}">
+                        ${index + 1}
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-lg leading-tight ${titleClass}">
+                            ${exam.title}
+                        </h3>
+                        <p class="text-sm mt-1 italic opacity-80">${exam.category}</p>
+                    </div>
+                `;
+
+                listContainer.appendChild(btn);
+            });
+        }
+
+        function updateExamDetail() {
+            const detailContainer = document.getElementById('exam-detail');
+            
+            // Khởi động lại hiệu ứng animation
+            detailContainer.classList.remove('animate-fade-in-up');
+            void detailContainer.offsetWidth; // Trigger reflow
+            detailContainer.classList.add('animate-fade-in-up');
+
+            document.getElementById('detail-category').innerText = `Ngự Bút - ${selectedItem.category}`;
+            document.getElementById('detail-title').innerText = selectedItem.title;
+            document.getElementById('detail-description').innerText = selectedItem.description;
+            document.getElementById('detail-link').href = selectedItem.link;
+        }
+
+        // Khởi tạo trang khi tải xong
+        document.addEventListener('DOMContentLoaded', () => {
+            renderExamList();
+            updateExamDetail();
+        });
+    </script>
+</body>
+</html>
