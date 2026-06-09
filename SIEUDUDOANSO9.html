@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BỘ ĐỀ SDĐ SỐ 09 - KỲ THI TỐT NGHIỆP THPT 2026</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+            background-attachment: fixed;
+            color: #1f2937;
+        }
+        
+        /* Custom Scrollbar for a clean look */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #c7c7cc; 
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a1a1aa; 
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        /* Glassmorphism elements */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Gen Z Border Style */
+        .genz-border {
+            border: 3px solid #1f2937;
+            box-shadow: 6px 6px 0px 0px #1f2937;
+            transition: all 0.2s ease;
+        }
+        
+        /* 3D Option button styling (Gen Z Neobrutalism) */
+        .option-label {
+            cursor: pointer;
+            display: block;
+            position: relative;
+            margin-top: 12px;
+        }
+        .option-box {
+            border: 2px solid #1f2937;
+            border-radius: 0.75rem;
+            box-shadow: 3px 3px 0px 0px #1f2937;
+            transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .option-label:hover .option-box {
+            transform: translate(-3px, -3px);
+            box-shadow: 6px 6px 0px 0px #1f2937;
+        }
+        .option-label:active .option-box {
+            transform: translate(2px, 2px);
+            box-shadow: 0px 0px 0px 0px #1f2937;
+        }
+        
+        /* Checked State Styling */
+        input[type="radio"]:checked + .option-box {
+            background-color: #1f2937 !important; /* Bold Dark Gray */
+            border-color: #1f2937;
+            box-shadow: 4px 4px 0px 0px #a855f7 !important; /* Neon Purple Shadow */
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+        input[type="radio"]:checked + .option-box .opt-text {
+            color: white !important;
+        }
+        input[type="radio"]:checked + .option-box .letter-circle {
+            background-color: #a855f7 !important;
+            color: white !important;
+            border-color: #1f2937;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.95); }
+            50% { transform: scale(1.03); }
+            100% { transform: scale(1); }
+        }
+
+        /* Result states after submission (Disabled mode - no colors shown) */
+        input:disabled + .option-box {
+            cursor: not-allowed;
+            opacity: 0.8;
+        }
+
+        /* Sticky top offset for header */
+        .sticky-offset {
+            top: 5rem;
+        }
+        
+        .blank-space {
+            display: inline-block;
+            padding: 0 8px;
+            font-weight: bold;
+            color: #8b5cf6;
+            background: #ede9fe;
+            border-radius: 6px;
+            margin: 0 2px;
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col relative">
+
+    <!-- OVERLAY: START TEST -->
+    <div id="startOverlay" class="fixed inset-0 z-50 flex items-center justify-center bg-white/80 backdrop-blur-md">
+        <div class="bg-white p-8 md:p-12 rounded-3xl genz-border text-center max-w-lg mx-4">
+            <h1 class="text-3xl md:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-500 mb-4">
+                ✨ Sẵn sàng chưa?
+            </h1>
+            <p class="text-gray-600 mb-8 text-lg">Bài thi môn Tiếng Anh có thời gian làm bài là <b>50 phút</b>. Hệ thống sẽ có chuông báo khi còn 1 phút.</p>
+            <button onclick="startTest()" class="w-full bg-gradient-to-r from-violet-500 to-fuchsia-500 hover:from-violet-600 hover:to-fuchsia-600 text-white font-bold py-4 px-8 rounded-2xl shadow-lg transform hover:scale-105 transition-all duration-200 text-xl">
+                Bắt Đầu Làm Bài 🚀
+            </button>
+        </div>
+    </div>
+
+    <!-- HEADER / TIMER -->
+    <header class="sticky top-0 z-40 glass-panel border-b border-gray-200 px-4 py-3 shadow-sm">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <span class="text-2xl">📝</span>
+                <h1 class="font-bold text-lg hidden sm:block bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600">Đề Siêu Dự Đoán - Số 09</h1>
+            </div>
+            <div class="flex items-center gap-4">
+                <div id="timerBox" class="bg-indigo-100 text-indigo-800 font-mono font-bold text-xl px-4 py-2 rounded-xl border-2 border-indigo-200 flex items-center gap-2 transition-colors">
+                    ⏳ <span id="timeDisplay">50:00</span>
+                </div>
+                <button onclick="submitTest()" id="submitBtnTop" class="bg-gray-900 hover:bg-gray-800 text-white font-bold py-2 px-6 rounded-xl transition-colors hidden sm:block">
+                    Nộp Bài
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="flex-grow max-w-7xl mx-auto w-full px-4 py-8">
+        
+        <form id="testForm" onsubmit="event.preventDefault(); submitTest();">
+            
+            <!-- SECTION 1: READING COMPREHENSION 1 -->
+            <div class="mb-12">
+                <h2 class="text-xl font-bold mb-4 text-green-700 bg-green-100 inline-block px-4 py-1 rounded-full border-2 border-green-200">Part 1: Reading Comprehension 1 (Questions 1 - 8)</h2>
+                <p class="italic text-gray-600 mb-4 font-medium">Read the passage and mark the letter A, B, C or D on your answer sheet to indicate the best answer to each of the following questions from 1 to 8.</p>
+                <div class="flex flex-col lg:flex-row gap-6">
+                    <!-- Left: Reading (70% on lg) -->
+                    <div class="lg:w-[70%] glass-panel rounded-3xl p-6 lg:p-8 lg:sticky lg:top-24 lg:max-h-[80vh] overflow-y-auto custom-scrollbar border border-gray-200">
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            The fast-growing digital economy in Vietnam has created a powerful group of influencers: Key Opinion Leaders (KOLs), famous stars, and rich tech investors often called "Sharks." Using their massive online followings and images of financial success, these people have moved from entertainment or business management into the profitable world of selling online. From health pills to expensive investment courses, the products they advertise sell out within minutes. However, behind the perfect images of these celebrity-backed businesses lies a dubious reality that is increasingly worrying the authorities.
+                        </p>
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            The primary driver of this business model is the psychological phenomenon known as parasocial interaction, where followers develop a false sense of intimacy and trust with a media personality. Taking advantage of this blind loyalty, some influencers aggressively promote goods without checking if they are safe or real. Recent reports in Vietnam have shown many cases where cosmetics and health foods endorsed by top stars were actually fake items made in illegal, unhygienic facilities. When problems happen, these influencers often just delete their promotional posts and give short apologies, leaving unlucky buyers to suffer the financial and health consequences alone.
+                        </p>
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            Beyond bad products, this trend has also spread to harmful financial scams. Certain famous figures use their images of great wealth to trick ambitious young people into high-risk cryptocurrency projects or unfair multi-level marketing networks. <u class='font-bold text-gray-900'>While these celebrity advertisements promise to ensure quick financial freedom, they usually act as clever traps designed to make the creators rich while taking advantage of inexperienced investors.</u> This bad behavior not only steals the life savings of thousands of citizens but also corrodes public trust in honest startups and real financial experts.
+                        </p>
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            Stopping the bad actions of celebrity-led businesses requires strict new laws and better digital education. The Vietnamese government is currently writing tighter rules that will make influencers legally responsible for the truth of their advertisements. At the same time, internet users must think more carefully, understanding that stars' charm on screen does not mean they have real professional skills. Ultimately, taking away the fake glamour of these online empires is the only way to protect buyers. If people can do it, the digital market will become much safer.
+                        </p>
+                    </div>
+                    
+                    <!-- Right: Questions (30% on lg) -->
+                    <div class="lg:w-[30%] flex flex-col gap-4" id="q-container-part1">
+                        <!-- Questions injected via JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 2: CLOZE TEST 1 (Piece of News) -->
+            <div class="mb-12">
+                <h2 class="text-xl font-bold mb-4 text-purple-700 bg-purple-100 inline-block px-4 py-1 rounded-full border-2 border-purple-200">Part 2: Guided Cloze 1 (Questions 9 - 14)</h2>
+                <p class="italic text-gray-600 mb-4 font-medium">Read the following piece of news and mark the letter A, B, C or D on your answer sheet to indicate the option that best fits each of the numbered blanks from 9 to 14.</p>
+                <div class="flex flex-col lg:flex-row gap-6">
+                    <div class="lg:w-[70%] glass-panel rounded-3xl p-6 lg:p-8 lg:sticky lg:top-24 lg:max-h-[80vh] overflow-y-auto custom-scrollbar border border-gray-200">
+                        <h3 class="text-2xl font-bold mb-4 uppercase tracking-wide">Vietnam tourism shines in Global Readers' Choice Awards</h3>
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            Vietnam has achieved <span class="blank-space">(9)</span> rankings in several categories of the prestigious global Readers' Choice Awards, voted by readers of the international travel magazine Condé Nast Traveller, the Vietnam National Authority of Tourism has reported.
+                        </p>
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            Specifically, Vietnam earned 97.27 out of 100 points, <span class="blank-space">(10)</span> 6th among the world's friendliest countries. In 2024, the country welcomed nearly 18 million international visitors, <span class="blank-space">(11)</span> came to explore its distinctive attractions, immerse themselves in its rich traditional culture, and <span class="blank-space">(12)</span> its pristine natural landscapes. Additionally, the <span class="blank-space">(13)</span> of new flight routes has made it easier for international tourists to visit Vietnam.
+                        </p>
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            Vietnamese cuisine is also highly praised by international visitors for its fresh, diverse, and abundant ingredients, with <span class="blank-space">(14)</span> dish telling its own story about the country, culture, and people of Vietnam.
+                        </p>
+                        <p class="text-sm text-gray-400 mt-4">(Adapted from https://vietnamnet.vn)</p>
+                    </div>
+                    <div class="lg:w-[30%] flex flex-col gap-4" id="q-container-part2"></div>
+                </div>
+            </div>
+
+            <!-- SECTION 3: READING COMPREHENSION 2 -->
+            <div class="mb-12">
+                <h2 class="text-xl font-bold mb-4 text-orange-700 bg-orange-100 inline-block px-4 py-1 rounded-full border-2 border-orange-200">Part 3: Reading Comprehension 2 (Questions 15 - 24)</h2>
+                <p class="italic text-gray-600 mb-4 font-medium">Read the following passage and mark the letter A, B, C or D on your answer sheet to indicate the option that best fits each of the numbered questions from 15 to 24.</p>
+                <div class="flex flex-col lg:flex-row gap-6">
+                    <div class="lg:w-[70%] glass-panel rounded-3xl p-6 lg:p-8 lg:sticky lg:top-24 lg:max-h-[80vh] overflow-y-auto custom-scrollbar border border-gray-200">
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            As countries transition to a clean economy, the demand for raw materials like copper, aluminum, and lithium has surged. These metals are essential for manufacturing renewable energy technologies. <b>[I]</b>. However, strict environmental regulations and the rise of ESG (Environmental, Social, and Governance) standards have restricted the mining of these "dirty" materials. This imbalance between soaring demand and limited supply has led to a new economic phenomenon known as "greenflation."
+                        </p>
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            Environmental concerns are increasingly delaying critical mining projects worldwide. For instance, a proposed copper mine in Alaska faced strong opposition to protect local wildlife. Similarly, major projects in Chile and Peru are stalled due to new taxes and community resistance. Even China, the top aluminum producer, is cutting back on smelting to reduce emissions. <b>[II]</b>.
+                        </p>
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            Another paradox is that building a sustainable economy still requires vast amounts of fossil fuels. As global economies recover, the demand for oil, natural gas, and even coal has hit record highs. <b>[III]</b>. Meanwhile, investments in traditional energy production have dropped sharply in recent years. This mismatch causes severe energy price fluctuations, which could weaken the public's commitment to fighting climate change if everyday energy bills become excessively high. <b>[IV]</b>.
+                        </p>
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            Despite these challenges, optimists believe that "economies of scale" will eventually lower the costs of green technologies through mass production. Furthermore, high oil prices might actually accelerate the transition by encouraging consumers to adopt electric vehicles. Ultimately, achieving a sustainable future requires a massive financial investment over the next decade. <u class='font-bold text-gray-900'>Governments must implement sensible policies that promote clean energy without dismantling the old infrastructure too quickly, ensuring a stable and effective transition.</u>
+                        </p>
+                        <p class="text-sm text-gray-400 mt-4">(Adapted from https://cuoituan.tuoitre.vn)</p>
+                    </div>
+                    <div class="lg:w-[30%] flex flex-col gap-4" id="q-container-part3"></div>
+                </div>
+            </div>
+
+            <!-- SECTION 4: CLOZE TEST 2 (Leaflet) -->
+            <div class="mb-12">
+                <h2 class="text-xl font-bold mb-4 text-teal-700 bg-teal-100 inline-block px-4 py-1 rounded-full border-2 border-teal-200">Part 4: Leaflet (Questions 25 - 30)</h2>
+                <p class="italic text-gray-600 mb-4 font-medium">Read the following leaflet and mark the letter A, B, C or D on your answer sheet to indicate the option that best fits each of the numbered blanks from 25 to 30.</p>
+                <div class="flex flex-col lg:flex-row gap-6">
+                    <div class="lg:w-[70%] glass-panel rounded-3xl p-6 lg:p-8 lg:sticky lg:top-24 lg:max-h-[80vh] overflow-y-auto custom-scrollbar border border-gray-200">
+                        <h3 class="text-2xl font-bold mb-4 uppercase tracking-wide">THE HEALTH HAZARDS OF SITTING</h3>
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            We know sitting too <span class="blank-space">(25)</span> is bad, and most of us intuitively feel a little guilty after a long TV binge. But what exactly goes wrong in our bodies when we park ourselves for nearly eight hours per day, the average for a U.S. adult? Many things, say four experts, who detailed a <span class="blank-space">(26)</span> of problems from head to toe.
+                        </p>
+                        <ul class="list-disc pl-6 text-gray-700 leading-relaxed text-lg mb-4 space-y-4">
+                            <li>When we are sedentary for a long time, everything slows, including brain function. <span class="blank-space">(27)</span>, taking short walking breaks during the workday is highly recommended to keep your mind sharp.</li>
+                            <li>Weight-bearing activities such as walking and running <span class="blank-space">(28)</span> hip and lower-body bones to grow thicker, denser and stronger. Scientists partially attribute the recent surge in cases of osteoporosis <span class="blank-space">(29)</span> lack of activity.</li>
+                        </ul>
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            We must actively correct our sitting posture and move frequently; otherwise, this uneven pressure will inevitably lead to <span class="blank-space">(30)</span>.
+                        </p>
+                    </div>
+                    <div class="lg:w-[30%] flex flex-col gap-4" id="q-container-part4"></div>
+                </div>
+            </div>
+
+            <!-- SECTION 5: CLOZE TEST 3 -->
+            <div class="mb-12">
+                <h2 class="text-xl font-bold mb-4 text-pink-700 bg-pink-100 inline-block px-4 py-1 rounded-full border-2 border-pink-200">Part 5: Guided Cloze 2 (Questions 31 - 35)</h2>
+                <p class="italic text-gray-600 mb-4 font-medium">Read the following passage and mark the letter A, B, C or D on your answer sheet to indicate the option that best fits each of the numbered blanks from 31 to 35.</p>
+                <div class="flex flex-col lg:flex-row gap-6">
+                    <div class="lg:w-[70%] glass-panel rounded-3xl p-6 lg:p-8 lg:sticky lg:top-24 lg:max-h-[80vh] overflow-y-auto custom-scrollbar border border-gray-200">
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            Today's social media feeds are frequently flooded with "Al slop"-cheap, automated content like bizarre, highly realistic images. For digital companies, generating artificial text and pictures is much easier and cheaper than <span class="blank-space">(31)</span>.
+                        </p>
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            As a result, internet users encounter this fake content everywhere, from automated travel guides to artificial news. <span class="blank-space">(32)</span>. Although generative Al began as a promising breakthrough, many creators now prioritize automated volume over original quality. <span class="blank-space">(33)</span>.
+                        </p>
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            This trend matters deeply. While traditional clickbait relies on misleading titles, Al slop tricks the public into consuming entirely empty content. <span class="blank-space">(34)</span>. To save the web, we must learn to discern these digital tricks. <span class="blank-space">(35)</span>, ensuring that meaningful knowledge is not entirely replaced by meaningless noise.
+                        </p>
+                    </div>
+                    <div class="lg:w-[30%] flex flex-col gap-4" id="q-container-part5"></div>
+                </div>
+            </div>
+
+            <!-- SECTION 6: SENTENCE ARRANGEMENT -->
+            <div class="mb-12">
+                <h2 class="text-xl font-bold mb-4 text-blue-700 bg-blue-100 inline-block px-4 py-1 rounded-full border-2 border-blue-200">Part 6: Sentence Arrangement (Questions 36 - 40)</h2>
+                <p class="italic text-gray-600 mb-4 font-medium">Mark the letter A, B, C or D on your answer sheet to indicate the best arrangement of utterances or sentences to make a cohesive and coherent exchange or text in each of the following questions from 36 to 40.</p>
+                <div class="glass-panel rounded-3xl p-6 lg:p-8 grid grid-cols-1 md:grid-cols-2 gap-8 border border-gray-200" id="q-container-part6">
+                    <!-- Sentences injected via JS -->
+                </div>
+            </div>
+
+            <!-- SUBMIT BUTTON BOTTOM -->
+            <div class="text-center mt-12 mb-8">
+                <button type="submit" id="submitBtnBottom" class="bg-gray-900 hover:bg-gray-800 text-white font-bold py-4 px-12 rounded-2xl shadow-xl transform hover:-translate-y-1 transition-all duration-200 text-xl genz-border">
+                    Nộp Bài & Xem Điểm ✨
+                </button>
+            </div>
+
+        </form>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-white border-t border-gray-200 py-6 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p class="font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-500 text-xl">Idea for Design: Mr Hoa Van!</p>
+            <p class="text-gray-400 text-sm mt-1">© 2026 - Tinh Hoa Dự Đoán THPT</p>
+        </div>
+    </footer>
+
+    <!-- RESULT MODAL -->
+    <div id="resultModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm hidden">
+        <div class="bg-white p-8 md:p-12 rounded-3xl genz-border text-center max-w-md mx-4 animate-[fadeIn_0.3s_ease]">
+            <div class="text-6xl mb-4" id="resultIcon">🎉</div>
+            <h2 class="text-3xl font-extrabold mb-2">Điểm số của bạn</h2>
+            <p class="text-5xl font-black text-purple-600 mb-6"><span id="scoreText">0</span>/40</p>
+            <p class="text-gray-600 mb-8 font-medium">Kết quả bài làm đã được hệ thống ghi nhận thành công!</p>
+            <button onclick="closeModal()" class="w-full bg-gray-900 text-white font-bold py-3 px-6 rounded-xl hover:bg-gray-800 transition">
+                Đóng
+            </button>
+        </div>
+    </div>
+
+    <!-- DATA & SCRIPT -->
+    <script>
+        // QUESTION DATA - ĐỀ SIÊU DỰ ĐOÁN 09
+        // Không hiển thị lời giải, hệ thống chỉ cần chấm điểm ngầm.
+        const questionsData = [
+            // Part 1: Reading 1
+            { id: 1, part: 1, qText: "The word <b class='text-blue-700'><i>dubious</i></b> in paragraph 1 mostly means", options: ["apparent", "suspicious", "beneficial", "standardized"], correct: 1 },
+            { id: 2, part: 1, qText: "The word <b class='text-blue-700'><i>endorsed</i></b> in paragraph 2 is <b class='text-red-600 underline'>OPPOSITE</b> in meaning to", options: ["supported", "rejected", "promoted", "purchased"], correct: 1 },
+            { id: 3, part: 1, qText: "According to paragraph 2, what causes followers to buy things from famous people without questioning?", options: ["They want to avoid illegal factories and buy directly from stars.", "They are forced by the authorities to support celebrity-backed businesses.", "They believe the short apologies given by influencers are sincere.", "They feel a false sense of closeness and trust with the celebrities."], correct: 3 },
+            { id: 4, part: 1, qText: "Which of the following best paraphrases the <u class='font-bold text-gray-900'>underlined sentence</u> in paragraph 3?", options: ["Because celebrity advertisements usually act as clever traps, inexperienced investors struggle to ensure quick financial freedom for creators.", "Although these high-profile promotions vow to bring fast financial independence, they are actually complex tricks meant to profit the creators by exploiting naive buyers.", "Celebrity advertisements ensure quick financial freedom, meaning inexperienced investors face few challenges when avoiding clever traps.", "To make inexperienced investors rich at the expense of creators, celebrity advertisements promise to ensure quick financial freedom in clever traps."], correct: 1 },
+            { id: 5, part: 1, qText: "The word <b class='text-blue-700'><i>they</i></b> in paragraph 4 refers to", options: ["users", "stars", "advertisements", "rules"], correct: 1 },
+            { id: 6, part: 1, qText: "Which of the following is <b class='text-red-600 underline'>NOT</b> mentioned as a solution to address the dark sides of influencer businesses?", options: ["Writing stricter new laws by the government.", "Educating internet users to think more carefully online.", "Banning celebrities from using social media platforms completely.", "Making famous people legally responsible for their advertisements."], correct: 2 },
+            { id: 7, part: 1, qText: "Which paragraph mentions the specific types of items advertised by celebrities that were revealed to be fake?", options: ["Paragraph 1", "Paragraph 4", "Paragraph 2", "Paragraph 3"], correct: 2 },
+            { id: 8, part: 1, qText: "Which paragraph mentions the long-term goal of making the digital market much safer?", options: ["Paragraph 4", "Paragraph 1", "Paragraph 2", "Paragraph 3"], correct: 0 },
+
+            // Part 2: Guided Cloze 1 (News)
+            { id: 9, part: 2, options: ["top", "first", "peak", "big"], correct: 0 },
+            { id: 10, part: 2, options: ["placed", "placing", "to place", "having placed"], correct: 1 },
+            { id: 11, part: 2, options: ["that", "whom", "who", "which"], correct: 2 },
+            { id: 12, part: 2, options: ["put in", "bring in", "get in", "take in"], correct: 3 },
+            { id: 13, part: 2, options: ["developing", "developed", "development", "develop"], correct: 2 },
+            { id: 14, part: 2, options: ["each", "most", "few", "all"], correct: 0 },
+
+            // Part 3: Reading 2
+            { id: 15, part: 3, qText: "According to paragraph 1, the implementation of strict environmental regulations and ESG standards has", options: ["made it nearly impossible for countries to transition to a clean economy", "successfully balanced the soaring demand and limited supply of green energy", "imposed significant constraints on the exploitation of heavily polluting resources", "caused a sudden drop in the global demand for copper, aluminum, and lithium"], correct: 2 },
+            { id: 16, part: 3, qText: "The phrase <b class='text-blue-700'><i>\"this imbalance\"</i></b> in paragraph 1 refers to", options: ["the clean energy transition", "strict environmental rules", "the supply-demand disparity", "the greenflation phenomenon"], correct: 2 },
+            { id: 17, part: 3, qText: "The word <b class='text-blue-700'><i>\"stalled\"</i></b> in paragraph 2 mostly means", options: ["temporarily halted", "officially approved", "completely abandoned", "deliberately accelerated"], correct: 0 },
+            { id: 18, part: 3, qText: "Which of the following best summarises paragraph 2?", options: ["The global supply chain for green energy is struggling due to the joint effort between major projects in South America and top producers in China.", "Critical mining projects in specific regions like Alaska, Chile, and Peru are currently being abandoned to protect local wildlife and reduce emissions.", "New taxes and community resistance have a role to play in the production of essential materials for renewable energy technologies.", "Growing environmental concerns and local opposition worldwide are hindering major mining operations, causing a severe strain on the green energy supply chain."], correct: 3 },
+            { id: 19, part: 3, qText: "What could potentially undermine the public's commitment to fighting climate change?", options: ["A severe supply-demand imbalance in traditional energy", "The public's absolute refusal to cover energy expenses", "An unprecedented global demand for renewable energy", "Massive financial investments in post-pandemic recovery"], correct: 0 },
+            { id: 20, part: 3, qText: "What is expected to bring down the costs of green technologies according to optimists?", options: ["The rapid dismantling of old infrastructure", "Continuously high oil prices", "Massive financial investments", "Large-scale manufacturing processes"], correct: 3 },
+            { id: 21, part: 3, qText: "Which of the following best paraphrases the <u class='font-bold text-gray-900'>underlined sentence</u> in paragraph 4?", options: ["For a stable transition to occur, state authorities must prioritize the rapid elimination of legacy infrastructure before adopting practical measures for renewable energy.", "To guarantee a smooth and successful shift, policymakers are required to enact rational regulations that foster green energy while avoiding the hasty destruction of traditional facilities.", "The implementation of sensible policies ensures that governments can completely dismantle old infrastructure to make way for a stable and effective clean energy transition.", "A stable transition to clean energy can only be effectively managed if governments abandon their old infrastructure to focus exclusively on sensible environmental policies."], correct: 1 },
+            { id: 22, part: 3, qText: "Which of the following can be inferred from the passage?", options: ["The public's dedication to combating climate change remains steadfast regardless of the financial burden caused by unstable energy costs.", "A premature withdrawal of financial backing for traditional energy could unintentionally jeopardize the broader movement against climate change.", "The current record-high demand for fossil fuels is the direct consequence of the public's weakening commitment to environmental protection.", "Global economies will only achieve a stable recovery if they completely eliminate their reliance on oil, natural gas, and coal in the near future."], correct: 1 },
+            { id: 23, part: 3, qText: "Where in the passage does the following sentence best fit?<br><i class='text-purple-700 font-semibold mt-2 block'>Consequently, the global supply chain is struggling to provide enough materials to sustain the rapid shift toward green energy.</i>", options: ["[IV]", "[III]", "[II]", "[I]"], correct: 3 },
+            { id: 24, part: 3, qText: "Which of the following best summarises the passage?", options: ["Environmental concerns and local opposition have stalled critical mining operations, leading optimists to believe that mass production of electric vehicles is the only viable solution.", "By implementing strict ESG standards and reducing investments in traditional energy, global economies have successfully overcome supply chain struggles and stabilized energy bills.", "The mismatch between soaring fossil fuel demand and green energy initiatives has severely undermined public trust, forcing governments to immediately dismantle all legacy infrastructure.", "The global shift towards a green economy is paradoxically causing resource shortages and energy price volatility, necessitating a carefully balanced transitional strategy."], correct: 3 },
+
+            // Part 4: Leaflet
+            { id: 25, part: 4, options: ["many", "few", "little", "much"], correct: 3 },
+            { id: 26, part: 4, options: ["link", "row", "chain", "line"], correct: 2 },
+            { id: 27, part: 4, options: ["Therefore", "However", "Otherwise", "In addition"], correct: 0 },
+            { id: 28, part: 4, options: ["transmit", "stimulate", "utilize", "classify"], correct: 1 },
+            { id: 29, part: 4, options: ["to", "in", "on", "at"], correct: 0 },
+            { id: 30, part: 4, options: ["chronic pain back", "back pain chronic", "back chronic pain", "chronic back pain"], correct: 3 },
+
+            // Part 5: Guided Cloze 2
+            { id: 31, part: 5, options: ["many of whom are expected to produce well-researched articles", "every one of them undergoes expectations to produce well-researched articles", "when they are similarly expected to produce well-researched articles", "those with expectations to produce well-researched articles will be paid"], correct: 0 },
+            { id: 32, part: 5, options: ["this modern spam is amplified to an alarming extent by marketers and algorithms", "amplifying this modern spam to an alarming extent is what marketers do", "there is an alarming amplification of this modern spam by marketers and algorithms", "marketers and algorithms amplify this modern spam to an alarming extent"], correct: 3 },
+            { id: 33, part: 5, options: ["Common creators, by contrast, are a pattern among troubling content", "This is a troubling pattern among modern content creators.", "By contrast, a content-troubling pattern is seen among modern creators", "This is a common example of creators with trouble to a content pattern"], correct: 1 },
+            { id: 34, part: 5, options: ["This continuous spread of deceptive content makes it harder to locate valuable information", "This constant pressure to keep users engaged helps digital companies save financial resources", "This deliberate use of catchy titles allows digital marketers to capture user attention", "This promising breakthrough in generative technology enables human creators to produce original quality"], correct: 0 },
+            { id: 35, part: 5, options: ["So vital is such authenticity demand that it proves to be incredible", "Such authenticity is so vital that it proves to be demanded", "Such ability to identify fake content proves to be incredibly vital", "Such vital authenticity proves to be an incredible demand, though"], correct: 2 },
+
+            // Part 6: Sentence Arrangement
+            { id: 36, part: 6, text: "a. Consequently, many of these caregivers are compelled to compromise their own career trajectories, scaling back professional commitments to juggle medical appointments and school runs.<br>b. Caught between the simultaneous demands of raising dependent children and tending to aging parents, a growing demographic finds itself firmly squeezed in the middle.<br>c. Ultimately, successfully navigating this precarious phase of life demands not only immense personal resilience but also robust structural support from society.<br>d. This dual responsibility, widely recognized by sociologists as the \"sandwich generation\" phenomenon, inevitably exacts a profound emotional and financial toll.<br>e. Yet, despite the pervasive exhaustion, occupying this unique position can occasionally foster a profound sense of intergenerational empathy and familial solidarity.", options: ["b-a-d-e-c", "d-b-a-c-e", "b-d-a-e-c", "b-d-e-a-c"], correct: 2 },
+            { id: 37, part: 6, text: "a. Nam: I don't think so. While formal degrees are valuable, micro-credentials and self-directed upskilling are becoming just as important.<br>b. Lan: That makes perfect sense! It seems that cultivating a growth mindset is more crucial than merely accumulating traditional diplomas.<br>c. Lan: Do you think professionals need to constantly return to university to stay relevant in today's rapidly changing job market?<br>d. Lan: I couldn't agree more. Ultimately, lifelong learning is about continuous self-improvement, regardless of the educational setting.<br>e. Nam: Exactly. Employers nowadays are increasingly prioritizing practical competencies and adaptability over strict academic qualifications.", options: ["d-a-c-e-b", "c-a-b-e-d", "c-e-b-a-d", "d-e-b-c-a"], correct: 1 },
+            { id: 38, part: 6, text: "a. Peter: Oh, that's great! Let me know if you need help taking them out to the truck later.<br>b. Peter: These cardboard boxes are taking up too much space. Do you need a hand carrying them to the recycling bin?<br>c. Mary: Thanks, but I've already called the local recycling center, and they will come pick them up this afternoon.", options: ["a-b-c", "b-a-c", "b-c-a", "a-c-b"], correct: 2 },
+            { id: 39, part: 6, text: "Dear Mr. Nguyen,<br>a. We were highly impressed with your qualifications and the creative portfolio you submitted.<br>b. The interview is scheduled for next Tuesday, October 15th, at 9:00 AM at our main headquarters.<br>c. Therefore, we would like to invite you for an in-person interview to discuss your potential fit for our team.<br>d. Thank you for your application for the position of Marketing Assistant at our company.<br>e. Please reply to this email by Friday to confirm your attendance or request an alternative time.<br>Yours sincerely,<br>HR Department", options: ["d-a-c-b-e", "b-d-a-c-e", "a-c-d-b-e", "d-c-a-b-e"], correct: 0 },
+            { id: 40, part: 6, text: "a. Overall, these infrastructural developments highlight a clear shift from a traditional fishing economy to a thriving service-based industry.<br>b. This expansion was accompanied by a significant upgrade to the local transportation network, including a new coastal highway.<br>c. The most noticeable change was the development of the waterfront, where old fishing docks were replaced by luxury resorts and high-rise hotels.<br>d. At the same time, the central market area underwent a major renovation, becoming a modern shopping complex to cater to international visitors.<br>e. Over the past two decades, the coastal town of Seaview has experienced rapid urbanisation, transforming into a bustling tourist hub.", options: ["e-d-b-a-c", "e-b-a-c-d", "e-c-a-d-b", "e-c-b-d-a"], correct: 3 }
+        ];
+
+        // RENDER QUESTIONS
+        function renderQuestions() {
+            // Mảng màu Gen Z sặc sỡ cho 4 lựa chọn (Hồng, Xanh lam, Vàng, Xanh lá)
+            const optionBgColors = [
+                'bg-[#ffe4e6] hover:bg-[#fecdd3]', // A: Rose pastel
+                'bg-[#e0e7ff] hover:bg-[#c7d2fe]', // B: Indigo pastel
+                'bg-[#fef9c3] hover:bg-[#fef08a]', // C: Yellow pastel
+                'bg-[#dcfce7] hover:bg-[#bbf7d0]'  // D: Green pastel
+            ];
+
+            questionsData.forEach((q, index) => {
+                const container = document.getElementById(`q-container-part${q.part}`);
+                if (!container) return;
+
+                const qDiv = document.createElement('div');
+                qDiv.className = "bg-white rounded-2xl p-5 shadow-sm border border-gray-200 hover:shadow-md transition";
+                
+                let extraText = '';
+                if(q.part === 6 && q.text) {
+                    extraText = `<div class="mb-4 text-gray-700 bg-blue-50 p-4 rounded-xl text-sm leading-relaxed border border-blue-100">${q.text}</div>`;
+                }
+
+                // Hiển thị phần câu hỏi dẫn (Question Text) nếu có
+                let qTextDisplay = '';
+                if(q.qText) {
+                    qTextDisplay = `<p class="mb-4 text-gray-800 font-semibold text-[1.05rem] leading-snug">${q.qText}</p>`;
+                }
+
+                let optionsHtml = q.options.map((opt, i) => `
+                    <label class="option-label">
+                        <input type="radio" name="q${q.id}" value="${i}" class="peer hidden">
+                        <div class="option-box p-3 flex items-center gap-3 ${optionBgColors[i]}">
+                            <span class="letter-circle w-8 h-8 rounded-full bg-white flex items-center justify-center font-black text-sm shrink-0 transition-colors border-2 border-gray-900 text-gray-900">${String.fromCharCode(65 + i)}</span>
+                            <span class="opt-text text-base font-semibold text-gray-800 transition-colors">${opt}</span>
+                        </div>
+                    </label>
+                `).join('');
+
+                qDiv.innerHTML = `
+                    <h4 class="font-bold text-lg mb-3">Question ${q.id}.</h4>
+                    ${qTextDisplay}
+                    ${extraText}
+                    <div class="space-y-2">
+                        ${optionsHtml}
+                    </div>
+                `;
+                container.appendChild(qDiv);
+            });
+        }
+
+        // TIMER LOGIC
+        let timeLeft = 3000; // 50 minutes (50 * 60)
+        let timerInterval;
+        let audioCtx;
+        let isSubmitted = false;
+
+        function startTest() {
+            // Init Audio Context on user gesture
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            
+            document.getElementById('startOverlay').style.display = 'none';
+            
+            timerInterval = setInterval(() => {
+                if(isSubmitted) return;
+                
+                timeLeft--;
+                updateTimerDisplay();
+
+                if (timeLeft === 60) {
+                    playAlarm();
+                    document.getElementById('timerBox').classList.replace('bg-indigo-100', 'bg-red-100');
+                    document.getElementById('timerBox').classList.replace('text-indigo-800', 'text-red-600');
+                    document.getElementById('timerBox').classList.replace('border-indigo-200', 'border-red-300');
+                    document.getElementById('timerBox').classList.add('animate-pulse');
+                }
+
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    submitTest();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            let m = Math.floor(timeLeft / 60);
+            let s = timeLeft % 60;
+            document.getElementById('timeDisplay').innerText = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+        }
+
+        function playAlarm() {
+            if(!audioCtx) return;
+            // Create a sequence of 3 beeps
+            for(let i=0; i<3; i++) {
+                const osc = audioCtx.createOscillator();
+                const gainNode = audioCtx.createGain();
+                
+                osc.type = 'square';
+                osc.frequency.setValueAtTime(880, audioCtx.currentTime + i*0.4); // A5 note
+                
+                gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime + i*0.4);
+                gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + i*0.4 + 0.3);
+                
+                osc.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+                
+                osc.start(audioCtx.currentTime + i*0.4);
+                osc.stop(audioCtx.currentTime + i*0.4 + 0.3);
+            }
+        }
+
+        // SUBMIT LOGIC (Just score, no explanations)
+        function submitTest() {
+            if(isSubmitted) return;
+            isSubmitted = true;
+            clearInterval(timerInterval);
+            
+            let score = 0;
+            
+            questionsData.forEach(q => {
+                const selected = document.querySelector(`input[name="q${q.id}"]:checked`);
+                const allOptionsBox = document.querySelectorAll(`input[name="q${q.id}"] + .option-box`);
+                
+                // Vô hiệu hoá click sau khi nộp
+                document.querySelectorAll(`input[name="q${q.id}"]`).forEach(input => input.disabled = true);
+
+                let userAnsIndex = selected ? parseInt(selected.value) : -1;
+                
+                // Xóa hiệu ứng hover để giao diện cố định
+                allOptionsBox.forEach((box) => {
+                    box.classList.remove('hover:bg-[#fecdd3]', 'hover:bg-[#c7d2fe]', 'hover:bg-[#fef08a]', 'hover:bg-[#bbf7d0]');
+                });
+
+                if (userAnsIndex === q.correct) {
+                    score++;
+                }
+            });
+
+            // Ẩn nút Nộp bài
+            document.getElementById('submitBtnTop').style.display = 'none';
+            document.getElementById('submitBtnBottom').style.display = 'none';
+            
+            // Hiện Modal Kết quả
+            document.getElementById('scoreText').innerText = score;
+            if(score >= 35) document.getElementById('resultIcon').innerText = '🏆';
+            else if(score >= 25) document.getElementById('resultIcon').innerText = '🔥';
+            else document.getElementById('resultIcon').innerText = '💪';
+            
+            document.getElementById('resultModal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('resultModal').classList.add('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Khởi tạo render
+        window.onload = renderQuestions;
+    </script>
+</body>
+</html>

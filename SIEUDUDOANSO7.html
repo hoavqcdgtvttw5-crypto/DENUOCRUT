@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BỘ ĐỀ SDĐ SỐ 07 - KỲ THI TỐT NGHIỆP THPT 2026</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+            background-attachment: fixed;
+            color: #1f2937;
+        }
+        
+        /* Custom Scrollbar for a clean look */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #c7c7cc; 
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a1a1aa; 
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        /* Glassmorphism elements */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Gen Z Border Style */
+        .genz-border {
+            border: 3px solid #1f2937;
+            box-shadow: 6px 6px 0px 0px #1f2937;
+            transition: all 0.2s ease;
+        }
+        
+        /* 3D Option button styling (Gen Z Neobrutalism) */
+        .option-label {
+            cursor: pointer;
+            display: block;
+            position: relative;
+            margin-top: 12px;
+        }
+        .option-box {
+            border: 2px solid #1f2937;
+            border-radius: 0.75rem;
+            box-shadow: 3px 3px 0px 0px #1f2937;
+            transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .option-label:hover .option-box {
+            transform: translate(-3px, -3px);
+            box-shadow: 6px 6px 0px 0px #1f2937;
+        }
+        .option-label:active .option-box {
+            transform: translate(2px, 2px);
+            box-shadow: 0px 0px 0px 0px #1f2937;
+        }
+        
+        /* Checked State Styling */
+        input[type="radio"]:checked + .option-box {
+            background-color: #1f2937 !important; /* Bold Dark Gray */
+            border-color: #1f2937;
+            box-shadow: 4px 4px 0px 0px #a855f7 !important; /* Neon Purple Shadow */
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+        input[type="radio"]:checked + .option-box .opt-text {
+            color: white !important;
+        }
+        input[type="radio"]:checked + .option-box .letter-circle {
+            background-color: #a855f7 !important;
+            color: white !important;
+            border-color: #1f2937;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.95); }
+            50% { transform: scale(1.03); }
+            100% { transform: scale(1); }
+        }
+
+        /* Result states after submission (Disabled mode - no colors shown) */
+        input:disabled + .option-box {
+            cursor: not-allowed;
+            opacity: 0.8;
+        }
+
+        /* Sticky top offset for header */
+        .sticky-offset {
+            top: 5rem;
+        }
+        
+        .blank-space {
+            display: inline-block;
+            padding: 0 8px;
+            font-weight: bold;
+            color: #8b5cf6;
+            background: #ede9fe;
+            border-radius: 6px;
+            margin: 0 2px;
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col relative">
+
+    <!-- OVERLAY: START TEST -->
+    <div id="startOverlay" class="fixed inset-0 z-50 flex items-center justify-center bg-white/80 backdrop-blur-md">
+        <div class="bg-white p-8 md:p-12 rounded-3xl genz-border text-center max-w-lg mx-4">
+            <h1 class="text-3xl md:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-500 mb-4">
+                ✨ Sẵn sàng chưa?
+            </h1>
+            <p class="text-gray-600 mb-8 text-lg">Bài thi môn Tiếng Anh có thời gian làm bài là <b>50 phút</b>. Hệ thống sẽ có chuông báo khi còn 1 phút.</p>
+            <button onclick="startTest()" class="w-full bg-gradient-to-r from-violet-500 to-fuchsia-500 hover:from-violet-600 hover:to-fuchsia-600 text-white font-bold py-4 px-8 rounded-2xl shadow-lg transform hover:scale-105 transition-all duration-200 text-xl">
+                Bắt Đầu Làm Bài 🚀
+            </button>
+        </div>
+    </div>
+
+    <!-- HEADER / TIMER -->
+    <header class="sticky top-0 z-40 glass-panel border-b border-gray-200 px-4 py-3 shadow-sm">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <span class="text-2xl">📝</span>
+                <h1 class="font-bold text-lg hidden sm:block bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600">Đề Siêu Dự Đoán - Số 07</h1>
+            </div>
+            <div class="flex items-center gap-4">
+                <div id="timerBox" class="bg-indigo-100 text-indigo-800 font-mono font-bold text-xl px-4 py-2 rounded-xl border-2 border-indigo-200 flex items-center gap-2 transition-colors">
+                    ⏳ <span id="timeDisplay">50:00</span>
+                </div>
+                <button onclick="submitTest()" id="submitBtnTop" class="bg-gray-900 hover:bg-gray-800 text-white font-bold py-2 px-6 rounded-xl transition-colors hidden sm:block">
+                    Nộp Bài
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="flex-grow max-w-7xl mx-auto w-full px-4 py-8">
+        
+        <form id="testForm" onsubmit="event.preventDefault(); submitTest();">
+            
+            <!-- SECTION 1: READING COMPREHENSION 1 -->
+            <div class="mb-12">
+                <h2 class="text-xl font-bold mb-4 text-green-700 bg-green-100 inline-block px-4 py-1 rounded-full border-2 border-green-200">Part 1: Reading Comprehension 1 (Questions 1 - 10)</h2>
+                <p class="italic text-gray-600 mb-4 font-medium">Read the following passage and mark the letter A, B, C, or D on your answer sheet to indicate the best answer to each of the following questions.</p>
+                <div class="flex flex-col lg:flex-row gap-6">
+                    <!-- Left: Reading (70% on lg) -->
+                    <div class="lg:w-[70%] glass-panel rounded-3xl p-6 lg:p-8 lg:sticky lg:top-24 lg:max-h-[80vh] overflow-y-auto custom-scrollbar border border-gray-200">
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            Between homework, exams, and long bus rides, many upper secondary students and first-year university students follow creators who seem to speak from a nearby desk. A study vlogger turns stress into a neat hour-by-hour plan; a singer's short clip becomes a morning switch. When an online figure offers a calm voice during a crowded school week, this promise can feel like a spare key to control. The bond is not foolish, sometimes even benign: a learner may start revision, copy a useful timetable, or feel less alone before a presentation.
+                        </p>
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            Yet the same bond can become a soft leash. <b>[I]</b> During breaks, some students check comments before asking classmates for notes, not because classmates are unkind but because the creator's room feels cleaner than the classroom. If a creator says, "we survived another deadline," viewers may borrow the "we" and forget who actually shares the work. <b>[II]</b> Small choices then gather: copying catchphrases in class, buying a notebook from a video, defending a stranger, enjoying inside-joke complicity, or treating lunch as content. They are small, but together they tilt attention away from nearby people.
+                        </p>
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            The difficult part is that parasocial closeness often feels morally warmer than ordinary liking. A student may know the creator has never seen the private messages, yet leaving a fan group can still feel like betrayal. This is why the bond becomes knotty: the follower interprets care into a schedule built for public attention, not reciprocity. <b>[III]</b> To step back, the learner must separate comfort from obligation, and admiration from duty. That does not mean deleting every account. It means asking whether a post sharpens real life or merely paints a window on the wall. <b>[IV]</b>
+                        </p>
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            A healthier answer is not to mock fans, because mockery only pushes the feeling underground. Schools and families could discuss media bonds the way lessons discuss money or food: not with panic, but with questions about limits, needs, reflection, and choice. When students keep one hour for friends, study, or making something of their own, that habit gives admiration a proper seat. In practice, the screen can remain a window; it should not become the only lamp in the room.
+                        </p>
+                        <p class="text-sm text-gray-400 mt-4">(Adapted from https://pubmed.ncbi.nlm.nih.gov)</p>
+                    </div>
+                    
+                    <!-- Right: Questions (30% on lg) -->
+                    <div class="lg:w-[30%] flex flex-col gap-4" id="q-container-part1">
+                        <!-- Questions injected via JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 2: CLOZE TEST 1 (Leaflet) -->
+            <div class="mb-12">
+                <h2 class="text-xl font-bold mb-4 text-purple-700 bg-purple-100 inline-block px-4 py-1 rounded-full border-2 border-purple-200">Part 2: Leaflet (Questions 11 - 16)</h2>
+                <p class="italic text-gray-600 mb-4 font-medium">Read the following leaflet and mark the letter A, B, C or D on your answer sheet to indicate the option that best fits each of the numbered blanks.</p>
+                <div class="flex flex-col lg:flex-row gap-6">
+                    <div class="lg:w-[70%] glass-panel rounded-3xl p-6 lg:p-8 lg:sticky lg:top-24 lg:max-h-[80vh] overflow-y-auto custom-scrollbar border border-gray-200">
+                        <h3 class="text-2xl font-bold mb-4 uppercase tracking-wide">The Quiet System Behind a Home</h3>
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            Electricity is easy to notice when a light turns on, yet its path to a home is less visible. Power is produced from different energy sources, carried through wires, measured by a meter, and changed into light, heat, sound, or movement inside appliances.
+                        </p>
+                        <h4 class="text-xl font-bold mb-2 text-indigo-700">Using It Wisely</h4>
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            To understand the <span class="blank-space">(11)</span> of dependence, a household can list which tasks would stop during a short outage. A phone may still work for a while; <span class="blank-space">(12)</span>, a refrigerator, pump, or router may need earlier attention. <span class="blank-space">(13)</span> devices need a steady supply, while others can wait until power returns.
+                        </p>
+                        <h4 class="text-xl font-bold mb-2 text-indigo-700">Making a Small Plan</h4>
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            People often think a device uses energy only when it is active, but some chargers still <span class="blank-space">(14)</span> a small current when left in the socket. A simple plan can help families <span class="blank-space">(15)</span> safer habits: unplug unused chargers, keep one lamp ready, and know which circuit serves important rooms. These steps do not remove the risk of an outage, but they can make a home more <span class="blank-space">(16)</span> when the supply changes.
+                        </p>
+                    </div>
+                    <div class="lg:w-[30%] flex flex-col gap-4" id="q-container-part2"></div>
+                </div>
+            </div>
+
+            <!-- SECTION 3: SENTENCE ARRANGEMENT -->
+            <div class="mb-12">
+                <h2 class="text-xl font-bold mb-4 text-blue-700 bg-blue-100 inline-block px-4 py-1 rounded-full border-2 border-blue-200">Part 3: Sentence Arrangement (Questions 17 - 21)</h2>
+                <p class="italic text-gray-600 mb-4 font-medium">Mark the letter A, B, C or D on your answer sheet to indicate the best arrangement of utterances or sentences to make a cohesive and coherent exchange or text in each of the following questions.</p>
+                <div class="glass-panel rounded-3xl p-6 lg:p-8 grid grid-cols-1 md:grid-cols-2 gap-8 border border-gray-200" id="q-container-part3">
+                    <!-- Sentences injected via JS -->
+                </div>
+            </div>
+
+            <!-- SECTION 4: CLOZE TEST 2 -->
+            <div class="mb-12">
+                <h2 class="text-xl font-bold mb-4 text-teal-700 bg-teal-100 inline-block px-4 py-1 rounded-full border-2 border-teal-200">Part 4: Guided Cloze 2 (Questions 22 - 26)</h2>
+                <p class="italic text-gray-600 mb-4 font-medium">Read the following passage and mark the letter A, B, C or D on your answer sheet to indicate the option that best fits each of the numbered blanks.</p>
+                <div class="flex flex-col lg:flex-row gap-6">
+                    <div class="lg:w-[70%] glass-panel rounded-3xl p-6 lg:p-8 lg:sticky lg:top-24 lg:max-h-[80vh] overflow-y-auto custom-scrollbar border border-gray-200">
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            Career cushioning is not the same as secretly quitting work. The idea has become more visible as employees face restructures, changing technology, and uncertain hiring budgets across many industries. It is the habit of preparing for possible change while a person is still employed. In a stable month, this may look unnecessary. During layoffs or slow hiring, however, <span class="blank-space">(22)</span>.
+                        </p>
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            The practice can create tension. Employers may read it as a quiet exit plan, while workers may see it as basic insurance. <span class="blank-space">(23)</span>, the healthier version treats preparation as a way to stay capable, not as a reason to withdraw from daily responsibilities.
+                        </p>
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            A worker who keeps a portfolio, learns one useful tool, and asks for feedback is not necessarily planning to leave. The sign to watch is balance: <span class="blank-space">(24)</span>. If the search for a cushion begins to weaken attendance, cooperation, or quality, the cushion has started to damage the role it was meant to protect.
+                        </p>
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            For managers, the response should not be suspicion alone. Clear pay paths, honest updates, and visible learning opportunities reduce the need for silent backup plans, because <span class="blank-space">(25)</span>. In the end, career cushioning works best as a private system of readiness, <span class="blank-space">(26)</span>. It gives room to move without turning uncertain signals into panic.
+                        </p>
+                        <p class="text-sm text-gray-400 mt-4">(Adapted from https://www.forbes.com)</p>
+                    </div>
+                    <div class="lg:w-[30%] flex flex-col gap-4" id="q-container-part4"></div>
+                </div>
+            </div>
+
+            <!-- SECTION 5: CLOZE TEST 3 (Advertisement) -->
+            <div class="mb-12">
+                <h2 class="text-xl font-bold mb-4 text-pink-700 bg-pink-100 inline-block px-4 py-1 rounded-full border-2 border-pink-200">Part 5: Advertisement (Questions 27 - 32)</h2>
+                <p class="italic text-gray-600 mb-4 font-medium">Read the following advertisement and mark the letter A, B, C or D on your answer sheet to indicate the option that best fits each of the numbered blanks.</p>
+                <div class="flex flex-col lg:flex-row gap-6">
+                    <div class="lg:w-[70%] glass-panel rounded-3xl p-6 lg:p-8 lg:sticky lg:top-24 lg:max-h-[80vh] overflow-y-auto custom-scrollbar border border-gray-200">
+                        <h3 class="text-2xl font-bold mb-4 uppercase tracking-wide text-center">Clear Steps, Calm Skin</h3>
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            Meet Luma Dew, a light skincare set <span class="blank-space">(27)</span> for people who want a calm routine, not a crowded shelf. The morning cleanser removes oil gently, while the SPF cream protects exposed skin before outdoor time. At night, the barrier cream works with a mild retinoid step. We follow advice by the <span class="blank-space">(28)</span>: start slowly, use moisture, and let the routine <span class="blank-space">(29)</span> to your skin instead of forcing change. Each product is suitable <span class="blank-space">(30)</span> daily use when your skin accepts it well.
+                        </p>
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            The serum has a <span class="blank-space">(31)</span> feel and a soft finish, so it sits under makeup without stickiness. Its ingredient story is simple: vitamin C supports a brighter look, and the moisturizer helps reduce dryness after active care.
+                        </p>
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify font-bold">
+                            Luma Dew is not a miracle; it is a clear plan. Choose the set when you need a <span class="blank-space">(32)</span> that makes each step easy to remember.
+                        </p>
+                    </div>
+                    <div class="lg:w-[30%] flex flex-col gap-4" id="q-container-part5"></div>
+                </div>
+            </div>
+
+            <!-- SECTION 6: READING COMPREHENSION 2 -->
+            <div class="mb-12">
+                <h2 class="text-xl font-bold mb-4 text-orange-700 bg-orange-100 inline-block px-4 py-1 rounded-full border-2 border-orange-200">Part 6: Reading Comprehension 2 (Questions 33 - 40)</h2>
+                <p class="italic text-gray-600 mb-4 font-medium">Read the following passage and mark the letter A, B, C, or D on your answer sheet to indicate the best answer to each of the following questions.</p>
+                <div class="flex flex-col lg:flex-row gap-6">
+                    <div class="lg:w-[70%] glass-panel rounded-3xl p-6 lg:p-8 lg:sticky lg:top-24 lg:max-h-[80vh] overflow-y-auto custom-scrollbar border border-gray-200">
+                        <h3 class="text-2xl font-bold mb-4 uppercase tracking-wide">Filtering the Flood of Easy Content</h3>
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            Low-cost generators have made online publishing feel frictionless. A shop can create product tips, a fan page can post daily jokes, and a school group can design posters before lunch. Such speed sounds useful, yet the same pipeline also produces Al slop: smooth pieces with thin evidence, copied angles, or emotional bait. When a feed rewards quick reactions, cheap posts can travel farther across crowded platforms than careful work. The real issue is not machine help; it is the incentive to fill attention gaps without adding value.
+                        </p>
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            Many platforms answer the problem with labels. <u class='font-bold text-gray-900'>Although labels sound helpful, a small tag does little when viewers scroll past context in a few seconds.</u> Worse, labels can move responsibility from platform design to individual judgment. If weak material still receives distribution, labels become a receipt rather than a barrier. They may inform a reader after attention has already been sold.
+                        </p>
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            In practical terms, Al slop changes how people search, study, and buy. A recipe may list ingredients without testing the method; a health tip may sound calm while hiding missing evidence; a review may praise a product without experience. Because a search result may look polished, readers often trust it before checking whether a source has real evidence. The danger is not a single false sentence, but the slow corrosion of scrutiny when polished language replaces proof.
+                        </p>
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            Useful responses are less dramatic than bans. Schools can teach students to ask for the pathway behind a claim: source, evidence, purpose, and possible impectus. If a classroom uses generated examples, students can compare fluency with accuracy instead of treating neat wording as proof. Small creators can also mark original work clearly, while readers can save doubtful posts for later checking. Generated examples can become rough material, not finished answers, when people treat them as drafts.
+                        </p>
+                        <p class="text-sm text-gray-400 mt-4">(Adapted from https://www.theverge.com)</p>
+                    </div>
+                    <div class="lg:w-[30%] flex flex-col gap-4" id="q-container-part6"></div>
+                </div>
+            </div>
+
+            <!-- SUBMIT BUTTON BOTTOM -->
+            <div class="text-center mt-12 mb-8">
+                <button type="submit" id="submitBtnBottom" class="bg-gray-900 hover:bg-gray-800 text-white font-bold py-4 px-12 rounded-2xl shadow-xl transform hover:-translate-y-1 transition-all duration-200 text-xl genz-border">
+                    Nộp Bài & Xem Điểm ✨
+                </button>
+            </div>
+
+        </form>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-white border-t border-gray-200 py-6 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p class="font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-500 text-xl">Idea for Design: Mr Hoa Van!</p>
+            <p class="text-gray-400 text-sm mt-1">© 2026 - Tinh Hoa Dự Đoán THPT</p>
+        </div>
+    </footer>
+
+    <!-- RESULT MODAL -->
+    <div id="resultModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm hidden">
+        <div class="bg-white p-8 md:p-12 rounded-3xl genz-border text-center max-w-md mx-4 animate-[fadeIn_0.3s_ease]">
+            <div class="text-6xl mb-4" id="resultIcon">🎉</div>
+            <h2 class="text-3xl font-extrabold mb-2">Điểm số của bạn</h2>
+            <p class="text-5xl font-black text-purple-600 mb-6"><span id="scoreText">0</span>/40</p>
+            <p class="text-gray-600 mb-8 font-medium">Kết quả bài làm đã được hệ thống ghi nhận thành công!</p>
+            <button onclick="closeModal()" class="w-full bg-gray-900 text-white font-bold py-3 px-6 rounded-xl hover:bg-gray-800 transition">
+                Đóng
+            </button>
+        </div>
+    </div>
+
+    <!-- DATA & SCRIPT -->
+    <script>
+        // QUESTION DATA - ĐỀ SIÊU DỰ ĐOÁN 07
+        // Không hiển thị lời giải, hệ thống chỉ cần chấm điểm ngầm.
+        const questionsData = [
+            // Part 1: Reading 1
+            { id: 1, part: 1, qText: "The phrase <b class='text-blue-700'><i>this promise</i></b> in paragraph 1 refers to", options: ["a copied plan from a study vlogger", "a calming voice during a stressful week", "a morning clip that changes the mood", "a bond that reduces classroom loneliness"], correct: 1 },
+            { id: 2, part: 1, qText: "According to paragraph 1, students who follow creators during tired academic days", options: ["may use online calmness to organize stress without being simply foolish or lazy.", "treat creators as real classmates who share exams, bus rides, and presentations.", "follow creators because school friends refuse to share study notes before lessons.", "believe entertainment can replace timetables, revision, and classroom help each day."], correct: 0 },
+            { id: 3, part: 1, qText: "Which of the following best paraphrases the <u class='font-bold text-gray-900'>underlined sentence</u> in paragraph 2?", options: ["Viewers may hear a creator's shared struggle as advice and mistake online encouragement for practical help from classmates.", "Viewers may repeat a creator's deadline language and believe the creator has completed the same school task with them.", "Viewers may take the creator's inclusive wording as shared experience and overlook the people who truly work beside them.", "Viewers may feel motivated by a creator's deadline story and choose online planning over asking classmates for support."], correct: 2 },
+            { id: 4, part: 1, qText: "Which of the following is <b class='text-red-600 underline'>NOT</b> listed as an effect in paragraph 2?", options: ["copying class catchphrases from videos", "buying a creator-linked notebook", "defending an unseen online figure", "missing dinner for live streams"], correct: 3 },
+            { id: 5, part: 1, qText: "The word <b class='text-blue-700'><i>reciprocity</i></b> in paragraph 3 mostly means", options: ["two-way response", "public attention", "private care", "loyal feeling"], correct: 0 },
+            { id: 6, part: 1, qText: "According to paragraph 3, why can stepping back from fan groups feel difficult?", options: ["Because creators ask followers to prove loyalty through constant online replies after school.", "Because leaving feels disloyal, although the care comes from public routines online.", "Because deleting every account is presented as the path to thinking clearly alone.", "Because private messages create real friendship before followers notice emotional duty online."], correct: 1 },
+            { id: 7, part: 1, qText: "Which of the following statement is <b class='text-green-600 underline'>TRUE</b> according to paragraph 4?", options: ["Mocking fans solves the problem by bringing hidden feelings into open discussion.", "Media bonds can be discussed like daily choices, with limits and real activities.", "Screens should be removed from students' lives so friendships can fully return.", "Families should treat fan habits as panic-worthy and academically harmful after lessons."], correct: 1 },
+            { id: 8, part: 1, qText: "Where in the passage does the following sentence best fit?<br><i class='text-purple-700 font-semibold mt-2 block'>\"Such closeness feels private, yet it is shaped by an audience-facing script.\"</i>", options: ["[III]", "[I]", "[II]", "[IV]"], correct: 0 },
+            { id: 9, part: 1, qText: "Which of the following best summarises the passage?", options: ["Online fan bonds can help tired students, so real relationships and personal making become less necessary nearby afterward.", "Study creators look useful when students defend distant figures and copy shared routines into school life unchanged daily.", "Parasocial closeness is a normal teenage weakness that schools can correct through stricter screen rules after class alone.", "Digital admiration may comfort students, but it needs boundaries, reflection, and living ties outside screen-based school life."], correct: 3 },
+            { id: 10, part: 1, qText: "Which of the following can be inferred from the passage?", options: ["Students who enjoy creators are probably hiding weak friendships from teachers, parents, and classmates every day.", "Schools should judge parasocial habits by how quickly learners stop using social media accounts outside homework hours.", "The key issue is where a media bond sends learners' attention after comfort has been received.", "Creators may cause harm if their language enters classrooms, purchases, or conversations during ordinary school days."], correct: 2 },
+
+            // Part 2: Cloze 1 (Leaflet)
+            { id: 11, part: 2, options: ["extent", "altitude", "volume", "tier"], correct: 0 },
+            { id: 12, part: 2, options: ["Meanwhile", "Consequently", "Subsequently", "Likewise"], correct: 2 },
+            { id: 13, part: 2, options: ["Much", "Several", "Each", "Neither"], correct: 1 },
+            { id: 14, part: 2, options: ["sketch", "drag", "attract", "draw"], correct: 3 },
+            { id: 15, part: 2, options: ["look up to", "get away with", "come up with", "run out of"], correct: 2 },
+            { id: 16, part: 2, options: ["fragile", "resilient", "redundant", "intermittent"], correct: 1 },
+
+            // Part 3: Sentence Arrangement
+            { id: 17, part: 3, text: "a. Lina: Then we can join the lantern-lit procession and watch the ceremonial dance near the river.<br>b. Mark: That sounds perfect, because the guide said the opening speech explains why the festival is meaningful.<br>c. Lina: Let's arrive before sunset, so we can hear the opening speech and find a good place.", options: ["a-c-b", "c-b-a", "c-a-b", "b-c-a"], correct: 1 },
+            { id: 18, part: 3, text: "a. Leo: No problem, their online menu says the tomato soup is dairy-free and comes with whole-grain bread.<br>b. Mia: Leo, I'm getting hungry after class, but we only have forty minutes before the club meeting.<br>c. Mia: Perfect, let's order it now and make a small reservation before the lunch crowd arrives.<br>d. Mia: That sounds good, although I'm lactose-intolerant, so I need to check the menu first.<br>e. Leo: Then let's choose something quick but nutritious, maybe the new soup bar near the library.", options: ["b-e-d-a-c", "b-d-e-a-c", "e-b-d-c-a", "b-e-a-d-c"], correct: 0 },
+            { id: 19, part: 3, text: "Dear Linh,<br>a. Now I am writing to share this experience with you, so you can face your next exam with courage and perspective.<br>b. After that conversation, I started reviewing my mistakes calmly, making a simple study plan, and asking questions when I felt confused.<br>c. Then my teacher helped me see that grades are only useful feedback, not a final judgement of my effort or self-worth.<br>d. Last month, I felt extremely nervous before every test because I believed one low score would prove I was not intelligent.<br>e. Because of this new habit, I improved slowly, but more importantly, I stopped letting numbers control my confidence.<br>Best wishes,<br>Minh", options: ["a-d-c-b-e", "d-b-c-e-a", "d-c-b-e-a", "c-d-b-a-e"], correct: 2 },
+            { id: 20, part: 3, text: "a. Wage stagnation happens when workers keep doing their jobs well, but their pay rises very slowly compared with prices and living costs.<br>b. At first, this problem may seem small, because many families can still cover basic needs by cutting unnecessary spending each month.<br>c. As a result, lower spending can weaken small businesses, reduce job growth, and make the whole economy feel less stable over time.<br>d. For this reason, policymakers and companies need fair-pay plans that connect productivity, inflation, and long-term worker security more clearly.<br>e. However, when rent, food, transport, and healthcare keep becoming more expensive, slow wage growth gradually reduces real purchasing power.", options: ["a-e-b-c-d", "b-a-e-c-d", "a-b-c-e-d", "a-b-e-c-d"], correct: 3 },
+            { id: 21, part: 3, text: "a. However, clear climate lessons, community projects, and small green habits can change helpless feelings into practical and hopeful action over time.<br>b. Therefore, climate-anxiety does not disappear through silence; it becomes easier to manage when knowledge, support, and responsible choices work together every week.<br>c. This growing worry may start with a simple news report, but it can slowly turn into fear about the future of homes and communities.<br>d. When that fear stays for many days, sleep, study, and concentration can become harder, especially for students who already feel pressure.<br>e. Climate-anxiety is becoming more common among young people as storms, floods, and heatwaves appear more often in daily news and school discussions.", options: ["e-c-d-a-b", "e-c-a-d-b", "c-e-d-a-b", "e-d-c-a-b"], correct: 0 },
+
+            // Part 4: Cloze 2
+            { id: 22, part: 4, options: ["not only current skills are reviewed, but future roles mapped", "not only are current skills reviewed, but future roles are mapped", "current skills not only are reviewed, but are mapping future roles", "not only reviewed current skills, but future roles are mapped"], correct: 1 },
+            { id: 23, part: 4, options: ["In comparison with chasing promotions through faster application volume alone", "For the purpose of proving that loyalty has already disappeared", "Instead of framing caution as betrayal or disengagement from work", "In the absence of deciding between risk and professional growth"], correct: 2 },
+            { id: 24, part: 4, options: ["a longer resume can replace results when office trust begins to weaken visibly", "new contacts become useful only after a manager notices reduced effort during reviews", "skill courses matter more than assigned projects during periods of uncertainty and market noise", "preparation supports performance when current tasks still receive steady attention and care each week"], correct: 3 },
+            { id: 25, part: 4, options: ["employees trust uncertain news more when leaders explain realistic choices early without drama", "leaders prefer private loyalty when teams avoid asking difficult career questions openly", "training budgets reduce concern before hiring conditions change again unexpectedly across departments", "workers follow company plans once external opportunities appear less familiar than expected today"], correct: 0 },
+            { id: 26, part: 4, options: ["which encouraging workers to leave before reasons become clear inside companies", "that it separates growth from responsibility during normal workweeks inside teams", "designed to protect choices while keeping present work credible and consistent", "having protected choices while present work was becoming less credible"], correct: 2 },
+
+            // Part 5: Advertisement
+            { id: 27, part: 5, options: ["designing", "designed", "to be designed", "having designed"], correct: 1 },
+            { id: 28, part: 5, options: ["book", "page", "cover", "line"], correct: 0 },
+            { id: 29, part: 5, options: ["adapted", "adapting", "to adapt", "adapt"], correct: 3 },
+            { id: 30, part: 5, options: ["with", "for", "in", "at"], correct: 1 },
+            { id: 31, part: 5, options: ["breathe", "breath", "breathable", "breathably"], correct: 2 },
+            { id: 32, part: 5, options: ["gentle skin routine", "skin gentle routine", "routine gentle skin", "skin routine gentle"], correct: 0 },
+
+            // Part 6: Reading 2
+            { id: 33, part: 6, qText: "Which of the following is <b class='text-blue-700'>MENTIONED</b> in passage 1 as a condition that helps weak Al content spread?", options: ["stricter school rules", "paid human editors", "better camera quality", "quick reaction rewards"], correct: 3 },
+            { id: 34, part: 6, qText: "Which of the following best paraphrases the <u class='font-bold text-gray-900'>underlined sentence</u> in paragraph 2?", options: ["Labels may warn viewers, but they become useful only when platforms reduce the speed of scrolling.", "Labels seem clear, but they can make viewers depend less on their own judgment.", "Labels can guide viewers, but they fail when the tagged content is already too emotional.", "Labels appear useful, but they have limited effect when viewers move too quickly to notice context."], correct: 3 },
+            { id: 35, part: 6, qText: "The word <b class='text-blue-700'><i>corrosion</i></b> in paragraph 3 is <b class='text-red-600 underline'>OPPOSITE</b> meaning to", options: ["strengthening", "accumulation", "weakening", "wearing"], correct: 0 },
+            { id: 36, part: 6, qText: "The word <b class='text-blue-700'><i>impectus</i></b> in paragraph 4 could be best replace by", options: ["habit", "method", "motivation", "evidence"], correct: 2 },
+            { id: 37, part: 6, qText: "The word <b class='text-blue-700'><i>them</i></b> in paragraph 4 refers to", options: ["people", "generated examples", "finished answers", "doubtful posts"], correct: 1 },
+            { id: 38, part: 6, qText: "In which paragraph does the writer suggest that a safety cue may report risk without reducing its reach?", options: ["Paragraph 4", "Paragraph 2", "Paragraph 1", "Paragraph 3"], correct: 1 },
+            { id: 39, part: 6, qText: "In which paragraph does the writer show that a clean surface can borrow trust before support is tested?", options: ["Paragraph 1", "Paragraph 4", "Paragraph 3", "Paragraph 2"], correct: 2 },
+            { id: 40, part: 6, qText: "Which of the following is <b class='text-green-600 underline'>TRUE</b> according to the passage?", options: ["A label can shift platform responsibility while also stopping weak material from spreading.", "Weak reviews become safer when language sounds calm and product praise feels practical.", "A polished result may gain early trust before readers check whether evidence exists.", "Original work is protected when creators mark sources and readers save doubtful posts."], correct: 2 }
+        ];
+
+        // RENDER QUESTIONS
+        function renderQuestions() {
+            // Mảng màu Gen Z sặc sỡ cho 4 lựa chọn (Hồng, Xanh lam, Vàng, Xanh lá)
+            const optionBgColors = [
+                'bg-[#ffe4e6] hover:bg-[#fecdd3]', // A: Rose pastel
+                'bg-[#e0e7ff] hover:bg-[#c7d2fe]', // B: Indigo pastel
+                'bg-[#fef9c3] hover:bg-[#fef08a]', // C: Yellow pastel
+                'bg-[#dcfce7] hover:bg-[#bbf7d0]'  // D: Green pastel
+            ];
+
+            questionsData.forEach((q, index) => {
+                const container = document.getElementById(`q-container-part${q.part}`);
+                if (!container) return;
+
+                const qDiv = document.createElement('div');
+                qDiv.className = "bg-white rounded-2xl p-5 shadow-sm border border-gray-200 hover:shadow-md transition";
+                
+                let extraText = '';
+                if(q.part === 3 && q.text) {
+                    extraText = `<div class="mb-4 text-gray-700 bg-blue-50 p-4 rounded-xl text-sm leading-relaxed border border-blue-100">${q.text}</div>`;
+                }
+
+                // Hiển thị phần câu hỏi dẫn (Question Text) nếu có
+                let qTextDisplay = '';
+                if(q.qText) {
+                    qTextDisplay = `<p class="mb-4 text-gray-800 font-semibold text-[1.05rem] leading-snug">${q.qText}</p>`;
+                }
+
+                let optionsHtml = q.options.map((opt, i) => `
+                    <label class="option-label">
+                        <input type="radio" name="q${q.id}" value="${i}" class="peer hidden">
+                        <div class="option-box p-3 flex items-center gap-3 ${optionBgColors[i]}">
+                            <span class="letter-circle w-8 h-8 rounded-full bg-white flex items-center justify-center font-black text-sm shrink-0 transition-colors border-2 border-gray-900 text-gray-900">${String.fromCharCode(65 + i)}</span>
+                            <span class="opt-text text-base font-semibold text-gray-800 transition-colors">${opt}</span>
+                        </div>
+                    </label>
+                `).join('');
+
+                qDiv.innerHTML = `
+                    <h4 class="font-bold text-lg mb-3">Question ${q.id}.</h4>
+                    ${qTextDisplay}
+                    ${extraText}
+                    <div class="space-y-2">
+                        ${optionsHtml}
+                    </div>
+                `;
+                container.appendChild(qDiv);
+            });
+        }
+
+        // TIMER LOGIC
+        let timeLeft = 3000; // 50 minutes (50 * 60)
+        let timerInterval;
+        let audioCtx;
+        let isSubmitted = false;
+
+        function startTest() {
+            // Init Audio Context on user gesture
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            
+            document.getElementById('startOverlay').style.display = 'none';
+            
+            timerInterval = setInterval(() => {
+                if(isSubmitted) return;
+                
+                timeLeft--;
+                updateTimerDisplay();
+
+                if (timeLeft === 60) {
+                    playAlarm();
+                    document.getElementById('timerBox').classList.replace('bg-indigo-100', 'bg-red-100');
+                    document.getElementById('timerBox').classList.replace('text-indigo-800', 'text-red-600');
+                    document.getElementById('timerBox').classList.replace('border-indigo-200', 'border-red-300');
+                    document.getElementById('timerBox').classList.add('animate-pulse');
+                }
+
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    submitTest();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            let m = Math.floor(timeLeft / 60);
+            let s = timeLeft % 60;
+            document.getElementById('timeDisplay').innerText = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+        }
+
+        function playAlarm() {
+            if(!audioCtx) return;
+            // Create a sequence of 3 beeps
+            for(let i=0; i<3; i++) {
+                const osc = audioCtx.createOscillator();
+                const gainNode = audioCtx.createGain();
+                
+                osc.type = 'square';
+                osc.frequency.setValueAtTime(880, audioCtx.currentTime + i*0.4); // A5 note
+                
+                gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime + i*0.4);
+                gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + i*0.4 + 0.3);
+                
+                osc.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+                
+                osc.start(audioCtx.currentTime + i*0.4);
+                osc.stop(audioCtx.currentTime + i*0.4 + 0.3);
+            }
+        }
+
+        // SUBMIT LOGIC (Just score, no explanations)
+        function submitTest() {
+            if(isSubmitted) return;
+            isSubmitted = true;
+            clearInterval(timerInterval);
+            
+            let score = 0;
+            
+            questionsData.forEach(q => {
+                const selected = document.querySelector(`input[name="q${q.id}"]:checked`);
+                const allOptionsBox = document.querySelectorAll(`input[name="q${q.id}"] + .option-box`);
+                
+                // Vô hiệu hoá click sau khi nộp
+                document.querySelectorAll(`input[name="q${q.id}"]`).forEach(input => input.disabled = true);
+
+                let userAnsIndex = selected ? parseInt(selected.value) : -1;
+                
+                // Xóa hiệu ứng hover để giao diện cố định
+                allOptionsBox.forEach((box) => {
+                    box.classList.remove('hover:bg-[#fecdd3]', 'hover:bg-[#c7d2fe]', 'hover:bg-[#fef08a]', 'hover:bg-[#bbf7d0]');
+                });
+
+                if (userAnsIndex === q.correct) {
+                    score++;
+                }
+            });
+
+            // Ẩn nút Nộp bài
+            document.getElementById('submitBtnTop').style.display = 'none';
+            document.getElementById('submitBtnBottom').style.display = 'none';
+            
+            // Hiện Modal Kết quả
+            document.getElementById('scoreText').innerText = score;
+            if(score >= 35) document.getElementById('resultIcon').innerText = '🏆';
+            else if(score >= 25) document.getElementById('resultIcon').innerText = '🔥';
+            else document.getElementById('resultIcon').innerText = '💪';
+            
+            document.getElementById('resultModal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('resultModal').classList.add('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Khởi tạo render
+        window.onload = renderQuestions;
+    </script>
+</body>
+</html>
