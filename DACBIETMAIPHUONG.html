@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DỰ ĐOÁN ĐẶC BIỆT TRƯỚC NGÀY THI 2026 </title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+            background-attachment: fixed;
+            color: #1f2937;
+        }
+        
+        /* Custom Scrollbar for a clean look */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #c7c7cc; 
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a1a1aa; 
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        /* Glassmorphism elements */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Gen Z Border Style */
+        .genz-border {
+            border: 3px solid #1f2937;
+            box-shadow: 6px 6px 0px 0px #1f2937;
+            transition: all 0.2s ease;
+        }
+        
+        /* 3D Option button styling (Gen Z Neobrutalism) */
+        .option-label {
+            cursor: pointer;
+            display: block;
+            position: relative;
+            margin-top: 12px;
+        }
+        .option-box {
+            border: 2px solid #1f2937;
+            border-radius: 0.75rem;
+            box-shadow: 3px 3px 0px 0px #1f2937;
+            transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .option-label:hover .option-box {
+            transform: translate(-3px, -3px);
+            box-shadow: 6px 6px 0px 0px #1f2937;
+        }
+        .option-label:active .option-box {
+            transform: translate(2px, 2px);
+            box-shadow: 0px 0px 0px 0px #1f2937;
+        }
+        
+        /* Checked State Styling */
+        input[type="radio"]:checked + .option-box {
+            background-color: #1f2937 !important; /* Bold Dark Gray */
+            border-color: #1f2937;
+            box-shadow: 4px 4px 0px 0px #a855f7 !important; /* Neon Purple Shadow */
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+        input[type="radio"]:checked + .option-box .opt-text {
+            color: white !important;
+        }
+        input[type="radio"]:checked + .option-box .letter-circle {
+            background-color: #a855f7 !important;
+            color: white !important;
+            border-color: #1f2937;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.95); }
+            50% { transform: scale(1.03); }
+            100% { transform: scale(1); }
+        }
+
+        /* Result states after submission (Disabled mode - no colors shown) */
+        input:disabled + .option-box {
+            cursor: not-allowed;
+            opacity: 0.8;
+        }
+
+        /* Sticky top offset for header */
+        .sticky-offset {
+            top: 5rem;
+        }
+        
+        .blank-space {
+            display: inline-block;
+            padding: 0 8px;
+            font-weight: bold;
+            color: #8b5cf6;
+            background: #ede9fe;
+            border-radius: 6px;
+            margin: 0 2px;
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col relative">
+
+    <!-- OVERLAY: START TEST -->
+    <div id="startOverlay" class="fixed inset-0 z-50 flex items-center justify-center bg-white/80 backdrop-blur-md">
+        <div class="bg-white p-8 md:p-12 rounded-3xl genz-border text-center max-w-lg mx-4">
+            <h1 class="text-3xl md:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-500 mb-4">
+                ✨ Sẵn sàng chưa?
+            </h1>
+            <p class="text-gray-600 mb-8 text-lg">Bài thi môn Tiếng Anh có thời gian làm bài là <b>50 phút</b>. Hệ thống sẽ có chuông báo khi còn 1 phút.</p>
+            <button onclick="startTest()" class="w-full bg-gradient-to-r from-violet-500 to-fuchsia-500 hover:from-violet-600 hover:to-fuchsia-600 text-white font-bold py-4 px-8 rounded-2xl shadow-lg transform hover:scale-105 transition-all duration-200 text-xl">
+                Bắt Đầu Làm Bài 🚀
+            </button>
+        </div>
+    </div>
+
+    <!-- HEADER / TIMER -->
+    <header class="sticky top-0 z-40 glass-panel border-b border-gray-200 px-4 py-3 shadow-sm">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <span class="text-2xl">📝</span>
+                <h1 class="font-bold text-lg hidden sm:block bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600">Đề Dự Đoán Đặc Biệt Môn Tiếng Anh 2026</h1>
+            </div>
+            <div class="flex items-center gap-4">
+                <div id="timerBox" class="bg-indigo-100 text-indigo-800 font-mono font-bold text-xl px-4 py-2 rounded-xl border-2 border-indigo-200 flex items-center gap-2 transition-colors">
+                    ⏳ <span id="timeDisplay">50:00</span>
+                </div>
+                <button onclick="submitTest()" id="submitBtnTop" class="bg-gray-900 hover:bg-gray-800 text-white font-bold py-2 px-6 rounded-xl transition-colors hidden sm:block">
+                    Nộp Bài
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="flex-grow max-w-7xl mx-auto w-full px-4 py-8">
+        
+        <form id="testForm" onsubmit="event.preventDefault(); submitTest();">
+            
+            <!-- SECTION 1: CLOZE TEST 1 (Announcement) -->
+            <div class="mb-12">
+                <h2 class="text-xl font-bold mb-4 text-purple-700 bg-purple-100 inline-block px-4 py-1 rounded-full border-2 border-purple-200">Part 1: Announcement (Questions 1 - 6)</h2>
+                <p class="italic text-gray-600 mb-4 font-medium">Read the following announcement and mark the letter A, B, C, or D on your answer sheet to indicate the option that best fits each of the numbered blanks.</p>
+                <div class="flex flex-col lg:flex-row gap-6">
+                    <div class="lg:w-[70%] glass-panel rounded-3xl p-6 lg:p-8 lg:sticky lg:top-24 lg:max-h-[80vh] overflow-y-auto custom-scrollbar border border-gray-200">
+                        <h3 class="text-2xl font-bold mb-4 uppercase tracking-wide">SUSTAINABLE ALTERNATIVES TO PLASTIC</h3>
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            Single-use plastics are one of the world's worst contributors to waste. We produce huge <span class="blank-space">(1)</span> of plastic waste every year. So, what are the best alternatives?
+                        </p>
+                        <ul class="list-disc pl-6 text-gray-700 leading-relaxed text-lg mb-4 space-y-4">
+                            <li><b>Bamboo:</b> Bamboo is considered one of the most sustainable crops <span class="blank-space">(2)</span> its ability to grow incredibly fast, up to 3 feet in just 24 hours.</li>
+                            <li><b>Cork:</b> Next up it's the humble cork tree. Cork is 100% natural, renewable and recyclable, <span class="blank-space">(3)</span> it the perfect eco-friendly alternative to plastic.</li>
+                            <li><b>Jute:</b> It's not news that Jute is a durable and hard-working material that's perfect for <span class="blank-space">(4)</span>. But it's also a great choice for other eco-friendly promotional products because it's <span class="blank-space">(5)</span> and recyclable.</li>
+                            <li><b>Corn:</b> One of the most innovative and pioneering sustainable materials is the corn-based plastic substitute, PLA or polylactic acid. When plant waste (such as corn husks) is fermented and <span class="blank-space">(6)</span>, it can be a great alternative to petroleum-based plastics.</li>
+                        </ul>
+                        <p class="text-sm text-gray-400 mt-4">(Adapted from https://www.brandedbystreamline.com/)</p>
+                    </div>
+                    <div class="lg:w-[30%] flex flex-col gap-4" id="q-container-part1"></div>
+                </div>
+            </div>
+
+            <!-- SECTION 2: CLOZE TEST 2 (Leaflet) -->
+            <div class="mb-12">
+                <h2 class="text-xl font-bold mb-4 text-green-700 bg-green-100 inline-block px-4 py-1 rounded-full border-2 border-green-200">Part 2: Leaflet (Questions 7 - 12)</h2>
+                <p class="italic text-gray-600 mb-4 font-medium">Read the following leaflet and mark the letter A, B, C, or D on your answer sheet to indicate the option that best fits each of the numbered blanks.</p>
+                <div class="flex flex-col lg:flex-row gap-6">
+                    <div class="lg:w-[70%] glass-panel rounded-3xl p-6 lg:p-8 lg:sticky lg:top-24 lg:max-h-[80vh] overflow-y-auto custom-scrollbar border border-gray-200">
+                        <h3 class="text-2xl font-bold mb-4 uppercase tracking-wide">HEATWAVE: HOW TO COPE IN HOT WEATHER</h3>
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            <span class="blank-space">(7)</span> of us welcome hot weather, but when it's too hot, there are health risks. During heatwaves, more people than usual get seriously ill or die. If hot weather hits this summer, <span class="blank-space">(8)</span> sure it does not harm you or anyone you know.
+                        </p>
+                        <h4 class="text-xl font-bold mb-2 text-indigo-700 mt-6">Tips for coping in hot weather</h4>
+                        <ul class="list-disc pl-6 text-gray-700 leading-relaxed text-lg mb-4 space-y-4">
+                            <li><span class="blank-space">(9)</span> the heat if you can. If you have to go outside, stay in the shade, especially between 11 am and 3 pm, wear sunscreen, a hat, and light clothes, and avoid exercise or activity <span class="blank-space">(10)</span> makes you hotter.</li>
+                            <li>Cool yourself down. Have cold food and drinks, avoid alcohol, caffeine and hot drinks, and have a cool shower or put cool water on your skin or clothes.</li>
+                            <li>Keep your living space cool. Close windows during the day and open them at night when the temperature outside has gone down. <span class="blank-space">(11)</span> fans can help if the temperature is below 35 degrees. Check the temperature of rooms, especially where people <span class="blank-space">(12)</span> higher risk live and sleep.</li>
+                        </ul>
+                        <p class="text-sm text-gray-400 mt-4">(Adapted from https://www.nhs.uk/)</p>
+                    </div>
+                    <div class="lg:w-[30%] flex flex-col gap-4" id="q-container-part2"></div>
+                </div>
+            </div>
+
+            <!-- SECTION 3: SENTENCE ARRANGEMENT -->
+            <div class="mb-12">
+                <h2 class="text-xl font-bold mb-4 text-blue-700 bg-blue-100 inline-block px-4 py-1 rounded-full border-2 border-blue-200">Part 3: Sentence Arrangement (Questions 13 - 17)</h2>
+                <p class="italic text-gray-600 mb-4 font-medium">Mark the letter A, B, C, or D on your answer sheet to indicate the best arrangement of utterances or sentences to make a cohesive and coherent exchange or text.</p>
+                <div class="glass-panel rounded-3xl p-6 lg:p-8 grid grid-cols-1 md:grid-cols-2 gap-8 border border-gray-200" id="q-container-part3">
+                    <!-- Sentences injected via JS -->
+                </div>
+            </div>
+
+            <!-- SECTION 4: GUIDED CLOZE -->
+            <div class="mb-12">
+                <h2 class="text-xl font-bold mb-4 text-teal-700 bg-teal-100 inline-block px-4 py-1 rounded-full border-2 border-teal-200">Part 4: Guided Cloze (Questions 18 - 22)</h2>
+                <p class="italic text-gray-600 mb-4 font-medium">Read the following passage and mark the letter A, B, C, or D on your answer sheet to indicate the correct option that best fits each of the numbered blanks.</p>
+                <div class="flex flex-col lg:flex-row gap-6">
+                    <div class="lg:w-[70%] glass-panel rounded-3xl p-6 lg:p-8 lg:sticky lg:top-24 lg:max-h-[80vh] overflow-y-auto custom-scrollbar border border-gray-200">
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            Vietnam has a large sea with a long coastline <span class="blank-space">(18)</span>. This creates a rich diversity of biodiversity and natural landscapes, including about 25 tropical marine and coastal ecosystems, including coral reefs, seagrass beds, and mangrove forests.
+                        </p>
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            <span class="blank-space">(19)</span>. They serve as a "common home" for approximately 12,000 marine organism species, including many specialised aquatic species and over 100 economically valuable fish species. Furthermore, these ecosystems also determine connectivity, possess high marine conservation potential, and act as carbon sinks. They provide the resource basis for developing a sustainable and responsible fisheries sector in Vietnam.
+                        </p>
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            <span class="blank-space">(20)</span>, most marine organisms are migratory. Therefore, marine biodiversity and fisheries management must prioritise protecting species' habitats and regulating the activities of marine users through effective management of Marine Protected Areas (MPAs) and threatened species.
+                        </p>
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            Among the 16 national MPAs in the country, one is located in the Lý Sơn Special Economic Zone in the central province of Quảng Ngãi. Coral reefs in this area, of the fringing reef type, <span class="blank-space">(21)</span> including Đảo Lớn (Large Island) and Đảo Bé (Small Island). The marine ecosystems are not only a source of sustainable livelihood for local communities, but also a prerequisite for the zone's sustainable marine economic development. In particular, alongside the unique landscape of ancient volcanoes, as well as the historical and maritime cultural values, <span class="blank-space">(22)</span>.
+                        </p>
+                        <p class="text-sm text-gray-400 mt-4">(Adapted from https://vietnamnews.vn/)</p>
+                    </div>
+                    <div class="lg:w-[30%] flex flex-col gap-4" id="q-container-part4"></div>
+                </div>
+            </div>
+
+            <!-- SECTION 5: READING COMPREHENSION 1 -->
+            <div class="mb-12">
+                <h2 class="text-xl font-bold mb-4 text-pink-700 bg-pink-100 inline-block px-4 py-1 rounded-full border-2 border-pink-200">Part 5: Reading Comprehension 1 (Questions 23 - 30)</h2>
+                <p class="italic text-gray-600 mb-4 font-medium">Read the following passage and mark the letter A, B, C, or D on your answer sheet to indicate the best answer to each of the following questions.</p>
+                <div class="flex flex-col lg:flex-row gap-6">
+                    <div class="lg:w-[70%] glass-panel rounded-3xl p-6 lg:p-8 lg:sticky lg:top-24 lg:max-h-[80vh] overflow-y-auto custom-scrollbar border border-gray-200">
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            Most Al training teaches you how to get outputs, write a better prompt, refine your query, and generate content faster. This approach treats Al as a productivity tool and measures success by speed. It misses the point entirely. Critical Al literacy asks different questions. Not "how do I use this?" but "should I use this at all?" Not "how do I make this faster?" but "what am I losing when I do?"
+                        </p>
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            Al systems carry biases that most users never see. Researchers analysing the British Newspaper Archive in 2025 found that digitised Victorian newspapers represent less than 20% of what was actually printed. The sample skews toward overtly political publications and away from independent voices. Anyone drawing conclusions about Victorian society from this data risks reproducing distortions baked into the archive. The same principle applies to the datasets that power today's Al tools. We cannot interrogate what we do not see.
+                        </p>
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            Literary scholars have long understood that texts help to construct, rather than simply reflect, reality. A newspaper article from 1870 is not a window onto the past but a curated representation shaped by editors, advertisers and owners. Al outputs work the same way. They synthesise patterns from training data that reflect particular worldviews and commercial interests. The humanities teach us to ask whose voice is present and whose is absent.
+                        </p>
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            Consider friendship. Philosophers Micah Lott and William Hasselberger argue that AI cannot be your friend because friendship requires caring about the good of another for their own sake. An Al tool lacks an internal good. It exists to serve the user. <u class='font-bold text-gray-900'>When companies market Al as a companion, they offer simulated empathy without the friction of human relationships.</u> The Al cannot reject you or pursue its own interests. The relationship remains one-sided; a commercial transaction disguised as connection.
+                        </p>
+                        <p class="text-sm text-gray-400 mt-4">(Adapted from https://theconversation.com/)</p>
+                    </div>
+                    <div class="lg:w-[30%] flex flex-col gap-4" id="q-container-part5"></div>
+                </div>
+            </div>
+
+            <!-- SECTION 6: READING COMPREHENSION 2 -->
+            <div class="mb-12">
+                <h2 class="text-xl font-bold mb-4 text-orange-700 bg-orange-100 inline-block px-4 py-1 rounded-full border-2 border-orange-200">Part 6: Reading Comprehension 2 (Questions 31 - 40)</h2>
+                <p class="italic text-gray-600 mb-4 font-medium">Read the following passage and mark the letter A, B, C, or D on your answer sheet to indicate the best answer to each of the following questions.</p>
+                <div class="flex flex-col lg:flex-row gap-6">
+                    <div class="lg:w-[70%] glass-panel rounded-3xl p-6 lg:p-8 lg:sticky lg:top-24 lg:max-h-[80vh] overflow-y-auto custom-scrollbar border border-gray-200">
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            The way businesses operate and the way employees work is changing. It may seem that the COVID-19 pandemic caused changes to the way we use technology and the hours we work. However, in many cases, the pandemic only accelerated changes that were perhaps inevitable anyway.
+                        </p>
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            <u class='font-bold text-gray-900'>Remote working via IT programs and applications allows employees to meet "face-to-face," no matter where they are.</u> For obvious reasons, this function gained unprecedented importance during the pandemic. Companies look set to use remote working more in the future, having realized that they can cut down on both expensive office space and costly business trips. <b>[I]</b> Employees will see some financial benefit too, such as saving money on commutes and meals. However, it is still not clear that conferencing programs provide the optimum conditions for producing successful work. Furthermore, while many employees enjoy the freedom of working from home to begin with, this kind of isolation may harm mental health in the long term.
+                        </p>
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            Even before the pandemic, automation was a threat to many occupations as employers now have increasingly economical, efficient, non-human options. <b>[II]</b> Some jobs, such as assembly, were lost to robots long ago, but according to a report by the McKinsey Global Institute, 800 million further jobs across a variety of sectors could be lost to computers and robots by 2030. According to one study, telemarketers are at the greatest risk, with a ninety-nine percent chance of being replaced by computers. Jobs involving computation, such as accountancy, are also at high risk. Those at lowest risk (only 0.3 percent) are psychologists, as their work involves dealing with subtle human emotions. Automation can actually result in new jobs as humans will be required to install, monitor, and maintain equipment. In fact, the World Economic Forum has suggested that overall, automation could create an extra twelve million jobs worldwide. <b>[III]</b>
+                        </p>
+                        <p class="text-gray-700 leading-relaxed text-lg mb-4 text-justify">
+                            To deal with a future of high unemployment, some governments are considering introducing a universal basic income (UBI). This would guarantee all citizens a wage to keep them from falling below the poverty line. Supporters of UBI say that it would be cheaper than paying for the health and social-care problems that poverty creates. They also say that it could lead to increased birth rates in countries with aging populations. <b>[IV]</b> However, one common critique of UBI is that it may mean people are not incentivized to work at all.
+                        </p>
+                        <p class="text-sm text-gray-400 mt-4">(Adapted from Reading for the Real World 2)</p>
+                    </div>
+                    <div class="lg:w-[30%] flex flex-col gap-4" id="q-container-part6"></div>
+                </div>
+            </div>
+
+            <!-- SUBMIT BUTTON BOTTOM -->
+            <div class="text-center mt-12 mb-8">
+                <button type="submit" id="submitBtnBottom" class="bg-gray-900 hover:bg-gray-800 text-white font-bold py-4 px-12 rounded-2xl shadow-xl transform hover:-translate-y-1 transition-all duration-200 text-xl genz-border">
+                    Nộp Bài & Xem Điểm ✨
+                </button>
+            </div>
+
+        </form>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-white border-t border-gray-200 py-6 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p class="font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-500 text-xl">Idea for Design: Mr Hoa Van!</p>
+            <p class="text-gray-400 text-sm mt-1">© 2026 - Tinh Hoa Dự Đoán THPT</p>
+        </div>
+    </footer>
+
+    <!-- RESULT MODAL -->
+    <div id="resultModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm hidden">
+        <div class="bg-white p-8 md:p-12 rounded-3xl genz-border text-center max-w-md mx-4 animate-[fadeIn_0.3s_ease]">
+            <div class="text-6xl mb-4" id="resultIcon">🎉</div>
+            <h2 class="text-3xl font-extrabold mb-2">Điểm số của bạn</h2>
+            <p class="text-5xl font-black text-purple-600 mb-6"><span id="scoreText">0</span>/40</p>
+            <p class="text-gray-600 mb-8 font-medium">Kết quả bài làm đã được hệ thống ghi nhận thành công!</p>
+            <button onclick="closeModal()" class="w-full bg-gray-900 text-white font-bold py-3 px-6 rounded-xl hover:bg-gray-800 transition">
+                Đóng
+            </button>
+        </div>
+    </div>
+
+    <!-- DATA & SCRIPT -->
+    <script>
+        // QUESTION DATA - DỰ ĐOÁN ĐẶC BIỆT (V.M.P2)
+        // Không hiển thị lời giải, hệ thống chỉ cần chấm điểm ngầm.
+        const questionsData = [
+            // Part 1: Announcement (Sustainable Alternatives to Plastic)
+            { id: 1, part: 1, options: ["ranges", "amounts", "numbers", "series"], correct: 1 },
+            { id: 2, part: 1, options: ["in place of", "except for", "owing to", "with regard to"], correct: 2 },
+            { id: 3, part: 1, options: ["making", "made", "to make", "make"], correct: 0 },
+            { id: 4, part: 1, options: ["bags branded shopping", "shopping branded bags", "branded bags shopping", "branded shopping bags"], correct: 3 },
+            { id: 5, part: 1, options: ["adaptable", "incomparable", "knowledgeable", "biodegradable"], correct: 3 },
+            { id: 6, part: 1, options: ["processed", "progressed", "served", "exchanged"], correct: 0 },
+
+            // Part 2: Leaflet (Heatwave)
+            { id: 7, part: 2, options: ["Much", "Most", "Almost", "Other"], correct: 1 },
+            { id: 8, part: 2, options: ["put", "get", "take", "make"], correct: 3 },
+            { id: 9, part: 2, options: ["Go in for", "Keep out of", "Put up with", "Come down with"], correct: 1 },
+            { id: 10, part: 2, options: ["whose", "when", "that", "who"], correct: 2 },
+            { id: 11, part: 2, options: ["Electric", "Electricity", "Electrify", "Electrically"], correct: 0 },
+            { id: 12, part: 2, options: ["at", "on", "in", "for"], correct: 0 },
+
+            // Part 3: Sentence Arrangement
+            { id: 13, part: 3, text: "a. Linda: What's it like living in a multicultural environment?<br>b. Linda: That's true. It also helps people become more open-minded and understanding.<br>c. Tom: It's interesting because you can learn about different cultures and traditions.", options: ["b-c-a", "a-c-b", "b-a-c", "a-b-c"], correct: 1 },
+            { id: 14, part: 3, text: "a. Minh: I agree. City planners should strike a balance between modernization and conservation.<br>b. Minh: Have you heard about the urban redevelopment projects taking place in Hanoi these days?<br>c. Lan: Yes. Many old neighborhoods are being renovated to improve infrastructure and public services.<br>d. Lan: That's true, but some people are concerned about preserving historical buildings and local culture.<br>e. Minh: I think these projects can make the city more modern and provide residents with a better quality of life.", options: ["e-d-a-c-b", "a-d-b-c-e", "a-c-e-d-b", "b-c-e-d-a"], correct: 3 },
+            { id: 15, part: 3, text: "Dear Nam,<br>a. To achieve this goal, I plan to study computer science at university and improve my English and digital skills.<br>b. I'm writing to tell you about my career plans after attending a job fair last week.<br>c. The event was very informative because I had the chance to meet employers from different industries and learn about various career opportunities.<br>d. I believe that hard work and continuous learning will help me succeed in the future. Write back soon and tell me about your plans.<br>e. After talking with several professionals, I realized that I would like to work in the field of information technology.<br>Best wishes,<br>Minh", options: ["c-a-d-b-e", "b-c-e-a-d", "d-c-e-a-b", "b-a-c-e-d"], correct: 1 },
+            { id: 16, part: 3, text: "a. In addition, some trees were removed to make way for walking paths, making the park more accessible to visitors.<br>b. The maps illustrate the changes that took place in Green Park between 2005 and 2025.<br>c. By 2025, the playground had been replaced by a sports center, the car park had been expanded considerably, and a café had been built beside the lake.<br>d. Overall, the area became more developed, with several new facilities replacing open spaces.<br>e. In 2005, the park contained a large lake in the center, a playground in the northeast, and a small car park near the entrance, while most of the western side was covered with trees.", options: ["b-d-e-c-a", "e-c-b-a-d", "b-e-c-a-d", "d-b-e-a-c"], correct: 2 },
+            { id: 17, part: 3, text: "a. Many people believe that contributing to the community is unnecessary because it takes time and effort without bringing direct benefits to themselves.<br>b. Her work showed that even small acts of generosity can make a significant difference and encourage others to do the same.<br>c. Therefore, we should learn from her example and understand that community service is valuable not only for society but also for our personal growth.<br>d. A good example is Mother Teresa, who devoted her life to caring for poor and sick people and inspired millions around the world through her kindness and compassion.<br>e. However, helping others can create positive changes in society and improve the lives of those in need.", options: ["c-d-e-a-b", "a-b-d-c-e", "a-e-d-b-c", "c-a-e-d-b"], correct: 2 },
+
+            // Part 4: Guided Cloze
+            { id: 18, part: 4, options: ["extends across several regions and is surrounded by rich ecosystems", "extended from north to south and characterized by diverse ecological zones", "of which coverage of a wide range of climatic and environmental areas", "stretching along the meridian and through many natural ecological regions"], correct: 3 },
+            { id: 19, part: 4, options: ["Most of these habitats have been replaced by urban and industrial developments", "These ecosystems are widely distributed throughout the sea and coastal areas", "Marine ecosystems in Vietnam are limited in number and geographical coverage", "The primary function of these areas is to support large-scale tourism activities"], correct: 1 },
+            { id: 20, part: 4, options: ["Since the Vietnamese marine environment is influenced by seasonal currents", "Although Vietnam's coastal waters are home to a wide variety of marine species", "While many marine ecosystems contribute significantly to local livelihoods", "Because of the rich biodiversity found in Vietnam's marine and coastal habitats"], correct: 1 },
+            { id: 21, part: 4, options: ["to originate from ancient volcanic structures beneath the sea", "which are formed upon long-extinct volcanic landmasses", "emerging from the remnants of prehistoric volcanic islands", "develop on the foundation of ancient volcanic islands"], correct: 3 },
+            { id: 22, part: 4, options: ["the local communities around Lý Sơn maintain a strong connection with traditional maritime customs and practices", "the nearshore waters around Lý Sơn foster the development of island marine tourism and recreational fisheries", "the coastal ecosystems of the region support a wide range of marine species and biological resources", "the surrounding islands of Quảng Ngãi attract considerable attention from researchers and environmental experts"], correct: 1 },
+
+            // Part 5: Reading Comprehension 1 (AI Literacy)
+            { id: 23, part: 5, qText: "According to paragraph 1, most Al training teaches people all of the following, <b class='text-red-600 underline'>EXCEPT</b>", options: ["how to ask the right questions", "how to write better prompts", "how to improve their queries", "how to get outputs"], correct: 0 },
+            { id: 24, part: 5, qText: "The phrase <b class='text-blue-700'><i>\"misses the point\"</i></b> in paragraph 1 mostly means", options: ["fails to address the most important issue", "provides a complete understanding", "focuses on the central purpose effectively", "offers a practical solution to the problem"], correct: 0 },
+            { id: 25, part: 5, qText: "The word <b class='text-blue-700'><i>\"distortions\"</i></b> in paragraph 2 is <b class='text-red-600 underline'>OPPOSITE</b> in meaning to", options: ["biases", "exaggerations", "misconceptions", "accuracies"], correct: 3 },
+            { id: 26, part: 5, qText: "The word <b class='text-blue-700'><i>\"They\"</i></b> in paragraph 3 refers to", options: ["owners", "patterns", "Al outputs", "advertisers"], correct: 2 },
+            { id: 27, part: 5, qText: "Which of the following best paraphrases the <u class='font-bold text-gray-900'>underlined sentence</u> in paragraph 4?", options: ["Al tools help users avoid all conflicts in human relationships by developing real mutual feelings for them.", "Companies encourage people to replace all human relationships with Al because Al provides deeper emotional support.", "Al companions can experience genuine emotions and therefore build friendships more easily than humans can.", "Companies present Al as a friend that appears caring but lacks the mutual demands found in human connections."], correct: 3 },
+            { id: 28, part: 5, qText: "Which of the following is <b class='text-green-600 underline'>TRUE</b> according to the passage?", options: ["Al outputs reflect perspectives embedded in their training data.", "Digitised Victorian newspapers represent most historical publications accurately.", "Al can form genuine friendships based on mutual care.", "Critical Al literacy mainly focuses on improving prompt-writing skills."], correct: 0 },
+            { id: 29, part: 5, qText: "In which paragraph does the writer mention that historical documents may present a selective version of reality?", options: ["paragraph 3", "paragraph 2", "paragraph 1", "paragraph 4"], correct: 0 },
+            { id: 30, part: 5, qText: "In which paragraph does the writer suggest that users should consider the costs of relying on Al?", options: ["paragraph 1", "paragraph 2", "paragraph 3", "paragraph 4"], correct: 0 },
+
+            // Part 6: Reading Comprehension 2 (Work & Technology)
+            { id: 31, part: 6, qText: "According to paragraph 1, the COVID-19 pandemic mostly", options: ["sped up changes that were likely to happen anyway", "completely transformed the way technology was invented", "prevented businesses from adopting new technologies", "caused all changes in working hours and business practices"], correct: 0 },
+            { id: 32, part: 6, qText: "Which of the following best paraphrases the <u class='font-bold text-gray-900'>underlined sentence</u> in paragraph 2?", options: ["Modern technology has made face-to-face interaction unnecessary in all situations.", "Employees can only collaborate effectively when they are physically present in the same office.", "Online meetings require workers to travel frequently to maintain direct communication.", "Digital tools enable workers to communicate as if in person regardless of their location."], correct: 3 },
+            { id: 33, part: 6, qText: "Why are companies likely to make greater use of remote working in the future?", options: ["It completely eliminates concerns about employees' mental health.", "It guarantees the highest productivity in every situation.", "It helps reduce expenses related to offices and business travel.", "It allows all workers to perform their jobs more effectively."], correct: 2 },
+            { id: 34, part: 6, qText: "The phrase <b class='text-blue-700'><i>\"to begin with\"</i></b> in paragraph 2 is <b class='text-red-600 underline'>OPPOSITE</b> in meaning to", options: ["initially", "eventually", "at first", "permanently"], correct: 1 },
+            { id: 35, part: 6, qText: "The word <b class='text-blue-700'><i>\"their\"</i></b> in paragraph 3 refers to", options: ["jobs", "computers", "psychologists", "human emotions"], correct: 2 },
+            { id: 36, part: 6, qText: "Which of the following best summarises paragraph 3?", options: ["Psychologists are the only professionals unlikely to be replaced by advanced technologies in the future.", "Most occupations will remain unaffected because machines cannot perform complex workplace tasks effectively.", "Automation may replace many jobs but could also create new employment opportunities in some sectors.", "Governments worldwide have already solved the employment challenges caused by automation and robotics."], correct: 2 },
+            { id: 37, part: 6, qText: "Where in the passage does the following sentence best fit?<br><i class='text-purple-700 font-semibold mt-2 block'>With time, though, intelligent systems and machines may well be able to take care of themselves.</i>", options: ["[I]", "[II]", "[III]", "[IV]"], correct: 2 },
+            { id: 38, part: 6, qText: "Why do some people criticize UBI?", options: ["It would increase healthcare and social-care costs significantly.", "It may discourage people from seeking employment.", "It could reduce birth rates in countries with aging populations.", "It would only be available to unemployed citizens."], correct: 1 },
+            { id: 39, part: 6, qText: "What can be inferred from the passage?", options: ["Employees generally spend more money when working remotely.", "All jobs involving technology are not safe from automation.", "Universal basic income has already been introduced in most countries.", "Working from home may not always be beneficial for employees."], correct: 3 },
+            { id: 40, part: 6, qText: "Which of the following best summarises the passage?", options: ["Automation is expected to replace nearly all workers, making traditional forms of employment impossible in the future.", "Remote working is becoming the preferred option for businesses because it improves productivity and employee well-being.", "Advances in technology are reshaping employment, raising concerns about jobs and potential economic support measures.", "Governments should introduce universal basic income immediately to address the challenges created by technological development."], correct: 2 }
+        ];
+
+        // RENDER QUESTIONS
+        function renderQuestions() {
+            // Mảng màu Gen Z sặc sỡ cho 4 lựa chọn (Hồng, Xanh lam, Vàng, Xanh lá)
+            const optionBgColors = [
+                'bg-[#ffe4e6] hover:bg-[#fecdd3]', // A: Rose pastel
+                'bg-[#e0e7ff] hover:bg-[#c7d2fe]', // B: Indigo pastel
+                'bg-[#fef9c3] hover:bg-[#fef08a]', // C: Yellow pastel
+                'bg-[#dcfce7] hover:bg-[#bbf7d0]'  // D: Green pastel
+            ];
+
+            questionsData.forEach((q, index) => {
+                const container = document.getElementById(`q-container-part${q.part}`);
+                if (!container) return;
+
+                const qDiv = document.createElement('div');
+                qDiv.className = "bg-white rounded-2xl p-5 shadow-sm border border-gray-200 hover:shadow-md transition";
+                
+                let extraText = '';
+                if(q.part === 3 && q.text) {
+                    extraText = `<div class="mb-4 text-gray-700 bg-blue-50 p-4 rounded-xl text-sm leading-relaxed border border-blue-100">${q.text}</div>`;
+                }
+
+                // Hiển thị phần câu hỏi dẫn (Question Text) nếu có
+                let qTextDisplay = '';
+                if(q.qText) {
+                    qTextDisplay = `<p class="mb-4 text-gray-800 font-semibold text-[1.05rem] leading-snug">${q.qText}</p>`;
+                }
+
+                let optionsHtml = q.options.map((opt, i) => `
+                    <label class="option-label">
+                        <input type="radio" name="q${q.id}" value="${i}" class="peer hidden">
+                        <div class="option-box p-3 flex items-center gap-3 ${optionBgColors[i]}">
+                            <span class="letter-circle w-8 h-8 rounded-full bg-white flex items-center justify-center font-black text-sm shrink-0 transition-colors border-2 border-gray-900 text-gray-900">${String.fromCharCode(65 + i)}</span>
+                            <span class="opt-text text-base font-semibold text-gray-800 transition-colors">${opt}</span>
+                        </div>
+                    </label>
+                `).join('');
+
+                qDiv.innerHTML = `
+                    <h4 class="font-bold text-lg mb-3">Question ${q.id}.</h4>
+                    ${qTextDisplay}
+                    ${extraText}
+                    <div class="space-y-2">
+                        ${optionsHtml}
+                    </div>
+                `;
+                container.appendChild(qDiv);
+            });
+        }
+
+        // TIMER LOGIC
+        let timeLeft = 3000; // 50 minutes (50 * 60)
+        let timerInterval;
+        let audioCtx;
+        let isSubmitted = false;
+
+        function startTest() {
+            // Init Audio Context on user gesture
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            
+            document.getElementById('startOverlay').style.display = 'none';
+            
+            timerInterval = setInterval(() => {
+                if(isSubmitted) return;
+                
+                timeLeft--;
+                updateTimerDisplay();
+
+                if (timeLeft === 60) {
+                    playAlarm();
+                    document.getElementById('timerBox').classList.replace('bg-indigo-100', 'bg-red-100');
+                    document.getElementById('timerBox').classList.replace('text-indigo-800', 'text-red-600');
+                    document.getElementById('timerBox').classList.replace('border-indigo-200', 'border-red-300');
+                    document.getElementById('timerBox').classList.add('animate-pulse');
+                }
+
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    submitTest();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            let m = Math.floor(timeLeft / 60);
+            let s = timeLeft % 60;
+            document.getElementById('timeDisplay').innerText = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+        }
+
+        function playAlarm() {
+            if(!audioCtx) return;
+            // Create a sequence of 3 beeps
+            for(let i=0; i<3; i++) {
+                const osc = audioCtx.createOscillator();
+                const gainNode = audioCtx.createGain();
+                
+                osc.type = 'square';
+                osc.frequency.setValueAtTime(880, audioCtx.currentTime + i*0.4); // A5 note
+                
+                gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime + i*0.4);
+                gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + i*0.4 + 0.3);
+                
+                osc.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+                
+                osc.start(audioCtx.currentTime + i*0.4);
+                osc.stop(audioCtx.currentTime + i*0.4 + 0.3);
+            }
+        }
+
+        // SUBMIT LOGIC (Just score, no explanations)
+        function submitTest() {
+            if(isSubmitted) return;
+            isSubmitted = true;
+            clearInterval(timerInterval);
+            
+            let score = 0;
+            
+            questionsData.forEach(q => {
+                const selected = document.querySelector(`input[name="q${q.id}"]:checked`);
+                const allOptionsBox = document.querySelectorAll(`input[name="q${q.id}"] + .option-box`);
+                
+                // Vô hiệu hoá click sau khi nộp
+                document.querySelectorAll(`input[name="q${q.id}"]`).forEach(input => input.disabled = true);
+
+                let userAnsIndex = selected ? parseInt(selected.value) : -1;
+                
+                // Xóa hiệu ứng hover để giao diện cố định
+                allOptionsBox.forEach((box) => {
+                    box.classList.remove('hover:bg-[#fecdd3]', 'hover:bg-[#c7d2fe]', 'hover:bg-[#fef08a]', 'hover:bg-[#bbf7d0]');
+                });
+
+                if (userAnsIndex === q.correct) {
+                    score++;
+                }
+            });
+
+            // Ẩn nút Nộp bài
+            document.getElementById('submitBtnTop').style.display = 'none';
+            document.getElementById('submitBtnBottom').style.display = 'none';
+            
+            // Hiện Modal Kết quả
+            document.getElementById('scoreText').innerText = score;
+            if(score >= 35) document.getElementById('resultIcon').innerText = '🏆';
+            else if(score >= 25) document.getElementById('resultIcon').innerText = '🔥';
+            else document.getElementById('resultIcon').innerText = '💪';
+            
+            document.getElementById('resultModal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('resultModal').classList.add('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Khởi tạo render
+        window.onload = renderQuestions;
+    </script>
+</body>
+</html>
