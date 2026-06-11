@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TỔNG ÔN SAU CÙNG - NGỮ PHÁP & TỪ VỰNG - MR HOA VAN</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+            background-attachment: fixed;
+            color: #1f2937;
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #c7c7cc; 
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a1a1aa; 
+        }
+
+        /* Glassmorphism elements */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Gen Z Border Style */
+        .genz-border {
+            border: 3px solid #1f2937;
+            box-shadow: 6px 6px 0px 0px #1f2937;
+            transition: all 0.2s ease;
+        }
+        
+        /* 3D Option button styling (Gen Z Neobrutalism) */
+        .option-label {
+            cursor: pointer;
+            display: block;
+            position: relative;
+            margin-top: 12px;
+        }
+        .option-box {
+            border: 2px solid #1f2937;
+            border-radius: 0.75rem;
+            box-shadow: 3px 3px 0px 0px #1f2937;
+            transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+            height: 100%;
+        }
+        .option-label:hover .option-box {
+            transform: translate(-3px, -3px);
+            box-shadow: 6px 6px 0px 0px #1f2937;
+        }
+        .option-label:active .option-box {
+            transform: translate(2px, 2px);
+            box-shadow: 0px 0px 0px 0px #1f2937;
+        }
+        
+        /* Checked State Styling */
+        input[type="radio"]:checked + .option-box {
+            background-color: #1f2937 !important; 
+            border-color: #1f2937;
+            box-shadow: 4px 4px 0px 0px #a855f7 !important; 
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+        input[type="radio"]:checked + .option-box .opt-text {
+            color: white !important;
+        }
+        input[type="radio"]:checked + .option-box .letter-circle {
+            background-color: #a855f7 !important;
+            color: white !important;
+            border-color: #1f2937;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.95); }
+            50% { transform: scale(1.03); }
+            100% { transform: scale(1); }
+        }
+
+        /* Result states after submission */
+        input:disabled + .option-box {
+            cursor: not-allowed;
+            opacity: 0.8;
+        }
+
+        .blank-space {
+            display: inline-block;
+            padding: 0 12px;
+            font-weight: bold;
+            color: #8b5cf6;
+            background: #ede9fe;
+            border-radius: 6px;
+            margin: 0 2px;
+            min-width: 40px;
+            border-bottom: 2px solid #8b5cf6;
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col relative">
+
+    <!-- OVERLAY: START TEST -->
+    <div id="startOverlay" class="fixed inset-0 z-50 flex items-center justify-center bg-white/80 backdrop-blur-md">
+        <div class="bg-white p-8 md:p-12 rounded-3xl genz-border text-center max-w-lg mx-4">
+            <h1 class="text-3xl md:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-500 mb-4">
+                ✨ Sẵn sàng chưa?
+            </h1>
+            <p class="text-gray-600 mb-8 text-lg">Bài thi môn Tiếng Anh có thời gian làm bài là <b>50 phút</b>. Đề gồm 100 câu trắc nghiệm Ngữ pháp & Từ vựng.</p>
+            <button onclick="startTest()" class="w-full bg-gradient-to-r from-violet-500 to-fuchsia-500 hover:from-violet-600 hover:to-fuchsia-600 text-white font-bold py-4 px-8 rounded-2xl shadow-lg transform hover:scale-105 transition-all duration-200 text-xl">
+                Bắt Đầu Làm Bài 🚀
+            </button>
+        </div>
+    </div>
+
+    <!-- HEADER / TIMER -->
+    <header class="sticky top-0 z-40 glass-panel border-b border-gray-200 px-4 py-3 shadow-sm">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <span class="text-2xl">📝</span>
+                <h1 class="font-bold text-lg hidden sm:block bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600">Tổng Ôn Sau Cùng - MR HOA VAN EDITED </h1>
+            </div>
+            <div class="flex items-center gap-4">
+                <div id="timerBox" class="bg-indigo-100 text-indigo-800 font-mono font-bold text-xl px-4 py-2 rounded-xl border-2 border-indigo-200 flex items-center gap-2 transition-colors">
+                    ⏳ <span id="timeDisplay">50:00</span>
+                </div>
+                <button onclick="submitTest()" id="submitBtnTop" class="bg-gray-900 hover:bg-gray-800 text-white font-bold py-2 px-6 rounded-xl transition-colors hidden sm:block">
+                    Nộp Bài
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="flex-grow max-w-7xl mx-auto w-full px-4 py-8">
+        
+        <div class="mb-8 text-center">
+            <h2 class="text-3xl md:text-4xl font-black text-gray-800 mb-2 uppercase">Tổng Ôn Ngữ Pháp - Từ Vựng</h2>
+            <p class="text-gray-500 font-medium text-lg">Mark the letter A, B, C, or D on your answer sheet to indicate the correct answer to each of the following questions.</p>
+        </div>
+
+        <form id="testForm" onsubmit="event.preventDefault(); submitTest();">
+            
+            <!-- 100 QUESTIONS GRID -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6" id="q-container">
+                <!-- Questions injected via JS -->
+            </div>
+
+            <!-- SUBMIT BUTTON BOTTOM -->
+            <div class="text-center mt-12 mb-8">
+                <button type="submit" id="submitBtnBottom" class="bg-gray-900 hover:bg-gray-800 text-white font-bold py-4 px-12 rounded-2xl shadow-xl transform hover:-translate-y-1 transition-all duration-200 text-xl genz-border">
+                    Nộp Bài & Xem Điểm ✨
+                </button>
+            </div>
+
+        </form>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-white border-t border-gray-200 py-6 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p class="font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-500 text-xl">Idea for Design: Mr Hoa Van!</p>
+            <p class="text-gray-400 text-sm mt-1">© 2026 - Tinh Hoa Dự Đoán THPT</p>
+        </div>
+    </footer>
+
+    <!-- RESULT MODAL -->
+    <div id="resultModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm hidden">
+        <div class="bg-white p-8 md:p-12 rounded-3xl genz-border text-center max-w-md mx-4 animate-[fadeIn_0.3s_ease]">
+            <div class="text-6xl mb-4" id="resultIcon">🎉</div>
+            <h2 class="text-3xl font-extrabold mb-2">Điểm số của bạn</h2>
+            <p class="text-5xl font-black text-purple-600 mb-6"><span id="scoreText">0</span>/100</p>
+            <p class="text-gray-600 mb-8 font-medium">Kết quả bài làm đã được hệ thống ghi nhận thành công!</p>
+            <button onclick="closeModal()" class="w-full bg-gray-900 text-white font-bold py-3 px-6 rounded-xl hover:bg-gray-800 transition">
+                Đóng
+            </button>
+        </div>
+    </div>
+
+    <!-- DATA & SCRIPT -->
+    <script>
+        // QUESTION DATA - 100 CÂU NGỮ PHÁP TỪ VỰNG
+        const questionsData = [
+            { id: 1, text: "Using cheap software will only <span class='blank-space'></span> the existing security problem that our current office system is facing.", options: ["compound", "mingle", "enlarge", "engage"], correct: 0 },
+            { id: 2, text: "Discount pass tickets <span class='blank-space'></span> through our mobile application are currently out of stock online.", options: ["are booked", "booking", "book", "booked"], correct: 3 },
+            { id: 3, text: "Small enterprises cannot survive the digital economy <span class='blank-space'></span> they innovate their marketing methods.", options: ["if", "even if", "unless", "otherwise"], correct: 2 },
+            { id: 4, text: "In the event of heavy rainstorms, the organizing committee will <span class='blank-space'></span> the outdoor musical performance.", options: ["grow up", "find out", "call off", "pass down"], correct: 2 },
+            { id: 5, text: "Join our group this weekend to <span class='blank-space'></span> the public park paths near your apartment.", options: ["speed up", "clean up", "bring up", "break up"], correct: 1 },
+            { id: 6, text: "This shop uses an <span class='blank-space'></span> to help workers calculate customer bills much more quickly.", options: ["register automated machine", "machine automated register", "automated register machine", "automated machine register"], correct: 2 },
+            { id: 7, text: "Buy your festival tickets early because we have <span class='blank-space'></span> of special gifts for early customers.", options: ["each", "much", "another", "plenty"], correct: 3 },
+            { id: 8, text: "Our home camera application allows working mothers to keep an <span class='blank-space'></span> on their young children.", options: ["arm", "eye", "hand", "ear"], correct: 1 },
+            { id: 9, text: "Heavy autumn rain floods can easily <span class='blank-space'></span> organic vegetable crops if farmers lack strong drainage systems.", options: ["carry out", "fall out", "phase out", "wipe out"], correct: 3 },
+            { id: 10, text: "<span class='blank-space'></span> a luxury apartment in this green residential area, residents can use the swimming pool for free.", options: ["Buy", "To buy", "Buying", "Bought"], correct: 2 },
+            { id: 11, text: "Eat <span class='blank-space'></span> excessive sweet snacks nor greasy fast food if you want to maintain high energy.", options: ["neither", "whether", "both", "either"], correct: 0 },
+            { id: 12, text: "The local charity group expanded its food sharing project on a national <span class='blank-space'></span> this year.", options: ["range", "basis", "degree", "scale"], correct: 3 },
+            { id: 13, text: "Our young dynamic intern <span class='blank-space'></span> designed a beautiful advertising flyer for the summer fashion sale.", options: ["successful", "succeed", "successfully", "success"], correct: 2 },
+            { id: 14, text: "Low product quality is the main reason <span class='blank-space'></span> many online shops lose their credibility among buyers.", options: ["why", "whose", "which", "whom"], correct: 0 },
+            { id: 15, text: "The company has an <span class='blank-space'></span> vision for global growth, aiming to reach ten new markets next year.", options: ["responsive", "expansive", "conducive", "restrictive"], correct: 1 },
+            { id: 16, text: "Our team promises <span class='blank-space'></span> new employees during their initial professional working week.", options: ["supported", "supporting", "support", "to support"], correct: 3 },
+            { id: 17, text: "Hard work combined with our smart tracking tools is the ultimate <span class='blank-space'></span> for success for every startup.", options: ["recipe", "mixture", "measure", "formula"], correct: 0 },
+            { id: 18, text: "Building a modern subway transit line is the best <span class='blank-space'></span> to heavy traffic jam problems downtown.", options: ["solve", "solution", "soluble", "solved"], correct: 1 },
+            { id: 19, text: "The youth club introduces a broad <span class='blank-space'></span> of fun outdoor activities during the summer holiday.", options: ["level", "scale", "range", "deal"], correct: 2 },
+            { id: 20, text: "Apply for our position to gain <span class='blank-space'></span> experience at an international corporate organization today.", options: ["valuable", "prominent", "prestigious", "monumental"], correct: 0 },
+            { id: 21, text: "Please follow a <span class='blank-space'></span> during the official company celebration event tomorrow morning.", options: ["code strict dress", "strict code dress", "dress strict code", "strict dress code"], correct: 3 },
+            { id: 22, text: "Modern consumers deeply care <span class='blank-space'></span> sustainable product packaging and organic agricultural materials.", options: ["with", "about", "in", "to"], correct: 1 },
+            { id: 23, text: "Book flight tickets through our application because <span class='blank-space'></span> seats are heavily discounted now.", options: ["all", "every", "each", "another"], correct: 0 },
+            { id: 24, text: "Our creative designers <span class='blank-space'></span> inspiration from the vibrant street art festivals in our city center.", options: ["take", "give", "draw", "set"], correct: 2 },
+            { id: 25, text: "Please <span class='blank-space'></span> caution when clicking on suspicious internet links to safeguard your bank account information.", options: ["exercise", "investigate", "classify", "examine"], correct: 0 },
+            { id: 26, text: "Many successful entrepreneurs <span class='blank-space'></span> their career growth to the training programs of this global firm.", options: ["compare", "attribute", "implement", "enforce"], correct: 1 },
+            { id: 27, text: "We should not <span class='blank-space'></span> harmful misunderstandings but rather talk openly to bridge family relationships today.", options: ["investigate", "organize", "calculate", "perpetuate"], correct: 3 },
+            { id: 28, text: "<span class='blank-space'></span> the local authority built a modern subway line here, would you switch from motorbikes to trains?", options: ["Unless", "Suppose", "Otherwise", "As long as"], correct: 1 },
+            { id: 29, text: "All our product prototypes must <span class='blank-space'></span> a strict safety check before appearing on the official store catalog.", options: ["deliver", "undergo", "simplify", "address"], correct: 1 },
+            { id: 30, text: "Our training programs help creative design interns <span class='blank-space'></span> workspace developments.", options: ["look back on", "cut down on", "get along with", "keep up with"], correct: 3 },
+            { id: 31, text: "Our business maintains high professional <span class='blank-space'></span> by providing clean and organic products to all customers.", options: ["authority", "integrity", "ambition", "confidence"], correct: 1 },
+            { id: 32, text: "High-quality canvas shopping bags <span class='blank-space'></span> of natural materials are the perfect alternative to single-use plastic options.", options: ["are made", "making", "make", "made"], correct: 3 },
+            { id: 33, text: "<span class='blank-space'></span> rising cybersecurity dangers, our bank upgraded its online payment safety system.", options: ["In order to", "In light of", "Except for", "By means of"], correct: 1 },
+            { id: 34, text: "<span class='blank-space'></span> this form online to connect with top international corporations this week.", options: ["Cross out", "Rule out", "Wear out", "Fill out"], correct: 3 },
+            { id: 35, text: "Local photographers <span class='blank-space'></span> win our summer contest will receive a high-end camera as a special prize.", options: ["who", "when", "whom", "which"], correct: 0 },
+            { id: 36, text: "We offer a <span class='blank-space'></span> to ensure your grocery orders arrive on time every afternoon.", options: ["schedule fixed delivery", "fixed delivery schedule", "delivery fixed schedule", "fixed schedule delivery"], correct: 1 },
+            { id: 37, text: "Every employee must <span class='blank-space'></span> the duty of protecting company data as part of our strict security policy.", options: ["dismiss", "displace", "distort", "discharge"], correct: 3 },
+            { id: 38, text: "Download <span class='blank-space'></span> mobile app on your phone to track the exact departure hour of your flight.", options: ["the", "an", "a", "Ø"], correct: 0 },
+            { id: 39, text: "Check our flight schedules online, <span class='blank-space'></span> you travel to Southern Vietnam or flying abroad.", options: ["either", "both", "neither", "whether"], correct: 3 },
+            { id: 40, text: "An increasing <span class='blank-space'></span> of young people choose to join our photography club nowadays.", options: ["amount", "range", "number", "degree"], correct: 2 },
+            { id: 41, text: "<span class='blank-space'></span> dynamic teenagers, many older generations love visiting this historical museum downtown.", options: ["Because of", "Apart from", "In light of", "In order to"], correct: 1 },
+            { id: 42, text: "Submit your application portfolio early because <span class='blank-space'></span> international companies are looking for interns.", options: ["several", "each", "much", "another"], correct: 0 },
+            { id: 43, text: "You must <span class='blank-space'></span> all hidden costs before deciding to build a new factory in this region.", options: ["keep track of", "find fault with", "take account of", "miss out on"], correct: 2 },
+            { id: 44, text: "<span class='blank-space'></span> by veteran business professors, this textbook provides great case studies about the digital economy.", options: ["Having written", "Written", "Write", "Writing"], correct: 1 },
+            { id: 45, text: "Our local tour guides look forward <span class='blank-space'></span> international travelers the beautiful traditional craft villages.", options: ["to show", "showed", "to showing", "show"], correct: 2 },
+            { id: 46, text: "Add <span class='blank-space'></span> black pepper to the hot pasta sauce to create a rich traditional flavor.", options: ["many", "several", "a few", "a little"], correct: 3 },
+            { id: 47, text: "Teachers spend a fair <span class='blank-space'></span> of time creating interesting games for the morning lessons.", options: ["range", "scale", "number", "amount"], correct: 3 },
+            { id: 48, text: "<span class='blank-space'></span> a sustainable lifestyle by recycling your used paper boxes and glass bottles every day.", options: ["Look up", "Come up", "Turn up", "Build up"], correct: 3 },
+            { id: 49, text: "Enjoy <span class='blank-space'></span> peace and relaxation at our resort during your summer family holiday.", options: ["many", "every", "much", "little"], correct: 2 },
+            { id: 50, text: "Contact our hotlines if you possess any urgent questions <span class='blank-space'></span> product delivery.", options: ["with a view to", "by means of", "in spite of", "in regard to"], correct: 3 },
+            { id: 51, text: "Think outside the <span class='blank-space'></span> and apply for our manager position to lead global marketing campaigns.", options: ["wall", "cage", "box", "room"], correct: 2 },
+            { id: 52, text: "Our musical shop offers an <span class='blank-space'></span> designed specifically for a young energetic beginner.", options: ["excellent model guitar", "guitar excellent model", "excellent guitar model", "model excellent guitar"], correct: 2 },
+            { id: 53, text: "The residential area provides a <span class='blank-space'></span> where young children can play safely every day.", options: ["beautiful park public", "public beautiful park", "beautiful public park", "park beautiful public"], correct: 2 },
+            { id: 54, text: "Stop burning the <span class='blank-space'></span> oil and use our tracking scripts to complete your retail business reports faster.", options: ["morning", "daylight", "evening", "midnight"], correct: 3 },
+            { id: 55, text: "Avoid reading sensational stories <span class='blank-space'></span> on fake news websites to maintain a peaceful and positive lifestyle.", options: ["publishes", "published", "publishing", "publish"], correct: 1 },
+            { id: 56, text: "The university eco-club decided to organize the tree planting campaign on an unprecedented <span class='blank-space'></span> across the entire province.", options: ["quantity", "level", "scale", "basis"], correct: 2 },
+            { id: 57, text: "In that case, <span class='blank-space'></span> our technical support team immediately for free maintenance of your appliances.", options: ["contact", "to contact", "contacted", "contacting"], correct: 0 },
+            { id: 58, text: "Drink <span class='blank-space'></span> water every day to keep your sensitive skin healthy and smooth.", options: ["each", "another", "enough", "many"], correct: 2 },
+            { id: 59, text: "Our books help modern families deal <span class='blank-space'></span> emotional generation gap misunderstandings easily.", options: ["for", "with", "to", "on"], correct: 1 },
+            { id: 60, text: "It takes a great <span class='blank-space'></span> of effort and patience to master a new foreign language.", options: ["scale", "number", "deal", "degree"], correct: 2 },
+            { id: 61, text: "Choose our training programs <span class='blank-space'></span> by experts to enhance your future global job opportunities.", options: ["designed", "design", "designing", "are designed"], correct: 0 },
+            { id: 62, text: "The historical objects are displayed <span class='blank-space'></span> they were bringing local traditional stories back to life.", options: ["even if", "otherwise", "as though", "unless"], correct: 2 },
+            { id: 63, text: "Buy a <span class='blank-space'></span> to turn off your bedroom lights easily from your bed.", options: ["control cheap gadget", "cheap control gadget", "cheap gadget control", "gadget cheap control"], correct: 1 },
+            { id: 64, text: "Our health center takes a <span class='blank-space'></span> approach to wellness by combining physical exercises with a balanced diet.", options: ["pervasive", "seductive", "fleeting", "holistic"], correct: 3 },
+            { id: 65, text: "Explore <span class='blank-space'></span> modern furniture models at our showroom to decorate your living room.", options: ["each", "much", "many", "little"], correct: 2 },
+            { id: 66, text: "Protect <span class='blank-space'></span> your eyes and skin by wearing sunglasses during outdoor sports activities today.", options: ["either", "neither", "both", "every"], correct: 2 },
+            { id: 67, text: "Children must achieve a fundamental <span class='blank-space'></span> of physical fitness before registering for our intensive martial arts training camp.", options: ["deal", "level", "range", "scale"], correct: 1 },
+            { id: 68, text: "Use <span class='blank-space'></span> bank application or cash to pay for these winter jackets online.", options: ["neither", "both", "all", "either"], correct: 3 },
+            { id: 69, text: "Buy these high-quality computer <span class='blank-space'></span> to build a powerful machine for your graphic design projects.", options: ["components", "ingredients", "elements", "attributes"], correct: 0 },
+            { id: 70, text: "New evidence from our latest study successfully <span class='blank-space'></span> a theory that suggests rural areas cannot support growth.", options: ["demolish", "damage", "wreck", "devastate"], correct: 0 },
+            { id: 71, text: "An increasing <span class='blank-space'></span> of high school graduates choose to register for our online public speaking courses nowadays.", options: ["amount", "degree", "deal", "number"], correct: 3 },
+            { id: 72, text: "Plant an <span class='blank-space'></span> in your backyard garden to grow healthy vegetables for your children.", options: ["organic seed crop", "organic crop seed", "crop organic seed", "seed organic crop"], correct: 1 },
+            { id: 73, text: "Anxious freshmen should <span class='blank-space'></span> our counseling center for mental health advice.", options: ["sign up for", "come up with", "blend in with", "reach out to"], correct: 3 },
+            { id: 74, text: "Keep some useful mobile applications on your screen and delete <span class='blank-space'></span> to save phone memory.", options: ["others", "another", "every", "other"], correct: 0 },
+            { id: 75, text: "Our youth center provides a wide <span class='blank-space'></span> of free workshops to help teenagers manage school exam stress.", options: ["range", "basis", "number", "amount"], correct: 0 },
+            { id: 76, text: "Smart citizens can map out their driving routes easily <span class='blank-space'></span> our mobile transit application.", options: ["subject to", "prior to", "by means of", "in spite of"], correct: 2 },
+            { id: 77, text: "Our street festival will <span class='blank-space'></span> unique traditional music and regional arts this weekend.", options: ["celebrated", "celebratory", "celebrate", "celebration"], correct: 2 },
+            { id: 78, text: "We must <span class='blank-space'></span> all available resources to complete the green transit project before the winter starts.", options: ["modernize", "mobilize", "facilitate", "recognize"], correct: 1 },
+            { id: 79, text: "Protect <span class='blank-space'></span> your eyes and your skin by wearing sunglasses during outdoor sports activities today.", options: ["either", "both", "neither", "whether"], correct: 1 },
+            { id: 80, text: "The experienced experts <span class='blank-space'></span> you meet at our fair will give you great career advice.", options: ["whose", "which", "whom", "where"], correct: 2 },
+            { id: 81, text: "It is mandatory that online buyers <span class='blank-space'></span> website links carefully before entering private bank accounts.", options: ["to check", "checked", "checks", "check"], correct: 3 },
+            { id: 82, text: "<span class='blank-space'></span> our position today to work with experienced human resource teams downtown.", options: ["Close down", "Apply for", "Cut down on", "Keep up with"], correct: 1 },
+            { id: 83, text: "We supply a <span class='blank-space'></span> to help every local restaurant switch to eco-friendly packaging options easily.", options: ["paper cheap box", "box cheap paper", "cheap box paper", "cheap paper box"], correct: 3 },
+            { id: 84, text: "Check your flight tickets carefully because <span class='blank-space'></span> passenger must show a valid identity card online.", options: ["many", "every", "several", "all"], correct: 1 },
+            { id: 85, text: "The summer training program helps young leaders handle a huge <span class='blank-space'></span> of complex data without feeling overwhelmed.", options: ["amount", "number", "range", "scale"], correct: 0 },
+            { id: 86, text: "Check the official website to know the exact hour <span class='blank-space'></span> your flight departures happen tomorrow.", options: ["when", "why", "where", "which"], correct: 0 },
+            { id: 87, text: "Please donate <span class='blank-space'></span> money to our independent financial fund to help poor students buy textbooks.", options: ["each", "some", "another", "few"], correct: 1 },
+            { id: 88, text: "We phase out plastic packaging; <span class='blank-space'></span> our enterprise has built credibility among eco-friendly consumers.", options: ["consequently", "so that", "although", "because"], correct: 0 },
+            { id: 89, text: "Our garden restaurant serves delicious traditional Italian dishes <span class='blank-space'></span> noon every Saturday holiday.", options: ["in", "at", "on", "from"], correct: 1 },
+            { id: 90, text: "These room rates are <span class='blank-space'></span> change during the peak holiday season; so you should make the most of the current deals.", options: ["subject to", "in contrast to", "because of", "in order to"], correct: 0 },
+            { id: 91, text: "Finding a job after graduation will depend <span class='blank-space'></span> your professional skills and computer expertise.", options: ["with", "in", "to", "on"], correct: 3 },
+            { id: 92, text: "Buying one green product is just a drop in the <span class='blank-space'></span> unless we actively phase out plastic bags.", options: ["pond", "lake", "ocean", "river"], correct: 2 },
+            { id: 93, text: "Some domestic flight departures were delayed <span class='blank-space'></span> severe weather conditions last Thursday night.", options: ["in regard to", "due to", "in spite of", "in addition to"], correct: 1 },
+            { id: 94, text: "<span class='blank-space'></span> members of the school eco-club work hard to clean the local beach every single month.", options: ["Every", "Each", "Much", "All"], correct: 3 },
+            { id: 95, text: "Taste a <span class='blank-space'></span> made from clean and organic pork meat materials today.", options: ["delicious product sausage", "delicious sausage product", "product delicious sausage", "sausage delicious product"], correct: 1 },
+            { id: 96, text: "<span class='blank-space'></span> teenagers have different entertainment preferences, they rarely watch traditional television programs.", options: ["So that", "Therefore", "Since", "Although"], correct: 2 },
+            { id: 97, text: "Electric buses <span class='blank-space'></span> this crowded transit station every ten minutes help reduce heavy air pollution.", options: ["passes", "passing", "passed", "pass"], correct: 1 },
+            { id: 98, text: "<span class='blank-space'></span> you integrate these smart devices, you can control your entire home lighting system easily.", options: ["Once", "Whereas", "Though", "Meanwhile"], correct: 0 },
+            { id: 99, text: "We design voice-controlled devices <span class='blank-space'></span> your home lighting and security systems through one application.", options: ["managing", "managed", "manage", "are managing"], correct: 0 },
+            { id: 100, text: "Smart urban citizens heavily rely <span class='blank-space'></span> mobile transit applications to map out their driving routes.", options: ["to", "with", "in", "on"], correct: 3 }
+        ];
+
+        // RENDER QUESTIONS
+        function renderQuestions() {
+            // Mảng màu Gen Z sặc sỡ cho 4 lựa chọn (Hồng, Xanh lam, Vàng, Xanh lá)
+            const optionBgColors = [
+                'bg-[#ffe4e6] hover:bg-[#fecdd3]', // A: Rose pastel
+                'bg-[#e0e7ff] hover:bg-[#c7d2fe]', // B: Indigo pastel
+                'bg-[#fef9c3] hover:bg-[#fef08a]', // C: Yellow pastel
+                'bg-[#dcfce7] hover:bg-[#bbf7d0]'  // D: Green pastel
+            ];
+
+            const container = document.getElementById(`q-container`);
+            
+            questionsData.forEach((q, index) => {
+                const qDiv = document.createElement('div');
+                qDiv.className = "bg-white rounded-3xl p-6 shadow-sm border-2 border-gray-100 hover:shadow-md transition h-full flex flex-col";
+                
+                let optionsHtml = q.options.map((opt, i) => `
+                    <label class="option-label flex-grow">
+                        <input type="radio" name="q${q.id}" value="${i}" class="peer hidden">
+                        <div class="option-box p-3 flex items-center gap-3 ${optionBgColors[i]}">
+                            <span class="letter-circle w-8 h-8 rounded-full bg-white flex items-center justify-center font-black text-sm shrink-0 transition-colors border-2 border-gray-900 text-gray-900">${String.fromCharCode(65 + i)}</span>
+                            <span class="opt-text text-[15px] font-semibold text-gray-800 transition-colors leading-snug">${opt}</span>
+                        </div>
+                    </label>
+                `).join('');
+
+                qDiv.innerHTML = `
+                    <div class="mb-5 flex-grow">
+                        <h4 class="font-black text-xl mb-3 text-indigo-700">Question ${q.id}.</h4>
+                        <p class="text-gray-800 font-semibold text-[1.05rem] leading-relaxed">${q.text}</p>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-auto">
+                        ${optionsHtml}
+                    </div>
+                `;
+                container.appendChild(qDiv);
+            });
+        }
+
+        // TIMER LOGIC
+        let timeLeft = 3000; // 50 minutes (50 * 60)
+        let timerInterval;
+        let audioCtx;
+        let isSubmitted = false;
+
+        function startTest() {
+            // Init Audio Context on user gesture
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            
+            document.getElementById('startOverlay').style.display = 'none';
+            
+            timerInterval = setInterval(() => {
+                if(isSubmitted) return;
+                
+                timeLeft--;
+                updateTimerDisplay();
+
+                if (timeLeft === 60) {
+                    playAlarm();
+                    document.getElementById('timerBox').classList.replace('bg-indigo-100', 'bg-red-100');
+                    document.getElementById('timerBox').classList.replace('text-indigo-800', 'text-red-600');
+                    document.getElementById('timerBox').classList.replace('border-indigo-200', 'border-red-300');
+                    document.getElementById('timerBox').classList.add('animate-pulse');
+                }
+
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    submitTest();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            let m = Math.floor(timeLeft / 60);
+            let s = timeLeft % 60;
+            document.getElementById('timeDisplay').innerText = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+        }
+
+        function playAlarm() {
+            if(!audioCtx) return;
+            // Create a sequence of 3 beeps
+            for(let i=0; i<3; i++) {
+                const osc = audioCtx.createOscillator();
+                const gainNode = audioCtx.createGain();
+                
+                osc.type = 'square';
+                osc.frequency.setValueAtTime(880, audioCtx.currentTime + i*0.4); // A5 note
+                
+                gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime + i*0.4);
+                gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + i*0.4 + 0.3);
+                
+                osc.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+                
+                osc.start(audioCtx.currentTime + i*0.4);
+                osc.stop(audioCtx.currentTime + i*0.4 + 0.3);
+            }
+        }
+
+        // SUBMIT LOGIC (Just score, no explanations)
+        function submitTest() {
+            if(isSubmitted) return;
+            isSubmitted = true;
+            clearInterval(timerInterval);
+            
+            let score = 0;
+            
+            questionsData.forEach(q => {
+                const selected = document.querySelector(`input[name="q${q.id}"]:checked`);
+                const allOptionsBox = document.querySelectorAll(`input[name="q${q.id}"] + .option-box`);
+                
+                // Vô hiệu hoá click sau khi nộp
+                document.querySelectorAll(`input[name="q${q.id}"]`).forEach(input => input.disabled = true);
+
+                let userAnsIndex = selected ? parseInt(selected.value) : -1;
+                
+                // Xóa hiệu ứng hover để giao diện cố định
+                allOptionsBox.forEach((box) => {
+                    box.classList.remove('hover:bg-[#fecdd3]', 'hover:bg-[#c7d2fe]', 'hover:bg-[#fef08a]', 'hover:bg-[#bbf7d0]');
+                });
+
+                if (userAnsIndex === q.correct) {
+                    score++;
+                }
+            });
+
+            // Ẩn nút Nộp bài
+            document.getElementById('submitBtnTop').style.display = 'none';
+            document.getElementById('submitBtnBottom').style.display = 'none';
+            
+            // Hiện Modal Kết quả
+            document.getElementById('scoreText').innerText = score;
+            if(score >= 90) document.getElementById('resultIcon').innerText = '🏆';
+            else if(score >= 70) document.getElementById('resultIcon').innerText = '🔥';
+            else document.getElementById('resultIcon').innerText = '💪';
+            
+            document.getElementById('resultModal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('resultModal').classList.add('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Khởi tạo render
+        window.onload = renderQuestions;
+    </script>
+</body>
+</html>
